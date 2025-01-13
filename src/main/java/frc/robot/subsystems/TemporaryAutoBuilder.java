@@ -11,7 +11,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+//TODO: DELETE THIS ONCE SWERVE CODE EXISTS, if this is used in testing, none of the path generation will work
 public class TemporaryAutoBuilder extends SubsystemBase {
       private SwerveRequest.ApplyChassisSpeeds robotRelativeDrive;
     public TemporaryAutoBuilder(){

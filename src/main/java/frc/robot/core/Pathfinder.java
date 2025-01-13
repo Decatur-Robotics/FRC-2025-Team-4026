@@ -53,6 +53,7 @@ public class Pathfinder{
                  Units.degreesToRadians(540), Units.degreesToRadians(720));
         
     }
+    
 
     public Pose2d findBestTarget(double poseNum){
         A = new Pose2d(1, 5, Rotation2d.fromDegrees(0));
@@ -72,6 +73,7 @@ public class Pathfinder{
         poseNum = poses.length;
 
         int left = 0, right = (int)poseNum - 1;
+        //TODO: make it so this only runs when a button if held down
         while(left < right){
             if(poses[left].getTranslation().getDistance(robotPose.getTranslation())
                 <= poses[right].getTranslation().getDistance(robotPose.getTranslation())){
@@ -80,7 +82,6 @@ public class Pathfinder{
             else{
                 left++;
             }
-          
         }
         targetPose = poses[left];
         return poses[left];
