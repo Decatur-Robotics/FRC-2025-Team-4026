@@ -30,7 +30,7 @@ public class Robot extends TimedRobot implements ILogSource, IModeChangeListener
 	@Override
 	public void robotInit()
 	{
-		Pathfinding.setPathfinder(new LocalADStarAK());
+		
 		if (instance != null)
 			System.err.println("WARNING: Robot instance already exists!");
 		instance = this;

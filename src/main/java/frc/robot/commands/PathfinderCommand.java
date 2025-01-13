@@ -1,28 +1,17 @@
-package frc.robot.core;
-
-import java.io.IOException;
-
-import javax.xml.stream.events.Comment;
-
-import org.json.simple.parser.ParseException;
-import org.opencv.core.Mat;
+package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.TemporaryAutoBuilder;
 
+public class PathfinderCommand {    
 
-public class Pathfinder{
-
-    
-        private Pose2d robotPose;
+       private Pose2d robotPose;
         private Pose2d targetPose;
         private PathConstraints constraints;
 
@@ -41,21 +30,18 @@ public class Pathfinder{
         private Pose2d K;
         private Pose2d L;
 
+ public PathfinderCommand() {
+    targetPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    robotPose = new Pose2d(0 ,0 , Rotation2d.fromDegrees(0));
 
-    public Pathfinder() throws FileVersionException, IOException, ParseException{
-        targetPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-        path = null;
-        robotPose = new Pose2d(0 ,0 , Rotation2d.fromDegrees(0));
-        
-        // Create the constraints to use while pathfinding
+    // Create the constraints to use while pathfinding
         constraints = new PathConstraints(
                   3.0, 4.0,
                  Units.degreesToRadians(540), Units.degreesToRadians(720));
-        
-    }
+ }
+   
     
-
-    public Pose2d findBestTarget(double poseNum){
+     public Pose2d findBestTarget(double poseNum){
         A = new Pose2d(1, 5, Rotation2d.fromDegrees(0));
         B = new Pose2d(0, 5, Rotation2d.fromDegrees(0));
         C = new Pose2d(2, 10, Rotation2d.fromDegrees(0));
@@ -87,20 +73,4 @@ public class Pathfinder{
         return poses[left];
        
     }
-
-    public void findToPath(){
-        Command pathfindingCommand = AutoBuilder.pathfindThenFollowPath(path, constraints);
-    }
-
-    public void findToPose(){
-        Command pathfindingCommand = AutoBuilder.pathfindToPose(
-        targetPose,
-        constraints,
-        0.0
-        );
-    }
-
-    
-     
-
-}
+ }   
