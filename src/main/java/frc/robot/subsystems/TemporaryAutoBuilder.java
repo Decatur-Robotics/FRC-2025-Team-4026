@@ -10,10 +10,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 
-public class TemporaryAutoBuilder {
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class TemporaryAutoBuilder extends SubsystemBase {
       private SwerveRequest.ApplyChassisSpeeds robotRelativeDrive;
     public TemporaryAutoBuilder(){
-        RobotConfig config;
+        RobotConfig config = null;
     try{
       config = RobotConfig.fromGUISettings();
     } catch (Exception e) {
