@@ -21,6 +21,6 @@ public final class ElevatorConstants {
     public static final double ELEVATOR_POSITION_L3 = 0;
     public static final double ELEVATOR_POSITION_L4 = 0;
 
-    public static final double SUPPLY_CURRENT_LIMIT = 0;
+    public static final double ELEVATOR_STATOR_CURRENT_LIMIT = 0;
     
 }
