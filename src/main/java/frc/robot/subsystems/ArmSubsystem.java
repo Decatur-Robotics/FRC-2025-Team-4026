@@ -1,7 +1,8 @@
 package frc.robot.subsystems;
 
 
-    import com.ctre.phoenix6.configs.Slot0Configs;
+    import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
@@ -19,6 +20,8 @@ public class ArmSubsystem extends SubsystemBase {
 	public double targetAngle;
 
 	private MotionMagicDutyCycle motorControlRequest;
+
+    private TalonFXConfiguration mainMotorConfigs;
 
 	public ArmSubsystem()
 	{
@@ -44,10 +47,14 @@ public class ArmSubsystem extends SubsystemBase {
 		pidSlot0Configs.kA = ArmConstants.ARM_KA;
 		pidSlot0Configs.kG = ArmConstants.ARM_KG;
 
+        var MotionMagicConfigs = mainMotorConfigs.MotionMagic;
+        MotionMagicConfigs.MotionMagicAcceleration = ArmConstants.ARM_ACCELERATION;
+        MotionMagicConfigs.MotionMagicCruiseVelocity = ArmConstants.ARM_CRUISE_VELOCITY;
+        
 		armMotorRight.getConfigurator().apply(mainMotorConfigs);
 		armMotorLeft.getConfigurator().apply(mainMotorConfigs);
 
-		double targetAngle = ArmConstants.ARM_INITIAL_POSITION;
+		double targetAngle = ArmConstants.ARM_ZERO_POSITION;
 
 	
 
@@ -55,11 +62,7 @@ public class ArmSubsystem extends SubsystemBase {
 		RobotContainer.getShuffleboardTab().add("Target Arm Mount Rotation", targetAngle);
 
 		
-
-	}
-
-	public void periodic(){
-		if(armMotorRight.hasResetOccurred()||armMotorLeft.hasResetOccurred()){
+        if(armMotorRight.hasResetOccurred()||armMotorLeft.hasResetOccurred()){
 			armMotorRight.optimizeBusUtilization();
 			armMotorLeft.optimizeBusUtilization();
 			
@@ -67,7 +70,9 @@ public class ArmSubsystem extends SubsystemBase {
 		}
 	}
 
-	public void setTargetRotation(double targetAngle)
+
+
+	public void setPosition(double targetAngle)
 	{
 
 		double gravityFeedForward = Math
@@ -79,14 +84,8 @@ public class ArmSubsystem extends SubsystemBase {
 
 	}
 
-	public boolean isAtTarget()
-	{
-		if (Math.abs(armMotorLeft.getRotorPosition().getValueAsDouble() - (targetAngle)) < ArmConstants.ARM_DEADBAND)
-		{
-			return true;
-		}
-		return false;
-	}
-
+    public void getPosition(){
+        armMotorRight.getRotorPosition().getValueAsDouble();
+    }
 }
 

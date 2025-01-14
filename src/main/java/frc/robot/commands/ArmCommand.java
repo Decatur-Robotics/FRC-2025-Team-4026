@@ -20,6 +20,6 @@ public class ArmCommand extends Command
 
 	@Override
 	public void initialize(){
-		arm.setTargetRotation(targetAngle);
+		arm.setPosition(targetAngle);
 	}
 }
