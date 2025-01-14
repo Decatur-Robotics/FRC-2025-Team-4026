@@ -48,9 +48,26 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotorLeft.getConfigurator().apply(talonFXConfigs);
         elevatorMotorRight.getConfigurator().apply(talonFXConfigs);
 
+        elevatorMotorLeft.optimizeBusUtilization();
+        elevatorMotorRight.optimizeBusUtilization();
+        elevatorMotorLeft.getRotorPosition().setUpdateFrequency(20);
+        elevatorMotorRight.getRotorPosition().setUpdateFrequency(20);
+
         motorControlRequest = new MotionMagicDutyCycle(position);
         elevatorMotorLeft.setControl(motorControlRequest);
 
+        
+    }
+
+    @Override
+    public void periodic() {
+        if (elevatorMotorLeft.hasResetOccurred() || elevatorMotorRight.hasResetOccurred())
+		{
+			elevatorMotorLeft.optimizeBusUtilization();
+			elevatorMotorRight.optimizeBusUtilization();
+			elevatorMotorLeft.getRotorPosition().setUpdateFrequency(20);
+			elevatorMotorRight.getRotorPosition().setUpdateFrequency(20);
+		}
     }
 
     public double getMotorPosition() {
