@@ -18,30 +18,6 @@ public class ArmCommand extends Command
 	
 	}
 
-    public void setToIntakeAngle(){
-        targetAngle = ArmConstants.ARM_INTAKE_POSITION;
-    }
-
-    public void setToL1Position(){
-        targetAngle = ArmConstants.ARM_L1_POSITION;
-    }
-
-    public void setToL2Position(){
-        targetAngle = ArmConstants.ARM_L2_POSITION;
-    }
-
-    public void setToL3Position(){
-        targetAngle = ArmConstants.ARM_L3_POSITION;
-    }
-
-    public void setToL4Position(){
-        targetAngle = ArmConstants.ARM_L4_POSITION;
-    }
-
-    public void setToSourcePosition(){
-        targetAngle = ArmConstants.ARM_SOURCE_POSITION;
-    }
-
 	@Override
 	public void initialize(){
 		arm.setTargetRotation(targetAngle);
