@@ -35,8 +35,8 @@ public class PathfinderCommand {
  }
    
     
-     public Pose2d findBestTarget(double poseNum, PathSetpoints path){
-        
+    public Pose2d findBestTarget(double poseNum, PathSetpoints path){
+        //TODO: have this end when path is generated
 
         Pose2d[] poses = {path.REEF_A, path.REEF_B, path.REEF_C, path.REEF_D, path.REEF_E, path.REEF_F, path.REEF_G, path.REEF_H, path.REEF_I, path.REEF_J, path.REEF_K, path.REEF_L};
         poseNum = poses.length;
