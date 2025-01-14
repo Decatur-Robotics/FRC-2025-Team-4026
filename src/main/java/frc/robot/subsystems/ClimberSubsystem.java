@@ -13,7 +13,7 @@ import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 
 public class ClimberSubsystem extends SubsystemBase{
 
-    private TalonFX ClimberMotorRight, ClimberMotorLeft;
+    private TalonFX climberMotorRight, climberMotorLeft;
     
     private double position;
     private MotionMagicDutyCycle motorControlRequest;
@@ -22,10 +22,10 @@ public class ClimberSubsystem extends SubsystemBase{
 
         position = ClimberConstants.CLIMBER_POSITION_REST;
 
-        ClimberMotorRight = new TalonFX(Ports.CLIMBER_MOTOR_RIGHT);
-        ClimberMotorLeft = new TalonFX(Ports.CLIMBER_MOTOR_LEFT);
+        climberMotorRight = new TalonFX(Ports.CLIMBER_MOTOR_RIGHT);
+        climberMotorLeft = new TalonFX(Ports.CLIMBER_MOTOR_LEFT);
 
-        ClimberMotorRight.setControl(new Follower(Ports.CLIMBER_MOTOR_LEFT, true));
+        climberMotorRight.setControl(new Follower(Ports.CLIMBER_MOTOR_LEFT, true));
 
         TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
 
@@ -45,41 +45,41 @@ public class ClimberSubsystem extends SubsystemBase{
         talonFXConfigs.MotionMagic.MotionMagicAcceleration = ClimberConstants.MOTION_MAGIC_ACCELERATION;
         talonFXConfigs.MotionMagic.MotionMagicJerk = ClimberConstants.MOTION_MAGIC_JERK;
 
-        ClimberMotorLeft.getConfigurator().apply(talonFXConfigs);
-        ClimberMotorRight.getConfigurator().apply(talonFXConfigs);
+        climberMotorLeft.getConfigurator().apply(talonFXConfigs);
+        climberMotorRight.getConfigurator().apply(talonFXConfigs);
 
-        ClimberMotorLeft.optimizeBusUtilization();
-        ClimberMotorRight.optimizeBusUtilization();
-        ClimberMotorLeft.getRotorPosition().setUpdateFrequency(20);
-        ClimberMotorRight.getRotorPosition().setUpdateFrequency(20);
+        climberMotorLeft.optimizeBusUtilization();
+        climberMotorRight.optimizeBusUtilization();
+        climberMotorLeft.getRotorPosition().setUpdateFrequency(20);
+        climberMotorRight.getRotorPosition().setUpdateFrequency(20);
 
         motorControlRequest = new MotionMagicDutyCycle(position);
-        ClimberMotorLeft.setControl(motorControlRequest);
+        climberMotorLeft.setControl(motorControlRequest);
 
         
     }
 
     @Override
     public void periodic() {
-        if (ClimberMotorLeft.hasResetOccurred() || ClimberMotorRight.hasResetOccurred())
+        if (climberMotorLeft.hasResetOccurred() || climberMotorRight.hasResetOccurred())
 		{
-			ClimberMotorLeft.optimizeBusUtilization();
-			ClimberMotorRight.optimizeBusUtilization();
-			ClimberMotorLeft.getRotorPosition().setUpdateFrequency(20);
-			ClimberMotorRight.getRotorPosition().setUpdateFrequency(20);
+			climberMotorLeft.optimizeBusUtilization();
+			climberMotorRight.optimizeBusUtilization();
+			climberMotorLeft.getRotorPosition().setUpdateFrequency(20);
+			climberMotorRight.getRotorPosition().setUpdateFrequency(20);
 		}
     }
 
     public double getMotorPosition() {
 
-        return ClimberMotorLeft.getRotorPosition().getValueAsDouble();
+        return climberMotorLeft.getRotorPosition().getValueAsDouble();
 
     }
  
     public void setTargetPosition(double position) {
 
         this.position = position;
-        ClimberMotorLeft.setControl(motorControlRequest.withPosition(this.position));
+        climberMotorLeft.setControl(motorControlRequest.withPosition(this.position));
 
     }
 }
