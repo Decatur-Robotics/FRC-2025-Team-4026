@@ -1,8 +1,13 @@
 package frc.robot.commands;
 
+import java.nio.file.Path;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.revrobotics.spark.SparkLowLevel.PeriodicFrame;
+
+import frc.robot.constants.PathSetpoints;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,18 +22,7 @@ public class PathfinderCommand {
 
         private PathPlannerPath path;
 
-        private Pose2d A;
-        private Pose2d B;
-        private Pose2d C;
-        private Pose2d D;
-        private Pose2d E;
-        private Pose2d F;
-        private Pose2d G;
-        private Pose2d H;
-        private Pose2d I;
-        private Pose2d J;
-        private Pose2d K;
-        private Pose2d L;
+       
 
  public PathfinderCommand() {
     targetPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
@@ -41,25 +35,13 @@ public class PathfinderCommand {
  }
    
     
-     public Pose2d findBestTarget(double poseNum){
-        A = new Pose2d(1, 5, Rotation2d.fromDegrees(0));
-        B = new Pose2d(0, 5, Rotation2d.fromDegrees(0));
-        C = new Pose2d(2, 10, Rotation2d.fromDegrees(0));
-        D = new Pose2d(5, 2, Rotation2d.fromDegrees(0));
-        E = new Pose2d(5, 5, Rotation2d.fromDegrees(0));
-        F = new Pose2d(5, 10, Rotation2d.fromDegrees(0));
-        G = new Pose2d(10, 0, Rotation2d.fromDegrees(0));
-        H = new Pose2d(10, 5, Rotation2d.fromDegrees(0));
-        I = new Pose2d(10, 10, Rotation2d.fromDegrees(0));
-        J = new Pose2d(15, 0, Rotation2d.fromDegrees(0));
-        K = new Pose2d(15, 5, Rotation2d.fromDegrees(0));
-        L = new Pose2d(15, 10, Rotation2d.fromDegrees(0));
+     public Pose2d findBestTarget(double poseNum, PathSetpoints path){
+        
 
-        Pose2d[] poses = {A, B, C, D, E, F, G, H, I, J, K, L};
+        Pose2d[] poses = {path.REEF_A, path.REEF_B, path.REEF_C, path.REEF_D, path.REEF_E, path.REEF_F, path.REEF_G, path.REEF_H, path.REEF_I, path.REEF_J, path.REEF_K, path.REEF_L};
         poseNum = poses.length;
 
         int left = 0, right = (int)poseNum - 1;
-        //TODO: make it so this only runs when a button if held down
         while(left < right){
             if(poses[left].getTranslation().getDistance(robotPose.getTranslation())
                 <= poses[right].getTranslation().getDistance(robotPose.getTranslation())){
@@ -73,4 +55,6 @@ public class PathfinderCommand {
         return poses[left];
        
     }
+
+    
  }   
