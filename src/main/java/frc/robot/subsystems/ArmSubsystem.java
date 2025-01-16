@@ -1,8 +1,5 @@
 package frc.robot.subsystems;
 
-
-    import com.ctre.phoenix6.configs.MotionMagicConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
@@ -17,51 +14,40 @@ import frc.robot.constants.Ports;
 public class ArmSubsystem extends SubsystemBase {
 	private TalonFX armMotorRight, armMotorLeft;
 	
-	public double targetAngle;
+	private double position;
 
 	private MotionMagicDutyCycle motorControlRequest;
 
-    private TalonFXConfiguration mainMotorConfigs;
-
 	public ArmSubsystem()
 	{
-
 		armMotorRight = new TalonFX(Ports.ARM_RIGHT_MOTOR);
 		armMotorLeft = new TalonFX(Ports.ARM_LEFT_MOTOR);
 
 		armMotorRight.setControl(new Follower(armMotorLeft.getDeviceID(), true));
 
-
 		TalonFXConfiguration mainMotorConfigs = new TalonFXConfiguration();
 
 		mainMotorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-		mainMotorConfigs.CurrentLimits.StatorCurrentLimit = ArmConstants.ARM_CURRENT_LIMIT;
+		mainMotorConfigs.CurrentLimits.StatorCurrentLimit = ArmConstants.CURRENT_LIMIT;
 
-		// PIDs
-		Slot0Configs pidSlot0Configs = mainMotorConfigs.Slot0;
-		pidSlot0Configs.kP = ArmConstants.ARM_KP;
-		pidSlot0Configs.kI = ArmConstants.ARM_KI;
-		pidSlot0Configs.kD = ArmConstants.ARM_KD;
-		pidSlot0Configs.kS = ArmConstants.ARM_KS;
-		pidSlot0Configs.kV = ArmConstants.ARM_KV;
-		pidSlot0Configs.kA = ArmConstants.ARM_KA;
-		pidSlot0Configs.kG = ArmConstants.ARM_KG;
+		mainMotorConfigs.Slot0.kP = ArmConstants.KP;
+		mainMotorConfigs.Slot0.kI = ArmConstants.KI;
+		mainMotorConfigs.Slot0.kD = ArmConstants.KD;
+		mainMotorConfigs.Slot0.kS = ArmConstants.KS;
+		mainMotorConfigs.Slot0.kV = ArmConstants.KV;
+		mainMotorConfigs.Slot0.kA = ArmConstants.KA;
 
-        var MotionMagicConfigs = mainMotorConfigs.MotionMagic;
-        MotionMagicConfigs.MotionMagicAcceleration = ArmConstants.ARM_ACCELERATION;
-        MotionMagicConfigs.MotionMagicCruiseVelocity = ArmConstants.ARM_CRUISE_VELOCITY;
+        mainMotorConfigs.MotionMagic.MotionMagicAcceleration = ArmConstants.ACCELERATION;
+        mainMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = ArmConstants.CRUISE_VELOCITY;
         
 		armMotorRight.getConfigurator().apply(mainMotorConfigs);
 		armMotorLeft.getConfigurator().apply(mainMotorConfigs);
 
-		double targetAngle = ArmConstants.ARM_ZERO_POSITION;
+		position = ArmConstants.INITIAL_POSITION;
 
-	
+		RobotContainer.getShuffleboardTab().add("Actual Arm Mount Rotation", getPosition());
+		RobotContainer.getShuffleboardTab().add("Target Arm Mount Rotation", position);
 
-		RobotContainer.getShuffleboardTab().add("Actual Arm Mount Rotation", armMotorRight.getRotorPosition().getValueAsDouble());
-		RobotContainer.getShuffleboardTab().add("Target Arm Mount Rotation", targetAngle);
-
-		
         if(armMotorRight.hasResetOccurred()||armMotorLeft.hasResetOccurred()){
 			armMotorRight.optimizeBusUtilization();
 			armMotorLeft.optimizeBusUtilization();
@@ -70,22 +56,21 @@ public class ArmSubsystem extends SubsystemBase {
 		}
 	}
 
-
-
-	public void setPosition(double targetAngle)
+	public void setPosition(double position)
 	{
+		this.position = position;
 
-		double gravityFeedForward = Math
-				.cos(ArmConstants.ARM_MIN_ANGLE + Math.toDegrees(targetAngle))
-				* ArmConstants.ARM_KG;
+		// Arm angle in radians (0 is parallel to the floor)
+		double angle = (position - ArmConstants.LEVEL_POSITION) * ArmConstants.ENCODER_TO_RADIANS_FACTOR;
 
-		armMotorLeft.setControl(motorControlRequest.withPosition(targetAngle)
+		double gravityFeedForward = Math.cos(angle) * ArmConstants.KG;
+
+		armMotorLeft.setControl(motorControlRequest.withPosition(position)
 				.withFeedForward(gravityFeedForward));
-
 	}
 
-    public void getPosition(){
-        armMotorRight.getRotorPosition().getValueAsDouble();
+    public double getPosition() {
+        return armMotorRight.getRotorPosition().getValueAsDouble();
     }
 }
 
