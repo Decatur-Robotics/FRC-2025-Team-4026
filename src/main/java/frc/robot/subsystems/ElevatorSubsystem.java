@@ -70,7 +70,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 		}
     }
 
-    public double getMotorPosition() {
+    public double getElevatorPosition() {
 
         return elevatorMotorLeft.getRotorPosition().getValueAsDouble();
 
