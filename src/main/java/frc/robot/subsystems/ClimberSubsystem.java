@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 import frc.robot.constants.ClimberConstants;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
@@ -20,8 +19,6 @@ public class ClimberSubsystem extends SubsystemBase{
     
     public ClimberSubsystem() {
 
-        position = ClimberConstants.CLIMBER_POSITION_REST;
-
         climberMotorRight = new TalonFX(Ports.CLIMBER_MOTOR_RIGHT);
         climberMotorLeft = new TalonFX(Ports.CLIMBER_MOTOR_LEFT);
 
@@ -32,18 +29,15 @@ public class ClimberSubsystem extends SubsystemBase{
         talonFXConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
         talonFXConfigs.CurrentLimits.SupplyCurrentLimit = ClimberConstants.SUPPLY_CURRENT_LIMIT;
 
-        Slot0Configs slot0Configs = talonFXConfigs.Slot0;
+        talonFXConfigs.Slot0.kS = ClimberConstants.KS; 
+        talonFXConfigs.Slot0.kV = ClimberConstants.KV;
+        talonFXConfigs.Slot0.kA = ClimberConstants.KA; 
+        talonFXConfigs.Slot0.kP = ClimberConstants.KP; 
+        talonFXConfigs.Slot0.kI = ClimberConstants.KI; 
+        talonFXConfigs.Slot0.kD = ClimberConstants.KD;
 
-        slot0Configs.kS = ClimberConstants.CLIMBER_MOTOR_KS; 
-        slot0Configs.kV = ClimberConstants.CLIMBER_MOTOR_KV;
-        slot0Configs.kA = ClimberConstants.CLIMBER_MOTOR_KA; 
-        slot0Configs.kP = ClimberConstants.CLIMBER_MOTOR_KP; 
-        slot0Configs.kI = ClimberConstants.CLIMBER_MOTOR_KI; 
-        slot0Configs.kD = ClimberConstants.CLIMBER_MOTOR_KD;
-
-        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = ClimberConstants.MOTION_MAGIC_CRUISE_VELOCITY;
-        talonFXConfigs.MotionMagic.MotionMagicAcceleration = ClimberConstants.MOTION_MAGIC_ACCELERATION;
-        talonFXConfigs.MotionMagic.MotionMagicJerk = ClimberConstants.MOTION_MAGIC_JERK;
+        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = ClimberConstants.CRUISE_VELOCITY;
+        talonFXConfigs.MotionMagic.MotionMagicAcceleration = ClimberConstants.ACCELERATION;
 
         climberMotorLeft.getConfigurator().apply(talonFXConfigs);
         climberMotorRight.getConfigurator().apply(talonFXConfigs);
@@ -52,11 +46,11 @@ public class ClimberSubsystem extends SubsystemBase{
         climberMotorRight.optimizeBusUtilization();
         climberMotorLeft.getRotorPosition().setUpdateFrequency(20);
         climberMotorRight.getRotorPosition().setUpdateFrequency(20);
+        
+        position = ClimberConstants.INITIAL_POSITION;
 
         motorControlRequest = new MotionMagicDutyCycle(position);
         climberMotorLeft.setControl(motorControlRequest);
-
-        
     }
 
     @Override
@@ -69,19 +63,16 @@ public class ClimberSubsystem extends SubsystemBase{
 			climberMotorRight.getRotorPosition().setUpdateFrequency(20);
 		}
     }
-
-    public double getMotorPosition() {
-
-        return climberMotorLeft.getRotorPosition().getValueAsDouble();
-
-    }
  
-    public void setTargetPosition(double position) {
-
+    public void setPosition(double position) {
         this.position = position;
         climberMotorLeft.setControl(motorControlRequest.withPosition(this.position));
-
     }
+
+    public double getPosition() {
+        return climberMotorLeft.getRotorPosition().getValueAsDouble();
+    }
+
 }
 
 

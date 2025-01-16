@@ -5,22 +5,18 @@ import frc.robot.subsystems.ClimberSubsystem;
 
 public class ClimberCommand extends Command {
     
-    private ClimberSubsystem climberSubsystem;
-    private double targetPosition;
+    private ClimberSubsystem climber;
+    private double position;
 
-    public ClimberCommand(ClimberSubsystem climberSubsystem, double targetPosition) {
-
-        this.climberSubsystem = climberSubsystem;
-        this.targetPosition = targetPosition;
+    public ClimberCommand(ClimberSubsystem climber, double position) {
+        this.climber = climber;
+        this.position = position;
         
-        addRequirements(climberSubsystem);
-
+        addRequirements(climber);
     }
 
     @Override
     public void initialize() {
-
-        climberSubsystem.setTargetPosition(targetPosition);
-
+        climber.setPosition(position);
     }
 }
