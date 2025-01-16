@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 import frc.robot.constants.ElevatorConstants;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
@@ -20,7 +19,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     
     public ElevatorSubsystem() {
 
-        position = ElevatorConstants.ELEVATOR_POSITION_REST;
+        position = ElevatorConstants.INITIAL_POSITION;
 
         elevatorMotorRight = new TalonFX(Ports.ELEVATOR_MOTOR_RIGHT);
         elevatorMotorLeft = new TalonFX(Ports.ELEVATOR_MOTOR_LEFT);
@@ -32,18 +31,16 @@ public class ElevatorSubsystem extends SubsystemBase {
         talonFXConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
         talonFXConfigs.CurrentLimits.StatorCurrentLimit = ElevatorConstants.ELEVATOR_STATOR_CURRENT_LIMIT;
 
-        Slot0Configs slot0Configs = talonFXConfigs.Slot0;
+        talonFXConfigs.Slot0.kP = ElevatorConstants.KP; 
+        talonFXConfigs.Slot0.kI = ElevatorConstants.KI; 
+        talonFXConfigs.Slot0.kD = ElevatorConstants.KD;
+        talonFXConfigs.Slot0.kS = ElevatorConstants.KS; 
+        talonFXConfigs.Slot0.kV = ElevatorConstants.KV;
+        talonFXConfigs.Slot0.kA = ElevatorConstants.KA; 
+        talonFXConfigs.Slot0.kG = ElevatorConstants.KG;
 
-        slot0Configs.kS = ElevatorConstants.ELEVATOR_MOTOR_KS; 
-        slot0Configs.kV = ElevatorConstants.ELEVATOR_MOTOR_KV;
-        slot0Configs.kA = ElevatorConstants.ELEVATOR_MOTOR_KA; 
-        slot0Configs.kP = ElevatorConstants.ELEVATOR_MOTOR_KP; 
-        slot0Configs.kI = ElevatorConstants.ELEVATOR_MOTOR_KI; 
-        slot0Configs.kD = ElevatorConstants.ELEVATOR_MOTOR_KD;
-
-        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = ElevatorConstants.MOTION_MAGIC_CRUISE_VELOCITY;
-        talonFXConfigs.MotionMagic.MotionMagicAcceleration = ElevatorConstants.MOTION_MAGIC_ACCELERATION;
-        talonFXConfigs.MotionMagic.MotionMagicJerk = ElevatorConstants.MOTION_MAGIC_JERK;
+        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = ElevatorConstants.CRUISE_VELOCITY;
+        talonFXConfigs.MotionMagic.MotionMagicAcceleration = ElevatorConstants.ACCELERATION;
 
         elevatorMotorLeft.getConfigurator().apply(talonFXConfigs);
         elevatorMotorRight.getConfigurator().apply(talonFXConfigs);
@@ -55,8 +52,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         motorControlRequest = new MotionMagicDutyCycle(position);
         elevatorMotorLeft.setControl(motorControlRequest);
-
-        
     }
 
     @Override
@@ -69,17 +64,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 			elevatorMotorRight.getRotorPosition().setUpdateFrequency(20);
 		}
     }
-
-    public double getElevatorPosition() {
-
-        return elevatorMotorLeft.getRotorPosition().getValueAsDouble();
-
-    }
  
-    public void setTargetPosition(double position) {
-
+    public void setPosition(double position) {
         this.position = position;
-        elevatorMotorLeft.setControl(motorControlRequest.withPosition(this.position));
-
+        elevatorMotorLeft.setControl(motorControlRequest.withPosition(position));
     }
+
+    public double getPosition() {
+        return elevatorMotorLeft.getRotorPosition().getValueAsDouble();
+    }
+
 }

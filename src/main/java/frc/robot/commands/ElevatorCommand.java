@@ -5,22 +5,19 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 public class ElevatorCommand extends Command {
     
-    private ElevatorSubsystem elevatorSubsystem;
-    private double targetPosition;
+    private ElevatorSubsystem elevator;
+    private double position;
 
-    public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, double targetPosition) {
-
-        this.elevatorSubsystem = elevatorSubsystem;
-        this.targetPosition = targetPosition;
+    public ElevatorCommand(ElevatorSubsystem elevator, double position) {
+        this.elevator = elevator;
+        this.position = position;
         
-        addRequirements(elevatorSubsystem);
-
+        addRequirements(elevator);
     }
 
     @Override
     public void initialize() {
-
-        elevatorSubsystem.setTargetPosition(targetPosition);
-
+        elevator.setPosition(position);
     }
+
 }
