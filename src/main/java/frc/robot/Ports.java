@@ -6,5 +6,6 @@ public final class Ports {
     public static final int ELEVATOR_MOTOR_RIGHT = 17;
     public static final int CLIMBER_MOTOR_LEFT = 40;
     public static final int CLIMBER_MOTOR_RIGHT = 26;
+    public static final int WRIST_MOTOR = 0;
     
 }
