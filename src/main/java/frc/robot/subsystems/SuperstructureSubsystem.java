@@ -29,4 +29,29 @@ public class SuperstructureSubsystem extends SubsystemBase{
         elevator.setPosition(position);
     }
 
+    public void setArmPosition(double position) {
+        arm.setPosition(position);
+    }
+
+    public void setWristPosition(double position) {
+        wrist.setPosition(position);
+    }
+
+    public double getElevatorPosition() {
+        return elevator.getPosition();
+    }
+
+    public double getArmPosition() {
+        return arm.getPosition();
+    }
+
+    public double getWristPosition() {
+        return wrist.getPosition();
+    }
+
+    public SuperstructureState getState() {
+        state = new SuperstructureState(elevator.getPosition(), arm.getPosition(), wrist.getPosition());
+        return state;
+    }
+
 }
