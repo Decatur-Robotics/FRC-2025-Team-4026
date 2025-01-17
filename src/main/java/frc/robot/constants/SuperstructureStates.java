@@ -1,4 +1,6 @@
-package frc.robot.states;
+package frc.robot.constants;
+
+import frc.robot.util.SuperstructureState;
 
 public class SuperstructureStates {
 
