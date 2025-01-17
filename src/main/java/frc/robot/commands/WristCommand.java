@@ -14,6 +14,6 @@ public class WristCommand extends Command {
     }
 
     public void initialize(){
-        wrist.setWristPosition(position);
+        wrist.setPosition(position);
     }
 }

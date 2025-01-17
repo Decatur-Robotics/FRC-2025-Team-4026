@@ -9,9 +9,13 @@ import frc.robot.Ports;
 import frc.robot.constants.WristConstants;
 
 public class WristSubsystem extends SubsystemBase {
+
     private TalonFX wristMotor;
+
     private double position;
+
     private MotionMagicDutyCycle motorControlRequest;
+
     public WristSubsystem() {
         wristMotor = new TalonFX(Ports.WRIST_MOTOR);
 
@@ -47,11 +51,13 @@ public class WristSubsystem extends SubsystemBase {
         }
     }
 
-    public void setWristPosition(double position){
+    public void setPosition(double position) {
+        this.position = position;
+
         wristMotor.setControl(motorControlRequest);
     }
 
-    public double getWristPosition(){
+    public double getPosition() {
         return wristMotor.getRotorPosition().getValueAsDouble();
     }
     
