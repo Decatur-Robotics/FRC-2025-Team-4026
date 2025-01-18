@@ -3,13 +3,13 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SuperstructureState;
 
-public class SuperstructureSubsystem extends SubsystemBase{
+public class SuperstructureSubsystem extends SubsystemBase {
     
     private ElevatorSubsystem elevator;
     private ArmSubsystem arm;
     private WristSubsystem wrist;
 
-    private SuperstructureState state;
+    private SuperstructureState goalState;
 
     public SuperstructureSubsystem() {
         elevator = new ElevatorSubsystem();
@@ -17,12 +17,20 @@ public class SuperstructureSubsystem extends SubsystemBase{
         wrist = new WristSubsystem();
     }
 
-    public void setState(SuperstructureState state) {
-        this.state = state;
+    public void setState(SuperstructureState goalState) {
+        this.goalState = goalState;
 
-        elevator.setPosition(state.elevatorPosition);
-        arm.setPosition(state.armPosition);
-        wrist.setPosition(state.wristPosition);
+        elevator.setPosition(goalState.elevatorPosition);
+        arm.setPosition(goalState.armPosition);
+        wrist.setPosition(goalState.wristPosition);
+    }
+
+    public SuperstructureState getActualState() {
+        return new SuperstructureState(elevator.getPosition(), arm.getPosition(), wrist.getPosition());
+    }
+
+    public SuperstructureState getGoalState() {
+        return goalState;
     }
 
     public void setElevatorPosition(double position) {
@@ -37,21 +45,28 @@ public class SuperstructureSubsystem extends SubsystemBase{
         wrist.setPosition(position);
     }
 
-    public double getElevatorPosition() {
+    public double getActualElevatorPosition() {
         return elevator.getPosition();
     }
 
-    public double getArmPosition() {
+    public double getActualArmPosition() {
         return arm.getPosition();
     }
 
-    public double getWristPosition() {
+    public double getActualWristPosition() {
         return wrist.getPosition();
     }
 
-    public SuperstructureState getState() {
-        state = new SuperstructureState(elevator.getPosition(), arm.getPosition(), wrist.getPosition());
-        return state;
+    public double getGoalElevatorPosition() {
+        return goalState.elevatorPosition;
+    }
+
+    public double getGoalArmPosition() {
+        return goalState.armPosition;
+    }
+
+    public double getGoalWristPosition() {
+        return goalState.wristPosition;
     }
 
 }
