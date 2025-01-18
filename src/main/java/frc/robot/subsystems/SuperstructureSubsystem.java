@@ -17,6 +17,11 @@ public class SuperstructureSubsystem extends SubsystemBase {
         wrist = new WristSubsystem();
     }
 
+    @Override
+    public void periodic() {
+        
+    }
+
     public void setState(SuperstructureState goalState) {
         this.goalState = goalState;
 
