@@ -30,7 +30,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
 
         talonFXConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonFXConfigs.CurrentLimits.StatorCurrentLimit = ElevatorConstants.ELEVATOR_STATOR_CURRENT_LIMIT;
+        talonFXConfigs.CurrentLimits.StatorCurrentLimit = ElevatorConstants.STATOR_CURRENT_LIMIT;
 
         talonFXConfigs.Slot0.kP = ElevatorConstants.KP; 
         talonFXConfigs.Slot0.kI = ElevatorConstants.KI; 

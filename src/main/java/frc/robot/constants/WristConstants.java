@@ -14,6 +14,6 @@ public class WristConstants {
     public static final double CRUISE_VELOCITY = 0;
     public static final double ACCELERATION = 0;
 
-    public static final double INITIAL_POSITION = 0;
+    public static final double INITIAL_POSITION = SuperstructureStates.CORAL_STOWED_STATE.wristPosition;
     
 }
