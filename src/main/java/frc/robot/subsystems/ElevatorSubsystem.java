@@ -12,19 +12,20 @@ import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-    private TalonFX elevatorMotorRight, elevatorMotorLeft;
+    private TalonFX motorFollower, motorMain;
     
     private double position;
+    
     private MotionMagicDutyCycle motorControlRequest;
     
     public ElevatorSubsystem() {
 
         position = ElevatorConstants.INITIAL_POSITION;
 
-        elevatorMotorRight = new TalonFX(Ports.ELEVATOR_MOTOR_RIGHT);
-        elevatorMotorLeft = new TalonFX(Ports.ELEVATOR_MOTOR_LEFT);
+        motorFollower = new TalonFX(Ports.ELEVATOR_MOTOR_RIGHT);
+        motorMain = new TalonFX(Ports.ELEVATOR_MOTOR_LEFT);
 
-        elevatorMotorRight.setControl(new Follower(Ports.ELEVATOR_MOTOR_LEFT, true));
+        motorFollower.setControl(new Follower(Ports.ELEVATOR_MOTOR_LEFT, true));
 
         TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
 
@@ -42,36 +43,36 @@ public class ElevatorSubsystem extends SubsystemBase {
         talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = ElevatorConstants.CRUISE_VELOCITY;
         talonFXConfigs.MotionMagic.MotionMagicAcceleration = ElevatorConstants.ACCELERATION;
 
-        elevatorMotorLeft.getConfigurator().apply(talonFXConfigs);
-        elevatorMotorRight.getConfigurator().apply(talonFXConfigs);
+        motorMain.getConfigurator().apply(talonFXConfigs);
+        motorFollower.getConfigurator().apply(talonFXConfigs);
 
-        elevatorMotorLeft.optimizeBusUtilization();
-        elevatorMotorRight.optimizeBusUtilization();
-        elevatorMotorLeft.getRotorPosition().setUpdateFrequency(20);
-        elevatorMotorRight.getRotorPosition().setUpdateFrequency(20);
+        motorMain.optimizeBusUtilization();
+        motorFollower.optimizeBusUtilization();
+        motorMain.getRotorPosition().setUpdateFrequency(20);
+        motorFollower.getRotorPosition().setUpdateFrequency(20);
 
         motorControlRequest = new MotionMagicDutyCycle(position);
-        elevatorMotorLeft.setControl(motorControlRequest);
+        motorMain.setControl(motorControlRequest);
     }
 
     @Override
     public void periodic() {
-        if (elevatorMotorLeft.hasResetOccurred() || elevatorMotorRight.hasResetOccurred())
+        if (motorMain.hasResetOccurred() || motorFollower.hasResetOccurred())
 		{
-			elevatorMotorLeft.optimizeBusUtilization();
-			elevatorMotorRight.optimizeBusUtilization();
-			elevatorMotorLeft.getRotorPosition().setUpdateFrequency(20);
-			elevatorMotorRight.getRotorPosition().setUpdateFrequency(20);
+			motorMain.optimizeBusUtilization();
+			motorFollower.optimizeBusUtilization();
+			motorMain.getRotorPosition().setUpdateFrequency(20);
+			motorFollower.getRotorPosition().setUpdateFrequency(20);
 		}
     }
  
     public void setPosition(double position) {
         this.position = position;
-        elevatorMotorLeft.setControl(motorControlRequest.withPosition(position));
+        motorMain.setControl(motorControlRequest.withPosition(position));
     }
 
     public double getPosition() {
-        return elevatorMotorLeft.getRotorPosition().getValueAsDouble();
+        return motorMain.getRotorPosition().getValueAsDouble();
     }
 
 }

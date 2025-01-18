@@ -10,14 +10,14 @@ import frc.robot.constants.WristConstants;
 
 public class WristSubsystem extends SubsystemBase {
 
-    private TalonFX wristMotor;
+    private TalonFX motor;
 
     private double position;
 
     private MotionMagicDutyCycle motorControlRequest;
 
     public WristSubsystem() {
-        wristMotor = new TalonFX(Ports.WRIST_MOTOR);
+        motor = new TalonFX(Ports.WRIST_MOTOR);
 
         TalonFXConfiguration talonFXconfigs = new TalonFXConfiguration();
 
@@ -29,36 +29,38 @@ public class WristSubsystem extends SubsystemBase {
         talonFXconfigs.Slot0.kA = WristConstants.KA;
 
         talonFXconfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonFXconfigs.CurrentLimits.StatorCurrentLimit = WristConstants.WRIST_STATOR_CURRENT_LIMIT;
+        talonFXconfigs.CurrentLimits.StatorCurrentLimit = WristConstants.STATOR_CURRENT_LIMIT;
 
-        talonFXconfigs.MotionMagic.MotionMagicCruiseVelocity = WristConstants.MOTION_MAGIC_CRUISE_VELOCITY;
-        talonFXconfigs.MotionMagic.MotionMagicAcceleration = WristConstants.MOTION_MAGIC_ACCELERATION;
+        talonFXconfigs.MotionMagic.MotionMagicCruiseVelocity = WristConstants.CRUISE_VELOCITY;
+        talonFXconfigs.MotionMagic.MotionMagicAcceleration = WristConstants.ACCELERATION;
 
-        wristMotor.getConfigurator().apply(talonFXconfigs);
+        motor.getConfigurator().apply(talonFXconfigs);
 
-        wristMotor.optimizeBusUtilization();
-        wristMotor.getRotorPosition().setUpdateFrequency(20);
+        motor.optimizeBusUtilization();
+        motor.getRotorPosition().setUpdateFrequency(20);
 
-       position = WristConstants.INITIAL_POSITION; 
+        position = WristConstants.INITIAL_POSITION; 
+
+        motor.setControl(motorControlRequest.withPosition(position));
 
     }
 
     @Override
     public void periodic() {
-        if(wristMotor.hasResetOccurred()){
-            wristMotor.optimizeBusUtilization();
-            wristMotor.getRotorPosition().setUpdateFrequency(20);
+        if(motor.hasResetOccurred()){
+            motor.optimizeBusUtilization();
+            motor.getRotorPosition().setUpdateFrequency(20);
         }
     }
 
     public void setPosition(double position) {
         this.position = position;
 
-        wristMotor.setControl(motorControlRequest);
+        motor.setControl(motorControlRequest);
     }
 
     public double getPosition() {
-        return wristMotor.getRotorPosition().getValueAsDouble();
+        return motor.getRotorPosition().getValueAsDouble();
     }
     
 }
