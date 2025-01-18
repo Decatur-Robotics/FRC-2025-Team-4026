@@ -12,9 +12,6 @@ import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Ports;
 
 public class ArmSubsystem extends SubsystemBase {
-
-	private static ArmSubsystem instance;
-
 	private TalonFX motorFollower, motorMain;
 	
 	private double position;
@@ -51,24 +48,7 @@ public class ArmSubsystem extends SubsystemBase {
 		RobotContainer.getShuffleboardTab().add("Actual Arm Mount Rotation", getPosition());
 		RobotContainer.getShuffleboardTab().add("Target Arm Mount Rotation", position);
 
-		motorFollower.optimizeBusUtilization();
-		motorMain.optimizeBusUtilization();
-			
-		motorMain.getRotorPosition().setUpdateFrequency(20);
-        
-	}
-
-	public static ArmSubsystem getInstance() {
-		if (instance == null) {
-			instance = new ArmSubsystem();
-		}
-
-		return instance;
-	}
-
-	@Override
-	public void periodic() {
-		if(motorFollower.hasResetOccurred()||motorMain.hasResetOccurred()){
+        if(motorFollower.hasResetOccurred()||motorMain.hasResetOccurred()){
 			motorFollower.optimizeBusUtilization();
 			motorMain.optimizeBusUtilization();
 			

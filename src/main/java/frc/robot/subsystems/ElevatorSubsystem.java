@@ -12,8 +12,6 @@ import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-    private static ElevatorSubsystem instance;
-
     private TalonFX motorFollower, motorMain;
     
     private double position;
@@ -55,14 +53,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         motorControlRequest = new MotionMagicDutyCycle(position);
         motorMain.setControl(motorControlRequest);
-    }
-
-    public static ElevatorSubsystem getInstance() {
-        if (instance == null) {
-            instance = new ElevatorSubsystem();
-        }
-
-        return instance;
     }
 
     @Override
