@@ -10,6 +10,8 @@ import frc.robot.constants.WristConstants;
 
 public class WristSubsystem extends SubsystemBase {
 
+    private static WristSubsystem instance;
+
     private TalonFX motor;
 
     private double position;
@@ -42,7 +44,14 @@ public class WristSubsystem extends SubsystemBase {
         position = WristConstants.INITIAL_POSITION; 
 
         motor.setControl(motorControlRequest.withPosition(position));
+    }
 
+    public static WristSubsystem getInstance() {
+        if (instance == null) {
+            instance = new WristSubsystem();
+        }
+
+        return instance;
     }
 
     @Override

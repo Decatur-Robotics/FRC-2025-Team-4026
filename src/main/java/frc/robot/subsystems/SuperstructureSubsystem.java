@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SuperstructureState;
 
 public class SuperstructureSubsystem extends SubsystemBase {
+
+    private static SuperstructureSubsystem instance;
     
     private ElevatorSubsystem elevator;
     private ArmSubsystem arm;
@@ -12,9 +14,17 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private SuperstructureState goalState;
 
     public SuperstructureSubsystem() {
-        elevator = new ElevatorSubsystem();
-        arm = new ArmSubsystem();
-        wrist = new WristSubsystem();
+        elevator = ElevatorSubsystem.getInstance();
+        arm = ArmSubsystem.getInstance();
+        wrist = WristSubsystem.getInstance();
+    }
+
+    public static SuperstructureSubsystem getInstance() {
+        if (instance == null) {
+            instance = new SuperstructureSubsystem();
+        }
+
+        return instance;
     }
 
     @Override
