@@ -11,10 +11,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     private SuperstructureState goalState;
 
-    public SuperstructureSubsystem() {
-        elevator = new ElevatorSubsystem();
-        arm = new ArmSubsystem();
-        wrist = new WristSubsystem();
+    public SuperstructureSubsystem(ElevatorSubsystem elevator, ArmSubsystem arm, WristSubsystem wrist) {
+        this.elevator = elevator;
+        this.arm = arm;
+        this.wrist = wrist;
     }
 
     @Override
