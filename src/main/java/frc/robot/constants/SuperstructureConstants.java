@@ -78,7 +78,7 @@ public class SuperstructureConstants {
     public static final double WRIST_ERROR_MARGIN = 0;
 
     // Stowability
-    public static final double ARM_MINIMUM_STOWABLE_POSITION = 0;
+    public static final double ARM_MINIMUM_STOWED_POSITION = 0;
     public static final double ELEVATOR_MINIMUM_UNSTOWED_POSITION = 0;
             
 }

@@ -27,15 +27,14 @@ public class SuperstructureSubsystem extends SubsystemBase {
         if (!targetState.equals(goalTargetState)) {
             SuperstructureState oldTargetState = targetState.copyInstance();
 
-            if (goalTargetState.armPosition < SuperstructureConstants.ARM_MINIMUM_STOWABLE_POSITION
-                    && getActualElevatorPosition() < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION) {
+            if (getActualElevatorPosition() < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION) {
                 targetState = new SuperstructureState(goalTargetState.elevatorPosition, 
-                        SuperstructureConstants.ARM_MINIMUM_STOWABLE_POSITION, 
+                        Math.max(SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION, goalTargetState.armPosition), 
                         goalTargetState.wristPosition);
             }
-            else if (goalTargetState.elevatorPosition < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION
-                    && getActualArmPosition() < SuperstructureConstants.ARM_MINIMUM_STOWABLE_POSITION) {
-                targetState = new SuperstructureState(SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION, 
+            else if (getActualArmPosition() < SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION) {
+                targetState = new SuperstructureState(
+                        Math.max(SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION, goalTargetState.elevatorPosition), 
                         goalTargetState.armPosition, goalTargetState.wristPosition);
             }
             else {
@@ -52,16 +51,15 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public void setState(final SuperstructureState goalTargetState) {
         this.goalTargetState = goalTargetState.copyInstance();
-
-        if (goalTargetState.armPosition < SuperstructureConstants.ARM_MINIMUM_STOWABLE_POSITION
-                && getActualElevatorPosition() < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION) {
+        
+        if (getActualElevatorPosition() < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION) {
             targetState = new SuperstructureState(goalTargetState.elevatorPosition, 
-                    SuperstructureConstants.ARM_MINIMUM_STOWABLE_POSITION, 
+                    Math.max(SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION, goalTargetState.armPosition), 
                     goalTargetState.wristPosition);
         }
-        if (goalTargetState.elevatorPosition < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION
-                && getActualArmPosition() < SuperstructureConstants.ARM_MINIMUM_STOWABLE_POSITION) {
-            targetState = new SuperstructureState(SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION, 
+        else if (getActualArmPosition() < SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION) {
+            targetState = new SuperstructureState(
+                    Math.max(SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION, goalTargetState.elevatorPosition), 
                     goalTargetState.armPosition, goalTargetState.wristPosition);
         }
         else {
@@ -74,7 +72,37 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
 
     public SuperstructureState getActualState() {
-        return new SuperstructureState(elevator.getPosition(), arm.getPosition(), wrist.getPosition());
+        return new SuperstructureState(getActualElevatorPosition(), getActualArmPosition(), getActualWristPosition());
+    }
+
+    public boolean isAtTargetState() {
+        return isElevatorAtTargetPosition() &&
+                isArmAtTargetPosition() &&
+                isWristAtTargetPosition();
+    }
+
+    public boolean isElevatorAtTargetPosition() {
+        if (Math.abs(getActualElevatorPosition() - targetState.elevatorPosition) > SuperstructureConstants.ELEVATOR_ERROR_MARGIN) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean isArmAtTargetPosition() {
+        if (Math.abs(getActualArmPosition() - targetState.armPosition) > SuperstructureConstants.ARM_ERROR_MARGIN) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean isWristAtTargetPosition() {
+        if (Math.abs(getActualWristPosition() - targetState.wristPosition) > SuperstructureConstants.WRIST_ERROR_MARGIN) {
+            return false;
+        }
+
+        return true;
     }
 
     public SuperstructureState getGoalTargetState() {
