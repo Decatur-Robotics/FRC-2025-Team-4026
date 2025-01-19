@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.SuperstructureStates;
 import frc.robot.util.SuperstructureState;
 
 public class SuperstructureSubsystem extends SubsystemBase {
@@ -15,6 +16,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
         this.elevator = elevator;
         this.arm = arm;
         this.wrist = wrist;
+
+        goalState = SuperstructureStates.CORAL_STOWED_STATE;
     }
 
     @Override
