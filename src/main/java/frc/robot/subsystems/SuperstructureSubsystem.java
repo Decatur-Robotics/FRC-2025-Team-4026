@@ -41,18 +41,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return goalState;
     }
 
-    public void setElevatorPosition(double position) {
-        elevator.setPosition(position);
-    }
-
-    public void setArmPosition(double position) {
-        arm.setPosition(position);
-    }
-
-    public void setWristPosition(double position) {
-        wrist.setPosition(position);
-    }
-
     public double getActualElevatorPosition() {
         return elevator.getPosition();
     }
@@ -75,6 +63,20 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public double getGoalWristPosition() {
         return goalState.wristPosition;
+    }
+
+    // Directly set subsystem positions
+
+    public void setElevatorPosition(double position) {
+        elevator.setPosition(position);
+    }
+
+    public void setArmPosition(double position) {
+        arm.setPosition(position);
+    }
+
+    public void setWristPosition(double position) {
+        wrist.setPosition(position);
     }
 
 }
