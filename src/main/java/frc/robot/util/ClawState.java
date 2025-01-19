@@ -10,4 +10,8 @@ public class ClawState {
         this.rollerVelocity = rollerVelocity;
     }
 
+    public ClawState copyInstance() {
+        return new ClawState(clawPosition, rollerVelocity);
+    }
+
 }

@@ -14,7 +14,7 @@ public final class ElevatorConstants {
 
     public static final double STATOR_CURRENT_LIMIT = 0;
 
-    public static final double INITIAL_POSITION = SuperstructureStates.CORAL_STOWED_STATE.elevatorPosition;
+    public static final double INITIAL_POSITION = SuperstructureConstants.CORAL_STOWED_STATE.elevatorPosition;
 
    
     

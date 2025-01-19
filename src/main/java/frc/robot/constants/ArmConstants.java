@@ -20,6 +20,6 @@ public class ArmConstants {
     /** The position when the arm is parallel to the floor */
 	public static final double LEVEL_POSITION = 0;
 
-    public static final double INITIAL_POSITION = SuperstructureStates.CORAL_STOWED_STATE.armPosition;
+    public static final double INITIAL_POSITION = SuperstructureConstants.CORAL_STOWED_STATE.armPosition;
     
 }

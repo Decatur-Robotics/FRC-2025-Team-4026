@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.SuperstructureStates;
+import frc.robot.constants.SuperstructureConstants;
 import frc.robot.util.SuperstructureState;
 
 public class SuperstructureSubsystem extends SubsystemBase {
@@ -10,35 +10,75 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private ArmSubsystem arm;
     private WristSubsystem wrist;
 
-    private SuperstructureState goalState;
+    private SuperstructureState goalTargetState;
+    private SuperstructureState targetState;
 
     public SuperstructureSubsystem(ElevatorSubsystem elevator, ArmSubsystem arm, WristSubsystem wrist) {
         this.elevator = elevator;
         this.arm = arm;
         this.wrist = wrist;
 
-        goalState = SuperstructureStates.CORAL_STOWED_STATE;
+        goalTargetState = SuperstructureConstants.CORAL_STOWED_STATE.copyInstance();
+        targetState = SuperstructureConstants.CORAL_STOWED_STATE.copyInstance();
     }
 
     @Override
     public void periodic() {
-        
+        if (!targetState.equals(goalTargetState)) {
+            SuperstructureState oldTargetState = targetState.copyInstance();
+
+            if (goalTargetState.armPosition < SuperstructureConstants.ARM_MINIMUM_STOWABLE_POSITION
+                    && getActualElevatorPosition() < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION) {
+                targetState = new SuperstructureState(goalTargetState.elevatorPosition, 
+                        SuperstructureConstants.ARM_MINIMUM_STOWABLE_POSITION, 
+                        goalTargetState.wristPosition);
+            }
+            else if (goalTargetState.elevatorPosition < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION
+                    && getActualArmPosition() < SuperstructureConstants.ARM_MINIMUM_STOWABLE_POSITION) {
+                targetState = new SuperstructureState(SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION, 
+                        goalTargetState.armPosition, goalTargetState.wristPosition);
+            }
+            else {
+                targetState = goalTargetState.copyInstance();
+            }
+
+            if (!targetState.equals(oldTargetState)) {
+                elevator.setPosition(targetState.elevatorPosition);
+                arm.setPosition(targetState.armPosition);
+                wrist.setPosition(targetState.wristPosition);
+            }
+        }
     }
 
-    public void setState(SuperstructureState goalState) {
-        this.goalState = goalState;
+    public void setState(final SuperstructureState goalTargetState) {
+        this.goalTargetState = goalTargetState.copyInstance();
 
-        elevator.setPosition(goalState.elevatorPosition);
-        arm.setPosition(goalState.armPosition);
-        wrist.setPosition(goalState.wristPosition);
+        if (goalTargetState.armPosition < SuperstructureConstants.ARM_MINIMUM_STOWABLE_POSITION
+                && getActualElevatorPosition() < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION) {
+            targetState = new SuperstructureState(goalTargetState.elevatorPosition, 
+                    SuperstructureConstants.ARM_MINIMUM_STOWABLE_POSITION, 
+                    goalTargetState.wristPosition);
+        }
+        if (goalTargetState.elevatorPosition < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION
+                && getActualArmPosition() < SuperstructureConstants.ARM_MINIMUM_STOWABLE_POSITION) {
+            targetState = new SuperstructureState(SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION, 
+                    goalTargetState.armPosition, goalTargetState.wristPosition);
+        }
+        else {
+            targetState = goalTargetState.copyInstance();
+        }
+
+        elevator.setPosition(targetState.elevatorPosition);
+        arm.setPosition(targetState.armPosition);
+        wrist.setPosition(targetState.wristPosition);
     }
 
     public SuperstructureState getActualState() {
         return new SuperstructureState(elevator.getPosition(), arm.getPosition(), wrist.getPosition());
     }
 
-    public SuperstructureState getGoalState() {
-        return goalState;
+    public SuperstructureState getGoalTargetState() {
+        return goalTargetState;
     }
 
     public double getActualElevatorPosition() {
@@ -54,15 +94,15 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
 
     public double getGoalElevatorPosition() {
-        return goalState.elevatorPosition;
+        return goalTargetState.elevatorPosition;
     }
 
     public double getGoalArmPosition() {
-        return goalState.armPosition;
+        return goalTargetState.armPosition;
     }
 
     public double getGoalWristPosition() {
-        return goalState.wristPosition;
+        return goalTargetState.wristPosition;
     }
 
     // Directly set subsystem positions

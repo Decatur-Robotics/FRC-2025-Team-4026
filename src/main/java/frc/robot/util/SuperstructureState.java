@@ -11,5 +11,9 @@ public class SuperstructureState {
         this.armPosition = armPosition;
         this.wristPosition = wristPosition;
     }
+
+    public SuperstructureState copyInstance() {
+        return new SuperstructureState(elevatorPosition, armPosition, wristPosition);
+    }
     
 }
