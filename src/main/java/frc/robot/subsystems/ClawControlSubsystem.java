@@ -18,7 +18,7 @@ import frc.robot.constants.ClawConstants;
 
 public class ClawControlSubsystem extends SubsystemBase{
     
-    private TalonFX ClawMotor;
+    private TalonFX clawMotor;
     private SparkMax intakeMotorLeft, intakeMotorRight;
     private SparkClosedLoopController intakeController; 
 
@@ -30,7 +30,7 @@ public class ClawControlSubsystem extends SubsystemBase{
         
         position = ClawConstants.CORAL_POSITION;
 
-        ClawMotor = new TalonFX(Ports.CLAW_MOTOR); 
+        clawMotor = new TalonFX(Ports.CLAW_MOTOR); 
         intakeMotorLeft = new SparkMax(Ports.INTAKE_MOTOR_LEFT, MotorType.kBrushless);
         intakeMotorRight = new SparkMax(Ports.INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
 
@@ -68,10 +68,10 @@ public class ClawControlSubsystem extends SubsystemBase{
         talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = ClawConstants.CLAW_CRUISE_VELOCITY;
         talonFXConfigs.MotionMagic.MotionMagicAcceleration = ClawConstants.CLAW_ACCELERATION;
 
-        ClawMotor.optimizeBusUtilization();
-        ClawMotor.getRotorPosition().setUpdateFrequency(20);
+        clawMotor.optimizeBusUtilization();
+        clawMotor.getRotorPosition().setUpdateFrequency(20);
 
-        ClawMotor.getConfigurator().apply(talonFXConfigs);
+        clawMotor.getConfigurator().apply(talonFXConfigs);
 
 
         clawControlRequest = new MotionMagicDutyCycle(position);
@@ -80,10 +80,10 @@ public class ClawControlSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        if (ClawMotor.hasResetOccurred())
+        if (clawMotor.hasResetOccurred())
 		{
-			ClawMotor.optimizeBusUtilization();
-			ClawMotor.getRotorPosition().setUpdateFrequency(20);
+			clawMotor.optimizeBusUtilization();
+			clawMotor.getRotorPosition().setUpdateFrequency(20);
 		}
 
         
@@ -91,11 +91,11 @@ public class ClawControlSubsystem extends SubsystemBase{
 
     public void setClawPosition(double position) {
         this.position = position;
-        ClawMotor.setControl(clawControlRequest);
+        clawMotor.setControl(clawControlRequest);
     }
 
     public double getClawPosition() {
-        return ClawMotor.getRotorPosition().getValueAsDouble();
+        return clawMotor.getRotorPosition().getValueAsDouble();
     }
 
     public void setIntakeVelocity(double velocity) {
