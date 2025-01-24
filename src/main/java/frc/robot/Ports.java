@@ -9,5 +9,6 @@ public final class Ports {
     public static final int CLAW_MOTOR = 0;
     public static final int INTAKE_MOTOR_LEFT = 0;
     public static final int INTAKE_MOTOR_RIGHT = 0;
+    public static final int WRIST_MOTOR = 0;
     
 }
