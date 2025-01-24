@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
 import frc.robot.constants.ClawConstants;
 
-public class ClawControlSubsystem extends SubsystemBase{
+public class ClawSubsystem extends SubsystemBase{
     
     private TalonFX clawMotor;
     private SparkMax intakeMotorLeft, intakeMotorRight;
@@ -24,7 +24,7 @@ public class ClawControlSubsystem extends SubsystemBase{
     private double position, velocity;
     private MotionMagicDutyCycle clawControlRequest;
 
-    public ClawControlSubsystem() {
+    public ClawSubsystem() {
         clawMotor = new TalonFX(Ports.CLAW_MOTOR); 
         intakeMotorLeft = new SparkMax(Ports.INTAKE_MOTOR_LEFT, MotorType.kBrushless);
         intakeMotorRight = new SparkMax(Ports.INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
