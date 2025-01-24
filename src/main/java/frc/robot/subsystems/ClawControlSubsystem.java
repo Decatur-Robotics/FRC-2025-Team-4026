@@ -30,7 +30,7 @@ public class ClawControlSubsystem extends SubsystemBase{
         
         position = ClawConstants.CORAL_POSITION;
 
-        GripMotor = new TalonFX(Ports.ARM_GRIP_MOTOR); 
+        GripMotor = new TalonFX(Ports.ARM_CLAW_MOTOR); 
         intakeMotorLeft = new SparkMax(Ports.INTAKE_MOTOR_LEFT, MotorType.kBrushless);
         intakeMotorRight = new SparkMax(Ports.INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
 
@@ -65,8 +65,8 @@ public class ClawControlSubsystem extends SubsystemBase{
         talonFXConfigs.Slot0.kA = ClawConstants.CLAW_KA; 
         talonFXConfigs.Slot0.kG = ClawConstants.CLAW_KG;
 
-        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = ClawConstants.CRUISE_VELOCITY;
-        talonFXConfigs.MotionMagic.MotionMagicAcceleration = ClawConstants.ACCELERATION;
+        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = ClawConstants.CLAW_CRUISE_VELOCITY;
+        talonFXConfigs.MotionMagic.MotionMagicAcceleration = ClawConstants.CLAW_ACCELERATION;
 
         GripMotor.optimizeBusUtilization();
         GripMotor.getRotorPosition().setUpdateFrequency(20);
@@ -89,23 +89,20 @@ public class ClawControlSubsystem extends SubsystemBase{
         
     }
 
-    public void setClawMode(double position) {
+    public void setClawPosition(double position) {
         this.position = position;
         GripMotor.setControl(motionControlRequest);
     }
 
-    public double getPosition() {
+    public double getClawPosition() {
         return GripMotor.getRotorPosition().getValueAsDouble();
     }
 
-    public void setDesiredVelocity(double velocity) {
+    public void setIntakeVelocity(double velocity) {
         this.desiredVelocity = velocity;
         intakeController.setReference(velocity, SparkBase.ControlType.kVelocity);
     }
 
-    public void setDesiredRotation(double rotation) {
-        this.desiredRotation = rotation;
-        intakeController.setReference(rotation, SparkBase.ControlType.kPosition);
-    }
+   
 
 }

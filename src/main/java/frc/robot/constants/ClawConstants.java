@@ -19,8 +19,8 @@ public class ClawConstants {
     public static final double ROLLER_KD = 0;
     public static final double ROLLER_KFF = 0;
     
-    public static final double CRUISE_VELOCITY = 0;
-    public static final double ACCELERATION = 0;
+    public static final double CLAW_CRUISE_VELOCITY = 0;
+    public static final double CLAW_ACCELERATION = 0;
 
 
     
