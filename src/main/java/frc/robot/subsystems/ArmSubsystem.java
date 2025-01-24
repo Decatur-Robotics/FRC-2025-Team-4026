@@ -12,7 +12,7 @@ import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Ports;
 
 public class ArmSubsystem extends SubsystemBase {
-	private TalonFX armMotorRight, armMotorLeft;
+	private TalonFX motorFollower, motorMain;
 	
 	private double position;
 
@@ -20,10 +20,10 @@ public class ArmSubsystem extends SubsystemBase {
 
 	public ArmSubsystem()
 	{
-		armMotorRight = new TalonFX(Ports.ARM_RIGHT_MOTOR);
-		armMotorLeft = new TalonFX(Ports.ARM_LEFT_MOTOR);
+		motorFollower = new TalonFX(Ports.ARM_RIGHT_MOTOR);
+		motorMain = new TalonFX(Ports.ARM_LEFT_MOTOR);
 
-		armMotorRight.setControl(new Follower(armMotorLeft.getDeviceID(), true));
+		motorFollower.setControl(new Follower(motorMain.getDeviceID(), true));
 
 		TalonFXConfiguration mainMotorConfigs = new TalonFXConfiguration();
 
@@ -40,19 +40,19 @@ public class ArmSubsystem extends SubsystemBase {
         mainMotorConfigs.MotionMagic.MotionMagicAcceleration = ArmConstants.ACCELERATION;
         mainMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = ArmConstants.CRUISE_VELOCITY;
         
-		armMotorRight.getConfigurator().apply(mainMotorConfigs);
-		armMotorLeft.getConfigurator().apply(mainMotorConfigs);
+		motorFollower.getConfigurator().apply(mainMotorConfigs);
+		motorMain.getConfigurator().apply(mainMotorConfigs);
 
 		position = ArmConstants.INITIAL_POSITION;
 
 		RobotContainer.getShuffleboardTab().add("Actual Arm Mount Rotation", getPosition());
 		RobotContainer.getShuffleboardTab().add("Target Arm Mount Rotation", position);
 
-        if(armMotorRight.hasResetOccurred()||armMotorLeft.hasResetOccurred()){
-			armMotorRight.optimizeBusUtilization();
-			armMotorLeft.optimizeBusUtilization();
+        if(motorFollower.hasResetOccurred()||motorMain.hasResetOccurred()){
+			motorFollower.optimizeBusUtilization();
+			motorMain.optimizeBusUtilization();
 			
-			armMotorLeft.getRotorPosition().setUpdateFrequency(20);
+			motorMain.getRotorPosition().setUpdateFrequency(20);
 		}
 	}
 
@@ -65,12 +65,12 @@ public class ArmSubsystem extends SubsystemBase {
 
 		double gravityFeedForward = Math.cos(angle) * ArmConstants.KG;
 
-		armMotorLeft.setControl(motorControlRequest.withPosition(position)
+		motorMain.setControl(motorControlRequest.withPosition(position)
 				.withFeedForward(gravityFeedForward));
 	}
 
     public double getPosition() {
-        return armMotorRight.getRotorPosition().getValueAsDouble();
+        return motorFollower.getRotorPosition().getValueAsDouble();
     }
 }
 

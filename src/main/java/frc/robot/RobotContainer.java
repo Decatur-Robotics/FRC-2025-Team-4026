@@ -4,7 +4,10 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.SuperstructureSubsystem;
+import frc.robot.subsystems.WristSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -16,7 +19,10 @@ public class RobotContainer {
 
 private static RobotContainer instance;
 
-private final SuperstructureSubsystem superstructureSubsystem;
+private final ElevatorSubsystem elevator;
+private final ArmSubsystem arm;
+private final WristSubsystem wrist;
+private final SuperstructureSubsystem superstructure;
 
 private final ShuffleboardTab shuffleboardTab;
 
@@ -27,7 +33,10 @@ public RobotContainer() {
     shuffleboardTab = Shuffleboard.getTab("Tab 1");
 
     // Instantiate Subsystems
-    superstructureSubsystem = new SuperstructureSubsystem();
+    elevator = new ElevatorSubsystem();
+    arm = new ArmSubsystem();
+    wrist = new WristSubsystem();
+    superstructure = new SuperstructureSubsystem(elevator, arm, wrist);
 
     // Configure button bindings
     configurePrimaryBindings();
