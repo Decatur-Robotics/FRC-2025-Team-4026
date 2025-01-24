@@ -27,19 +27,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
         if (!targetState.equals(goalTargetState)) {
             SuperstructureState oldTargetState = targetState.copyInstance();
 
-            if (getActualElevatorPosition() < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION) {
-                targetState = new SuperstructureState(goalTargetState.elevatorPosition, 
-                        Math.max(SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION, goalTargetState.armPosition), 
-                        goalTargetState.wristPosition);
-            }
-            else if (getActualArmPosition() < SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION) {
-                targetState = new SuperstructureState(
-                        Math.max(SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION, goalTargetState.elevatorPosition), 
-                        goalTargetState.armPosition, goalTargetState.wristPosition);
-            }
-            else {
-                targetState = goalTargetState.copyInstance();
-            }
+            calculateCollisionAvoidanceState();
 
             if (!targetState.equals(oldTargetState)) {
                 elevator.setPosition(targetState.elevatorPosition);
@@ -49,9 +37,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
         }
     }
 
-    public void setState(final SuperstructureState goalTargetState) {
-        this.goalTargetState = goalTargetState.copyInstance();
-        
+    private void calculateCollisionAvoidanceState() {
         if (getActualElevatorPosition() < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION) {
             targetState = new SuperstructureState(goalTargetState.elevatorPosition, 
                     Math.max(SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION, goalTargetState.armPosition), 
@@ -65,6 +51,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
         else {
             targetState = goalTargetState.copyInstance();
         }
+    }
+
+    public void setState(final SuperstructureState goalTargetState) {
+        this.goalTargetState = goalTargetState.copyInstance();
+        
+        calculateCollisionAvoidanceState();
 
         elevator.setPosition(targetState.elevatorPosition);
         arm.setPosition(targetState.armPosition);
