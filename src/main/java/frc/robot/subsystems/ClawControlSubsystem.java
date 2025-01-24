@@ -18,19 +18,19 @@ import frc.robot.constants.ClawConstants;
 
 public class ClawControlSubsystem extends SubsystemBase{
     
-    private TalonFX GripMotor;
+    private TalonFX ClawMotor;
     private SparkMax intakeMotorLeft, intakeMotorRight;
     private SparkClosedLoopController intakeController; 
 
 
     private double position, desiredRotation, desiredVelocity;
-    private MotionMagicDutyCycle motionControlRequest;
+    private MotionMagicDutyCycle clawControlRequest;
 
     public ClawControlSubsystem() {
         
         position = ClawConstants.CORAL_POSITION;
 
-        GripMotor = new TalonFX(Ports.ARM_CLAW_MOTOR); 
+        ClawMotor = new TalonFX(Ports.CLAW_MOTOR); 
         intakeMotorLeft = new SparkMax(Ports.INTAKE_MOTOR_LEFT, MotorType.kBrushless);
         intakeMotorRight = new SparkMax(Ports.INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
 
@@ -68,22 +68,22 @@ public class ClawControlSubsystem extends SubsystemBase{
         talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = ClawConstants.CLAW_CRUISE_VELOCITY;
         talonFXConfigs.MotionMagic.MotionMagicAcceleration = ClawConstants.CLAW_ACCELERATION;
 
-        GripMotor.optimizeBusUtilization();
-        GripMotor.getRotorPosition().setUpdateFrequency(20);
+        ClawMotor.optimizeBusUtilization();
+        ClawMotor.getRotorPosition().setUpdateFrequency(20);
 
-        GripMotor.getConfigurator().apply(talonFXConfigs);
+        ClawMotor.getConfigurator().apply(talonFXConfigs);
 
 
-        motionControlRequest = new MotionMagicDutyCycle(position);
+        clawControlRequest = new MotionMagicDutyCycle(position);
         intakeController = intakeMotorLeft.getClosedLoopController();
     }
 
     @Override
     public void periodic() {
-        if (GripMotor.hasResetOccurred())
+        if (ClawMotor.hasResetOccurred())
 		{
-			GripMotor.optimizeBusUtilization();
-			GripMotor.getRotorPosition().setUpdateFrequency(20);
+			ClawMotor.optimizeBusUtilization();
+			ClawMotor.getRotorPosition().setUpdateFrequency(20);
 		}
 
         
@@ -91,11 +91,11 @@ public class ClawControlSubsystem extends SubsystemBase{
 
     public void setClawPosition(double position) {
         this.position = position;
-        GripMotor.setControl(motionControlRequest);
+        ClawMotor.setControl(clawControlRequest);
     }
 
     public double getClawPosition() {
-        return GripMotor.getRotorPosition().getValueAsDouble();
+        return ClawMotor.getRotorPosition().getValueAsDouble();
     }
 
     public void setIntakeVelocity(double velocity) {
