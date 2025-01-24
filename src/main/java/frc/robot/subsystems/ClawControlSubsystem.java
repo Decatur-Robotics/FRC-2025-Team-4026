@@ -6,14 +6,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Ports;
-import frc.robot.constants.ClawConstants;
+import frc.robot.constants.Ports;
 import frc.robot.constants.ClawConstants;
 
 public class ClawControlSubsystem extends SubsystemBase{
@@ -23,13 +21,10 @@ public class ClawControlSubsystem extends SubsystemBase{
     private SparkClosedLoopController intakeController; 
 
 
-    private double position, desiredRotation, desiredVelocity;
+    private double position, velocity;
     private MotionMagicDutyCycle clawControlRequest;
 
     public ClawControlSubsystem() {
-        
-        position = ClawConstants.CORAL_POSITION;
-
         clawMotor = new TalonFX(Ports.CLAW_MOTOR); 
         intakeMotorLeft = new SparkMax(Ports.INTAKE_MOTOR_LEFT, MotorType.kBrushless);
         intakeMotorRight = new SparkMax(Ports.INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
@@ -40,22 +35,18 @@ public class ClawControlSubsystem extends SubsystemBase{
         talonFXConfigs.CurrentLimits.StatorCurrentLimit = ClawConstants.CLAW_STATOR_CURRENT_LIMIT;
 
         SparkMaxConfig intakeFollowerConfig = new SparkMaxConfig();
-        intakeFollowerConfig.follow(intakeMotorLeft.getDeviceId());
         intakeFollowerConfig.idleMode(IdleMode.kBrake);
         intakeFollowerConfig.smartCurrentLimit(40);
-        intakeFollowerConfig.closedLoop.pidf(ClawConstants.ROLLER_KP, ClawConstants.ROLLER_KI, ClawConstants.ROLLER_KD, ClawConstants.ROLLER_KFF);
-
+        intakeFollowerConfig.follow(intakeMotorLeft.getDeviceId());
+ 
         SparkMaxConfig intakeMainConfig = new SparkMaxConfig();
 
-        intakeMainConfig.follow(intakeMotorLeft.getDeviceId());
         intakeMainConfig.idleMode(IdleMode.kBrake);
         intakeMainConfig.smartCurrentLimit(40);
         intakeFollowerConfig.closedLoop.pidf(ClawConstants.ROLLER_KP, ClawConstants.ROLLER_KI, ClawConstants.ROLLER_KD, ClawConstants.ROLLER_KFF);
 
-
         intakeMotorLeft.configure(intakeMainConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
         intakeMotorRight.configure(intakeFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
-
      
         talonFXConfigs.Slot0.kP = ClawConstants.CLAW_KP; 
         talonFXConfigs.Slot0.kI = ClawConstants.CLAW_KI; 
@@ -68,14 +59,20 @@ public class ClawControlSubsystem extends SubsystemBase{
         talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = ClawConstants.CLAW_CRUISE_VELOCITY;
         talonFXConfigs.MotionMagic.MotionMagicAcceleration = ClawConstants.CLAW_ACCELERATION;
 
+        clawMotor.getConfigurator().apply(talonFXConfigs);
+
         clawMotor.optimizeBusUtilization();
         clawMotor.getRotorPosition().setUpdateFrequency(20);
 
-        clawMotor.getConfigurator().apply(talonFXConfigs);
-
+        position = ClawConstants.CORAL_POSITION;
 
         clawControlRequest = new MotionMagicDutyCycle(position);
+        clawMotor.setControl(clawControlRequest);
+
+        velocity = ClawConstants.REST_VELOCITY;
+
         intakeController = intakeMotorLeft.getClosedLoopController();
+        intakeController.setReference(velocity, SparkBase.ControlType.kVelocity);
     }
 
     @Override
@@ -99,7 +96,7 @@ public class ClawControlSubsystem extends SubsystemBase{
     }
 
     public void setIntakeVelocity(double velocity) {
-        this.desiredVelocity = velocity;
+        this.velocity = velocity;
         intakeController.setReference(velocity, SparkBase.ControlType.kVelocity);
     }
 

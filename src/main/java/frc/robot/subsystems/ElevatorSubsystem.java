@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Ports;
+import frc.robot.constants.Ports;
 import frc.robot.constants.ElevatorConstants;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -19,9 +19,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     private MotionMagicDutyCycle motorControlRequest;
     
     public ElevatorSubsystem() {
-
-        position = ElevatorConstants.INITIAL_POSITION;
-
         motorFollower = new TalonFX(Ports.ELEVATOR_MOTOR_RIGHT);
         motorMain = new TalonFX(Ports.ELEVATOR_MOTOR_LEFT);
 
@@ -49,7 +46,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         motorMain.optimizeBusUtilization();
         motorFollower.optimizeBusUtilization();
         motorMain.getRotorPosition().setUpdateFrequency(20);
-        motorFollower.getRotorPosition().setUpdateFrequency(20);
+
+        position = ElevatorConstants.INITIAL_POSITION;
 
         motorControlRequest = new MotionMagicDutyCycle(position);
         motorMain.setControl(motorControlRequest);
@@ -62,7 +60,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 			motorMain.optimizeBusUtilization();
 			motorFollower.optimizeBusUtilization();
 			motorMain.getRotorPosition().setUpdateFrequency(20);
-			motorFollower.getRotorPosition().setUpdateFrequency(20);
 		}
     }
  

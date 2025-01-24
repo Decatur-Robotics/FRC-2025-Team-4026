@@ -4,6 +4,10 @@ public class ClawConstants {
 
     public static final double CORAL_POSITION = 0;
     public static final double ALGAE_POSITION = 0;
+
+    public static final double REST_VELOCITY = 0;
+    public static final double INTAKE_VELOCITY = 0;
+
     public static final double CLAW_STATOR_CURRENT_LIMIT = 0;
     
     public static final double CLAW_KP = 0;

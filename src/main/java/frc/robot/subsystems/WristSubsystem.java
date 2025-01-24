@@ -5,7 +5,7 @@ import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Ports;
+import frc.robot.constants.Ports;
 import frc.robot.constants.WristConstants;
 
 public class WristSubsystem extends SubsystemBase {
@@ -42,7 +42,6 @@ public class WristSubsystem extends SubsystemBase {
         position = WristConstants.INITIAL_POSITION; 
 
         motor.setControl(motorControlRequest.withPosition(position));
-
     }
 
     @Override

@@ -7,21 +7,20 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.RobotContainer;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Ports;
 
 public class ArmSubsystem extends SubsystemBase {
+	
 	private TalonFX motorFollower, motorMain;
 	
 	private double position;
 
 	private MotionMagicDutyCycle motorControlRequest;
 
-	public ArmSubsystem()
-	{
-		motorFollower = new TalonFX(Ports.ARM_RIGHT_MOTOR);
-		motorMain = new TalonFX(Ports.ARM_LEFT_MOTOR);
+	public ArmSubsystem() {
+		motorFollower = new TalonFX(Ports.ARM_MOTOR_RIGHT);
+		motorMain = new TalonFX(Ports.ARM_MOTOR_LEFT);
 
 		motorFollower.setControl(new Follower(motorMain.getDeviceID(), true));
 
@@ -43,21 +42,25 @@ public class ArmSubsystem extends SubsystemBase {
 		motorFollower.getConfigurator().apply(mainMotorConfigs);
 		motorMain.getConfigurator().apply(mainMotorConfigs);
 
+        motorFollower.optimizeBusUtilization();
+		motorMain.optimizeBusUtilization();
+		motorMain.getRotorPosition().setUpdateFrequency(20);
+
 		position = ArmConstants.INITIAL_POSITION;
 
-		RobotContainer.getShuffleboardTab().add("Actual Arm Mount Rotation", getPosition());
-		RobotContainer.getShuffleboardTab().add("Target Arm Mount Rotation", position);
+		motorControlRequest = new MotionMagicDutyCycle(position);
+	}
 
-        if(motorFollower.hasResetOccurred()||motorMain.hasResetOccurred()){
+	@Override
+	public void periodic() {
+		if(motorFollower.hasResetOccurred() || motorMain.hasResetOccurred()) {
 			motorFollower.optimizeBusUtilization();
 			motorMain.optimizeBusUtilization();
-			
 			motorMain.getRotorPosition().setUpdateFrequency(20);
 		}
 	}
 
-	public void setPosition(double position)
-	{
+	public void setPosition(double position) {
 		this.position = position;
 
 		// Arm angle in radians (0 is parallel to the floor)
@@ -72,5 +75,6 @@ public class ArmSubsystem extends SubsystemBase {
     public double getPosition() {
         return motorFollower.getRotorPosition().getValueAsDouble();
     }
+
 }
 
