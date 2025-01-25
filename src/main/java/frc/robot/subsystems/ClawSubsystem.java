@@ -54,12 +54,12 @@ public class ClawSubsystem extends SubsystemBase{
 		}
     }
 
-    public void setClawPosition(double position) {
+    public void setPosition(double position) {
         this.position = position;
         motor.setControl(controlRequest);
     }
 
-    public double getClawPosition() {
+    public double getPosition() {
         return motor.getRotorPosition().getValueAsDouble();
     }  
 

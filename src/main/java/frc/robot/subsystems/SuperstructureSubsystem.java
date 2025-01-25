@@ -53,7 +53,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
         }
     }
 
-    public void setState(final SuperstructureState goalTargetState) {
+    public void setState(SuperstructureState goalTargetState) {
         this.goalTargetState = goalTargetState.copyInstance();
         
         calculateCollisionAvoidanceState();
@@ -128,14 +128,20 @@ public class SuperstructureSubsystem extends SubsystemBase {
     // Directly set subsystem positions
 
     public void setElevatorPosition(double position) {
+        targetState.elevatorPosition = position;
+        
         elevator.setPosition(position);
     }
 
     public void setArmPosition(double position) {
+        targetState.armPosition = position;
+        
         arm.setPosition(position);
     }
 
     public void setWristPosition(double position) {
+        targetState.wristPosition = position;
+        
         wrist.setPosition(position);
     }
 

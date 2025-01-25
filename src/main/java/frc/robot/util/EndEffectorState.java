@@ -3,15 +3,15 @@ package frc.robot.util;
 public class EndEffectorState {
     
     public double clawPosition;
-    public double rollerVelocity;
+    public double intakeVelocity;
 
-    public EndEffectorState(double clawPosition, double rollerVelocity) {
+    public EndEffectorState(double clawPosition, double intakeVelocity) {
         this.clawPosition = clawPosition;
-        this.rollerVelocity = rollerVelocity;
+        this.intakeVelocity = intakeVelocity;
     }
 
     public EndEffectorState copyInstance() {
-        return new EndEffectorState(clawPosition, rollerVelocity);
+        return new EndEffectorState(clawPosition, intakeVelocity);
     }
 
 }

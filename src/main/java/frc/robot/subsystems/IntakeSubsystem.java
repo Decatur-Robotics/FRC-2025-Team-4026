@@ -8,7 +8,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.ClawConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.Ports;
 
@@ -45,6 +44,10 @@ public class IntakeSubsystem extends SubsystemBase {
     public void setVelocity(double velocity) {
         this.velocity = velocity;
         intakeController.setReference(velocity, SparkBase.ControlType.kVelocity);
+    }
+
+    public double getVelocity() {
+        return motorLeft.getEncoder().getVelocity();
     }
 
 }
