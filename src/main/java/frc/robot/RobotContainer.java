@@ -1,11 +1,15 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
+
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.EndEffectorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -29,14 +33,27 @@ public class RobotContainer {
     private final IntakeSubsystem intake;
     private final SuperstructureSubsystem superstructure;
     private final EndEffectorSubsystem endEffector;
+    private final CommandSwerveDrivetrain drivetrain;
 
     private final ShuffleboardTab shuffleboardTab;
+
+    private double MaxSpeed;
+    private double MaxAngularRate;
+
+    private final Telemetry logger;
+
+    
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         instance = this;
 
         shuffleboardTab = Shuffleboard.getTab("Tab 1");
+
+        MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+        MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
+
+        logger = new Telemetry(MaxSpeed);
 
         // Instantiate Subsystems
         elevator = new ElevatorSubsystem();
@@ -46,6 +63,7 @@ public class RobotContainer {
         intake = new IntakeSubsystem();
         superstructure = new SuperstructureSubsystem(elevator, arm, wrist);
         endEffector = new EndEffectorSubsystem(claw, intake);
+        drivetrain = TunerConstants.createDrivetrain();
 
         // Configure button bindings
         configurePrimaryBindings();
