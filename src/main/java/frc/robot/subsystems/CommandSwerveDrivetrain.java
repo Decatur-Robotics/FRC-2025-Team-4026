@@ -412,7 +412,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public void setModuleStates(SwerveModuleState[] moduleStates){
     
     }
-
+    //TODO: Add somthing that detects the amount of current to see if there is coral in the claw
     public boolean isCoral(){
         return true;
     }
