@@ -50,7 +50,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private ChassisSpeeds currentSpeeds;
 
 
-     private PathPlannerPath path;
+    private PathPlannerPath path;
     private Pose2d robotPose;
     private Pose2d targetPose;
     //pathgen variables
@@ -350,6 +350,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
+        
     }
 
     private void startSimThread() {
@@ -394,64 +396,68 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     @Override
     public void addVisionMeasurement(
-        Pose2d visionRobotPoseMeters,
-        double timestampSeconds,
-        Matrix<N3, N1> visionMeasurementStdDevs
-    ) {
+            Pose2d visionRobotPoseMeters,
+            double timestampSeconds,
+            Matrix<N3, N1> visionMeasurementStdDevs) {
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
 
-    public static ChassisSpeeds getCurrentSpeeds(){
+    public static ChassisSpeeds getCurrentSpeeds() {
+        
+
         return new ChassisSpeeds(0, 0, 0);
     }
 
-    public static SwerveModuleState[] getCurrentModuleStates(){
+    public static SwerveModuleState[] getCurrentModuleStates() {
         return new SwerveModuleState[0];
     }
 
-    public void setModuleStates(SwerveModuleState[] moduleStates){
+    public void setModuleStates(SwerveModuleState[] moduleStates) {
     
     }
+
     //TODO: Add somthing that detects the amount of current to see if there is coral in the claw
-    public boolean isCoral(){
+    public boolean isCoral() {
         return true;
     }
 
     public Pose2d findBestTarget(double poseNum){
-        if (isCoral()){
-        Pose2d[] poses = {PathSetpoints.REEF_A, PathSetpoints.REEF_B, PathSetpoints.REEF_C, PathSetpoints.REEF_D, PathSetpoints.REEF_E, PathSetpoints.REEF_F, PathSetpoints.REEF_G, PathSetpoints.REEF_H, PathSetpoints.REEF_I, PathSetpoints.REEF_J, PathSetpoints.REEF_K, PathSetpoints.REEF_L};
-        
-        poseNum = poses.length;
-        int left = 0, right = (int)poseNum - 1;
-        while(left < right){
-            if(poses[left].getTranslation().getDistance(robotPose.getTranslation())
-                <= poses[right].getTranslation().getDistance(robotPose.getTranslation())){
+        if (isCoral()) {
+            Pose2d[] poses = {PathSetpoints.REEF_A, PathSetpoints.REEF_B, PathSetpoints.REEF_C, PathSetpoints.REEF_D, PathSetpoints.REEF_E, PathSetpoints.REEF_F, PathSetpoints.REEF_G, PathSetpoints.REEF_H, PathSetpoints.REEF_I, PathSetpoints.REEF_J, PathSetpoints.REEF_K, PathSetpoints.REEF_L};
+            
+            poseNum = poses.length;
+            int left = 0, right = (int)poseNum - 1;
+            while (left < right){
+                if (poses[left].getTranslation().getDistance(robotPose.getTranslation())
+                        <= poses[right].getTranslation().getDistance(robotPose.getTranslation())) {
                     right--;
+                }
+                else{
+                    left++;
+                }
+            
             }
-            else{
-                left++;
+            targetPose = poses[left];
+            return poses[left];
+        }
+        else { 
+            Pose2d[] poses = {PathSetpoints.REEF_AB, PathSetpoints.REEF_CD, PathSetpoints.REEF_EF, PathSetpoints.REEF_GH, PathSetpoints.REEF_IJ, PathSetpoints.REEF_KL};
+                
+            poseNum = poses.length;
+            int left = 0, right = (int)poseNum - 1;
+            while (left < right) {
+                if (poses[left].getTranslation().getDistance(robotPose.getTranslation())
+                        <= poses[right].getTranslation().getDistance(robotPose.getTranslation())) {
+                    right--;
+                }
+                else{
+                    left++;
+                }
+            
             }
-          
+            targetPose = poses[left];
+            return poses[left];
         }
-        targetPose = poses[left];
-        return poses[left];
-    }
-    else{ Pose2d[] poses = {PathSetpoints.REEF_AB, PathSetpoints.REEF_CD, PathSetpoints.REEF_EF, PathSetpoints.REEF_GH, PathSetpoints.REEF_IJ, PathSetpoints.REEF_KL};
-        
-    poseNum = poses.length;
-    int left = 0, right = (int)poseNum - 1;
-    while(left < right){
-        if(poses[left].getTranslation().getDistance(robotPose.getTranslation())
-            <= poses[right].getTranslation().getDistance(robotPose.getTranslation())){
-                right--;
-        }
-        else{
-            left++;
-        }
-      
-    }
-    targetPose = poses[left];
-    return poses[left];}
     
     }
 
