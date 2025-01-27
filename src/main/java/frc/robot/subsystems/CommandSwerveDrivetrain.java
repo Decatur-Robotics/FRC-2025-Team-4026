@@ -14,6 +14,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
@@ -26,6 +28,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -33,7 +36,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
+import frc.robot.constants.PathSetpoints;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -44,6 +47,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    private ChassisSpeeds currentSpeeds;
+
+
+     private PathPlannerPath path;
+    private Pose2d robotPose;
+    private Pose2d targetPose;
     //pathgen variables
        private final SwerveSetpointGenerator setpointGenerator;
     private SwerveSetpoint previousSetpoint;
@@ -139,11 +148,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveDrivetrainConstants drivetrainConstants,
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
+
         super(drivetrainConstants, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
         configureAutoBuilder();
+
+        targetPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+        path = null;
+        robotPose = new Pose2d(0 ,0 , Rotation2d.fromDegrees(0));
 
         RobotConfig config;
         try{
@@ -251,7 +265,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             config, // The robot configuration. This is the same config used for generating trajectories and running path following commands.
             Units.rotationsToRadians(10.0) // The max rotation velocity of a swerve module in radians per second. This should probably be stored in your Constants file
         );
-        ChassisSpeeds currentSpeeds = getCurrentSpeeds();
+        currentSpeeds = getCurrentSpeeds();
         SwerveModuleState[] currentStates = getCurrentModuleStates(); // Method to get the current swerve module states
         previousSetpoint = new SwerveSetpoint(currentSpeeds, currentStates, DriveFeedforwards.zeros(config.numModules));
     }
@@ -399,12 +413,56 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     
     }
 
+    public boolean isCoral(){
+        return true;
+    }
+
+    public Pose2d findBestTarget(double poseNum){
+        if (isCoral()){
+        Pose2d[] poses = {PathSetpoints.REEF_A, PathSetpoints.REEF_B, PathSetpoints.REEF_C, PathSetpoints.REEF_D, PathSetpoints.REEF_E, PathSetpoints.REEF_F, PathSetpoints.REEF_G, PathSetpoints.REEF_H, PathSetpoints.REEF_I, PathSetpoints.REEF_J, PathSetpoints.REEF_K, PathSetpoints.REEF_L};
+        
+        poseNum = poses.length;
+        int left = 0, right = (int)poseNum - 1;
+        while(left < right){
+            if(poses[left].getTranslation().getDistance(robotPose.getTranslation())
+                <= poses[right].getTranslation().getDistance(robotPose.getTranslation())){
+                    right--;
+            }
+            else{
+                left++;
+            }
+          
+        }
+        targetPose = poses[left];
+        return poses[left];
+    }
+    else{ Pose2d[] poses = {PathSetpoints.REEF_AB, PathSetpoints.REEF_CD, PathSetpoints.REEF_EF, PathSetpoints.REEF_GH, PathSetpoints.REEF_IJ, PathSetpoints.REEF_KL};
+        
+    poseNum = poses.length;
+    int left = 0, right = (int)poseNum - 1;
+    while(left < right){
+        if(poses[left].getTranslation().getDistance(robotPose.getTranslation())
+            <= poses[right].getTranslation().getDistance(robotPose.getTranslation())){
+                right--;
+        }
+        else{
+            left++;
+        }
+      
+    }
+    targetPose = poses[left];
+    return poses[left];}
+    
+    }
+
     
 
+    PathConstraints constraints = new PathConstraints(0, 0, Units.degreesToRadians(0), Units.degreesToRadians(0));
+    Command pathFindingCommand = AutoBuilder.pathfindToPose(targetPose, constraints, 0.0);
     public void driveRobotRelative(){
         previousSetpoint = setpointGenerator.generateSetpoint(
             previousSetpoint, // The previous setpoint
-            speeds, // The desired target speeds
+            currentSpeeds, // The desired target speeds
             0.02 // The loop time of the robot code, in seconds
         );
         setModuleStates(previousSetpoint.moduleStates());
