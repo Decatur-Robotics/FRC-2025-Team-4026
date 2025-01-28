@@ -371,7 +371,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double poseNum;
 
         if (isCoral()) {
-            Pose2d[] poses = {PathSetpoints.REEF_A, PathSetpoints.REEF_B, PathSetpoints.REEF_C, PathSetpoints.REEF_D, PathSetpoints.REEF_E, PathSetpoints.REEF_F, PathSetpoints.REEF_G, PathSetpoints.REEF_H, PathSetpoints.REEF_I, PathSetpoints.REEF_J, PathSetpoints.REEF_K, PathSetpoints.REEF_L};
+            Pose2d[] poses = PathSetpoints.CORAL_SCORING_POSES;
             
             poseNum = poses.length;
             int left = 0, right = (int)poseNum - 1;
@@ -393,8 +393,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
         }
         else { 
-            Pose2d[] poses = {PathSetpoints.REEF_AB, PathSetpoints.REEF_CD, PathSetpoints.REEF_EF, PathSetpoints.REEF_GH, PathSetpoints.REEF_IJ, PathSetpoints.REEF_KL};
-                
+            Pose2d[] poses = PathSetpoints.ALGAE_REEF_POSES;
+            
             poseNum = poses.length;
             int left = 0, right = (int)poseNum - 1;
 
