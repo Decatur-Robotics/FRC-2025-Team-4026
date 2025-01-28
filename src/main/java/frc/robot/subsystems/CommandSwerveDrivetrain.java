@@ -366,10 +366,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
 
-    public void setModuleStates(SwerveModuleState[] moduleStates) {
-    
-    }
-
     // TODO: Return true only if pathing should target coral scoring locations
     public boolean isCoral() {
         return true;
