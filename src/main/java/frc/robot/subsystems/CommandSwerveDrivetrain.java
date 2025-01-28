@@ -50,12 +50,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double m_lastSimTime;
     private ChassisSpeeds currentSpeeds;
 
-
-    private PathPlannerPath path;
     private Pose2d robotPose;
     private Pose2d targetPose;
     //pathgen variables
-       private final SwerveSetpointGenerator setpointGenerator;
+    private final SwerveSetpointGenerator setpointGenerator;
     private SwerveSetpoint previousSetpoint;
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
@@ -156,8 +154,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         setpointGenerator = getConfiguredSwerveSetpointGenerator();
     }
-
-    
 
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
