@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.PathSetpoints;
+import frc.robot.constants.SwerveConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -146,35 +147,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     public CommandSwerveDrivetrain(
         SwerveDrivetrainConstants drivetrainConstants,
-        SwerveModuleConstants<?, ?, ?>... modules
-    ) {
-
+        SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
         configureAutoBuilder();
 
-        targetPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-        path = null;
-        robotPose = new Pose2d(0 ,0 , Rotation2d.fromDegrees(0));
-
-        RobotConfig config;
-        try{
-          config = RobotConfig.fromGUISettings();
-        } catch (Exception e) {
-          // Handle exception as needed
-          config = null;
-          e.printStackTrace();
-        }
-
-        setpointGenerator = new SwerveSetpointGenerator(
-            config, // The robot configuration. This is the same config used for generating trajectories and running path following commands.
-            Units.rotationsToRadians(10.0) // The max rotation velocity of a swerve module in radians per second. This should probably be stored in your Constants file
-        );
-        ChassisSpeeds currentSpeeds = getCurrentSpeeds();
-        SwerveModuleState[] currentStates = getCurrentModuleStates(); // Method to get the current swerve module states
-        previousSetpoint = new SwerveSetpoint(currentSpeeds, currentStates, DriveFeedforwards.zeros(config.numModules));
+        setpointGenerator = getConfiguredSwerveSetpointGenerator();
     }
 
     
@@ -195,30 +175,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public CommandSwerveDrivetrain(
         SwerveDrivetrainConstants drivetrainConstants,
         double odometryUpdateFrequency,
-        SwerveModuleConstants<?, ?, ?>... modules
-    ) {
+        SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
         configureAutoBuilder();
-        RobotConfig config;
-        try{
-          config = RobotConfig.fromGUISettings();
-        } catch (Exception e) {
-          // Handle exception as needed
-          config = null;
-          e.printStackTrace();
-        }
 
-        setpointGenerator = new SwerveSetpointGenerator(
-            config, // The robot configuration. This is the same config used for generating trajectories and running path following commands.
-            Units.rotationsToRadians(10.0) // The max rotation velocity of a swerve module in radians per second. This should probably be stored in your Constants file
-        );
-        ChassisSpeeds currentSpeeds = getCurrentSpeeds();
-        SwerveModuleState[] currentStates = getCurrentModuleStates(); // Method to get the current swerve module states
-        previousSetpoint = new SwerveSetpoint(currentSpeeds, currentStates, DriveFeedforwards.zeros(config.numModules));
-       
+        setpointGenerator = getConfiguredSwerveSetpointGenerator();
     }
 
     /**
@@ -245,34 +209,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double odometryUpdateFrequency,
         Matrix<N3, N1> odometryStandardDeviation,
         Matrix<N3, N1> visionStandardDeviation,
-        SwerveModuleConstants<?, ?, ?>... modules
-    ) {
+        SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
         configureAutoBuilder();
-        RobotConfig config;
-        try{
-          config = RobotConfig.fromGUISettings();
-        } catch (Exception e) {
-          // Handle exception as needed
-          config = null;
-          e.printStackTrace();
-        }
-
-        setpointGenerator = new SwerveSetpointGenerator(
-            config, // The robot configuration. This is the same config used for generating trajectories and running path following commands.
-            Units.rotationsToRadians(10.0) // The max rotation velocity of a swerve module in radians per second. This should probably be stored in your Constants file
-        );
-        currentSpeeds = getCurrentSpeeds();
-        SwerveModuleState[] currentStates = getCurrentModuleStates(); // Method to get the current swerve module states
-        previousSetpoint = new SwerveSetpoint(currentSpeeds, currentStates, DriveFeedforwards.zeros(config.numModules));
+        
+        setpointGenerator = getConfiguredSwerveSetpointGenerator();
     }
 
     private void configureAutoBuilder() {
         try {
-            var config = RobotConfig.fromGUISettings();
+            RobotConfig config = SwerveConstants.CONFIG;
             AutoBuilder.configure(
                 () -> getState().Pose,   // Supplier of current robot pose
                 this::resetPose,         // Consumer for seeding pose against auto
@@ -297,6 +246,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         } catch (Exception ex) {
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
         }
+    }
+
+    // TODO: We are currently not using the swerve setpoint generator
+    private SwerveSetpointGenerator getConfiguredSwerveSetpointGenerator() {
+        RobotConfig config = SwerveConstants.CONFIG;
+
+        SwerveSetpointGenerator setpointGenerator = new SwerveSetpointGenerator(
+            config, // The robot configuration. This is the same config used for generating trajectories and running path following commands.
+            Units.rotationsToRadians(SwerveConstants.MAX_ROTATION_VELOCITY) 
+        );
+        currentSpeeds = getState().Speeds;
+        SwerveModuleState[] currentStates = getState().ModuleStates; // Method to get the current swerve module states
+        previousSetpoint = new SwerveSetpoint(currentSpeeds, currentStates, DriveFeedforwards.zeros(config.numModules));
+
+        return setpointGenerator;
     }
 
     /**
@@ -402,75 +366,58 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
 
-    public static ChassisSpeeds getCurrentSpeeds() {
-        
-
-        return new ChassisSpeeds(0, 0, 0);
-    }
-
-    public static SwerveModuleState[] getCurrentModuleStates() {
-        return new SwerveModuleState[0];
-    }
-
     public void setModuleStates(SwerveModuleState[] moduleStates) {
     
     }
 
-    //TODO: Add somthing that detects the amount of current to see if there is coral in the claw
+    // TODO: Return true only if pathing should target coral scoring locations
     public boolean isCoral() {
         return true;
     }
 
-    public Pose2d findBestTarget(double poseNum){
+    public Command pathfindToBestTarget() {
+        double poseNum;
+
         if (isCoral()) {
             Pose2d[] poses = {PathSetpoints.REEF_A, PathSetpoints.REEF_B, PathSetpoints.REEF_C, PathSetpoints.REEF_D, PathSetpoints.REEF_E, PathSetpoints.REEF_F, PathSetpoints.REEF_G, PathSetpoints.REEF_H, PathSetpoints.REEF_I, PathSetpoints.REEF_J, PathSetpoints.REEF_K, PathSetpoints.REEF_L};
             
             poseNum = poses.length;
             int left = 0, right = (int)poseNum - 1;
+
             while (left < right){
                 if (poses[left].getTranslation().getDistance(robotPose.getTranslation())
                         <= poses[right].getTranslation().getDistance(robotPose.getTranslation())) {
                     right--;
                 }
-                else{
+                else {
                     left++;
                 }
-            
             }
+
             targetPose = poses[left];
-            return poses[left];
+
+            return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
         }
         else { 
             Pose2d[] poses = {PathSetpoints.REEF_AB, PathSetpoints.REEF_CD, PathSetpoints.REEF_EF, PathSetpoints.REEF_GH, PathSetpoints.REEF_IJ, PathSetpoints.REEF_KL};
                 
             poseNum = poses.length;
             int left = 0, right = (int)poseNum - 1;
+
             while (left < right) {
                 if (poses[left].getTranslation().getDistance(robotPose.getTranslation())
                         <= poses[right].getTranslation().getDistance(robotPose.getTranslation())) {
                     right--;
                 }
-                else{
+                else {
                     left++;
                 }
-            
             }
+
             targetPose = poses[left];
-            return poses[left];
+
+            return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
         }
-    
     }
 
-    
-
-    PathConstraints constraints = new PathConstraints(0, 0, Units.degreesToRadians(0), Units.degreesToRadians(0));
-    Command pathFindingCommand = AutoBuilder.pathfindToPose(targetPose, constraints, 0.0);
-    public void driveRobotRelative(){
-        previousSetpoint = setpointGenerator.generateSetpoint(
-            previousSetpoint, // The previous setpoint
-            currentSpeeds, // The desired target speeds
-            0.02 // The loop time of the robot code, in seconds
-        );
-        setModuleStates(previousSetpoint.moduleStates());
-    }
 }
