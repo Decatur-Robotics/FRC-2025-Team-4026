@@ -375,7 +375,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             
             poseNum = poses.length;
             int left = 0, right = (int)poseNum - 1;
-
+            //Uses a pointer to find the closest pose in the array, to be able to figure out which one is the closest
             while (left < right){
                 if (poses[left].getTranslation().getDistance(robotPose.getTranslation())
                         <= poses[right].getTranslation().getDistance(robotPose.getTranslation())) {
@@ -387,7 +387,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
 
             targetPose = poses[left];
-
+            //the command that is used for pathfinding
             return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
         }
         else { 
