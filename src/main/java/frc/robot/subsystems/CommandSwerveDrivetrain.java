@@ -14,12 +14,21 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.DriveFeedforwards;
+import com.pathplanner.lib.util.swerve.SwerveSetpoint;
+import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -27,7 +36,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
+import frc.robot.constants.PathSetpoints;
+import frc.robot.constants.SwerveConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -38,6 +48,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    private ChassisSpeeds currentSpeeds;
+
+    private Pose2d robotPose;
+    private Pose2d targetPose;
+    //pathgen variables
+    private final SwerveSetpointGenerator setpointGenerator;
+    private SwerveSetpoint previousSetpoint;
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -128,13 +145,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     public CommandSwerveDrivetrain(
         SwerveDrivetrainConstants drivetrainConstants,
-        SwerveModuleConstants<?, ?, ?>... modules
-    ) {
+        SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
         configureAutoBuilder();
+
+        setpointGenerator = getConfiguredSwerveSetpointGenerator();
     }
 
     /**
@@ -153,13 +171,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public CommandSwerveDrivetrain(
         SwerveDrivetrainConstants drivetrainConstants,
         double odometryUpdateFrequency,
-        SwerveModuleConstants<?, ?, ?>... modules
-    ) {
+        SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
         configureAutoBuilder();
+
+        setpointGenerator = getConfiguredSwerveSetpointGenerator();
     }
 
     /**
@@ -186,18 +205,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double odometryUpdateFrequency,
         Matrix<N3, N1> odometryStandardDeviation,
         Matrix<N3, N1> visionStandardDeviation,
-        SwerveModuleConstants<?, ?, ?>... modules
-    ) {
+        SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
         configureAutoBuilder();
+        
+        setpointGenerator = getConfiguredSwerveSetpointGenerator();
     }
 
     private void configureAutoBuilder() {
         try {
-            var config = RobotConfig.fromGUISettings();
+            RobotConfig config = SwerveConstants.CONFIG;
             AutoBuilder.configure(
                 () -> getState().Pose,   // Supplier of current robot pose
                 this::resetPose,         // Consumer for seeding pose against auto
@@ -222,6 +242,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         } catch (Exception ex) {
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
         }
+    }
+
+    // TODO: We are currently not using the swerve setpoint generator
+    private SwerveSetpointGenerator getConfiguredSwerveSetpointGenerator() {
+        RobotConfig config = SwerveConstants.CONFIG;
+
+        SwerveSetpointGenerator setpointGenerator = new SwerveSetpointGenerator(
+            config, // The robot configuration. This is the same config used for generating trajectories and running path following commands.
+            Units.rotationsToRadians(SwerveConstants.MAX_ROTATION_VELOCITY) 
+        );
+        currentSpeeds = getState().Speeds;
+        SwerveModuleState[] currentStates = getState().ModuleStates; // Method to get the current swerve module states
+        previousSetpoint = new SwerveSetpoint(currentSpeeds, currentStates, DriveFeedforwards.zeros(config.numModules));
+
+        return setpointGenerator;
     }
 
     /**
@@ -275,6 +310,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
+        
     }
 
     private void startSimThread() {
@@ -319,10 +356,64 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     @Override
     public void addVisionMeasurement(
-        Pose2d visionRobotPoseMeters,
-        double timestampSeconds,
-        Matrix<N3, N1> visionMeasurementStdDevs
-    ) {
+            Pose2d visionRobotPoseMeters,
+            double timestampSeconds,
+            Matrix<N3, N1> visionMeasurementStdDevs) {
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
+
+    // TODO: Return true only if pathing should target coral scoring locations
+    public boolean isCoral() {
+        return true;
+    }
+
+    public Command pathfindToBestTarget() {
+        double poseNum;
+
+        if (isCoral()) {
+            Pose2d[] poses = PathSetpoints.CORAL_SCORING_POSES;
+            
+            poseNum = poses.length;
+            int left = 0, right = (int)poseNum - 1;
+
+            // Finds the closest pose in the array
+            while (left < right){
+                if (poses[left].getTranslation().getDistance(robotPose.getTranslation())
+                        <= poses[right].getTranslation().getDistance(robotPose.getTranslation())) {
+                    right--;
+                }
+                else {
+                    left++;
+                }
+            }
+
+            targetPose = poses[left];
+
+            //This is used as the command for pathfinding
+            return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
+        }
+        else { 
+            Pose2d[] poses = PathSetpoints.ALGAE_REEF_POSES;
+            
+            poseNum = poses.length;
+            int left = 0, right = (int)poseNum - 1;
+
+            // Finds the closest pose in the array
+            while (left < right) {
+                if (poses[left].getTranslation().getDistance(robotPose.getTranslation())
+                        <= poses[right].getTranslation().getDistance(robotPose.getTranslation())) {
+                    right--;
+                }
+                else {
+                    left++;
+                }
+            }
+
+            targetPose = poses[left];
+
+            //This is used as the command for pathfinding
+            return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
+        }
+    }
+
 }

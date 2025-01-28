@@ -2,8 +2,15 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.List;
+
+import com.pathplanner.lib.util.PathPlannerLogging;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.generated.TunerConstants;
@@ -42,11 +49,17 @@ public class RobotContainer {
 
     private final Telemetry logger;
 
+    private Field2d field;
     
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         instance = this;
+
+        field = new Field2d();
+        SmartDashboard.putData("Field", field);
+
+
 
         shuffleboardTab = Shuffleboard.getTab("Tab 1");
 
@@ -64,6 +77,18 @@ public class RobotContainer {
         superstructure = new SuperstructureSubsystem(elevator, arm, wrist);
         endEffector = new EndEffectorSubsystem(claw, intake);
         drivetrain = TunerConstants.createDrivetrain();
+
+        PathPlannerLogging.setLogCurrentPoseCallback((Pose2d pose) -> {
+            field.setRobotPose(pose);
+        });
+
+        PathPlannerLogging.setLogTargetPoseCallback((Pose2d pose)-> {
+            field.getObject("Target Pose").setPose(pose);
+        });
+
+        PathPlannerLogging.setLogActivePathCallback((List<Pose2d> poses) -> {
+            field.getObject("Path").setPoses(poses);
+        });
 
         // Configure button bindings
         configurePrimaryBindings();
