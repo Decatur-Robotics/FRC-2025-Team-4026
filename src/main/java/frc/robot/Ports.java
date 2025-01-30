@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.int;
+
 public final class Ports {
     
     public static final int ELEVATOR_MOTOR_LEFT = 18;
@@ -10,5 +12,7 @@ public final class Ports {
     public static final int INTAKE_MOTOR_LEFT = 0;
     public static final int INTAKE_MOTOR_RIGHT = 0;
     public static final int WRIST_MOTOR = 0;
+    public static final int ARM_ENCODER_A = 0;
+    public static final int ARM_ENCODER_B = 0;
     
 }

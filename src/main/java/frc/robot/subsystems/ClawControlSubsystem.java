@@ -15,13 +15,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 import frc.robot.constants.ClawConstants;
 import frc.robot.constants.ClawConstants;
+import edu.wpi.first.wpilibj.Encoder;
 
 public class ClawControlSubsystem extends SubsystemBase{
     
     private TalonFX clawMotor;
     private SparkMax intakeMotorLeft, intakeMotorRight;
     private SparkClosedLoopController intakeController; 
-
+    private Encoder clawEncoder;
 
     private double position, desiredRotation, desiredVelocity;
     private MotionMagicDutyCycle clawControlRequest;
@@ -76,6 +77,8 @@ public class ClawControlSubsystem extends SubsystemBase{
 
         clawControlRequest = new MotionMagicDutyCycle(position);
         intakeController = intakeMotorLeft.getClosedLoopController();
+
+        clawEncoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
     }
 
     @Override
@@ -103,6 +106,8 @@ public class ClawControlSubsystem extends SubsystemBase{
         intakeController.setReference(velocity, SparkBase.ControlType.kVelocity);
     }
 
-   
+    public double getEncoderValue() {
+        return clawEncoder.get();
+    }
 
 }
