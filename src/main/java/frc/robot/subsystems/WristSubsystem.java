@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 import frc.robot.constants.WristConstants;
@@ -15,6 +16,8 @@ public class WristSubsystem extends SubsystemBase {
     private double position;
 
     private MotionMagicDutyCycle motorControlRequest;
+
+    private Encoder wristEncoder;
 
     public WristSubsystem() {
         motor = new TalonFX(Ports.WRIST_MOTOR);
@@ -43,6 +46,8 @@ public class WristSubsystem extends SubsystemBase {
 
         motor.setControl(motorControlRequest.withPosition(position));
 
+        wristEncoder = new Encoder(Ports.WRIST_ENCODER_A, Ports.WRIST_ENCODER_B, false, Encoder.EncodingType.k4X);
+
     }
 
     @Override
@@ -63,4 +68,7 @@ public class WristSubsystem extends SubsystemBase {
         return motor.getRotorPosition().getValueAsDouble();
     }
     
+    public double getEncoderValue() {
+        return wristEncoder.get();
+    }
 }

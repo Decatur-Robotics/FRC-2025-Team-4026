@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.RobotContainer;
@@ -17,6 +18,8 @@ public class ArmSubsystem extends SubsystemBase {
 	private double position;
 
 	private MotionMagicDutyCycle motorControlRequest;
+
+	private Encoder armEncoder;
 
 	public ArmSubsystem()
 	{
@@ -48,6 +51,8 @@ public class ArmSubsystem extends SubsystemBase {
 		RobotContainer.getShuffleboardTab().add("Actual Arm Mount Rotation", getPosition());
 		RobotContainer.getShuffleboardTab().add("Target Arm Mount Rotation", position);
 
+		armEncoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
+
         if(motorFollower.hasResetOccurred()||motorMain.hasResetOccurred()){
 			motorFollower.optimizeBusUtilization();
 			motorMain.optimizeBusUtilization();
@@ -72,5 +77,10 @@ public class ArmSubsystem extends SubsystemBase {
     public double getPosition() {
         return motorFollower.getRotorPosition().getValueAsDouble();
     }
+
+	public double getEncoderValue()
+	{
+		return armEncoder.get();
+	}
 }
 
