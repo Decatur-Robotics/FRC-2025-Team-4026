@@ -46,6 +46,7 @@ public class WristSubsystem extends SubsystemBase {
 
         motor.setControl(motorControlRequest.withPosition(position));
 
+        //k4X is quadrature encoding
         wristEncoder = new Encoder(Ports.WRIST_ENCODER_A, Ports.WRIST_ENCODER_B, false, Encoder.EncodingType.k4X);
 
     }

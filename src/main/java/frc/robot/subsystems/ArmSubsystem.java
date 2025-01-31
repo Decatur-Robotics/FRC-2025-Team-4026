@@ -51,6 +51,7 @@ public class ArmSubsystem extends SubsystemBase {
 		RobotContainer.getShuffleboardTab().add("Actual Arm Mount Rotation", getPosition());
 		RobotContainer.getShuffleboardTab().add("Target Arm Mount Rotation", position);
 
+		//k4X is quadrature encoding
 		armEncoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
 
         if(motorFollower.hasResetOccurred()||motorMain.hasResetOccurred()){
