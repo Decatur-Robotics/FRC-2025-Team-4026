@@ -1,6 +1,9 @@
 package frc.robot.constants;
 
+import edu.wpi.first.wpilibj.DigitalSource;
+
 public class Ports {
+
 
     public static final int ARM_MOTOR_LEFT = 0;
 	public static final int ARM_MOTOR_RIGHT = 0;
@@ -19,4 +22,8 @@ public class Ports {
     public static final int WRIST_MOTOR = 0;
 
     public static final int ADDRESSABLE_LED = 0;
+
+    public static final int ARM_ENCODER_A = 0;
+    public static final int ARM_ENCODER_B = 1;
+
 }
