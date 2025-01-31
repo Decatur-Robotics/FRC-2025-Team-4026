@@ -77,7 +77,7 @@ public class ClawControlSubsystem extends SubsystemBase{
 
         clawControlRequest = new MotionMagicDutyCycle(position);
         intakeController = intakeMotorLeft.getClosedLoopController();
-
+        //k4X is the encoding type for quadrature encoders
         clawEncoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
     }
 
