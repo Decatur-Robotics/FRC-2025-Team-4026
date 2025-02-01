@@ -415,5 +415,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
         }
     }
+    public Command pathfindToProcessor() {
+        return AutoBuilder.pathfindToPose(PathSetpoints.PROCESSOR, SwerveConstants.CONSTRAINTS, 0);
+    }
+
+    public Command pathfindToNet() {
+        PPHolonomicDriveController.overrideXFeedback(() -> {
+            // Calculate feedback
+            return 0.0;
+        });
+        PPHolonomicDriveController.overrideRotationFeedback(() -> {
+            // Calculate feedback
+            return 0.0;
+        });
+        return AutoBuilder.pathfindToPose(PathSetpoints.NET, SwerveConstants.CONSTRAINTS, 0);
+    }
 
 }
