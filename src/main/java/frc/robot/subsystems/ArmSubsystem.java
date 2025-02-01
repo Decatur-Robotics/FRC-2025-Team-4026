@@ -19,7 +19,7 @@ public class ArmSubsystem extends SubsystemBase {
 
 	private MotionMagicDutyCycle motorControlRequest;
 
-	private Encoder armEncoder;
+	private Encoder encoder;
 
 	public ArmSubsystem() {
 		motorFollower = new TalonFX(Ports.ARM_MOTOR_RIGHT);
@@ -54,7 +54,7 @@ public class ArmSubsystem extends SubsystemBase {
 		motorControlRequest = new MotionMagicDutyCycle(position);
 
 		//k4X is quadrature encoding
-		armEncoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
+		encoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
 
 	}
 
@@ -90,7 +90,7 @@ public class ArmSubsystem extends SubsystemBase {
 
 	public double getEncoderValue()
 	{
-		return armEncoder.get();
+		return encoder.get();
 	}
 
 }

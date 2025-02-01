@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
 import frc.robot.constants.ClawConstants;
@@ -14,6 +15,8 @@ public class ClawSubsystem extends SubsystemBase{
 
     private double position;
     private MotionMagicDutyCycle controlRequest;
+
+    private Encoder encoder;
 
     public ClawSubsystem() {
         motor = new TalonFX(Ports.CLAW_MOTOR); 
@@ -42,7 +45,10 @@ public class ClawSubsystem extends SubsystemBase{
         position = ClawConstants.CORAL_POSITION;
 
         controlRequest = new MotionMagicDutyCycle(position);
-        motor.setControl(controlRequest);        
+        motor.setControl(controlRequest);
+
+        //k4X is quadrature encoding
+        encoder = new Encoder(Ports.CLAW_ENCODER_A, Ports.CLAW_ENCODER_B, false, Encoder.EncodingType.k4X);
     }
 
     @Override
@@ -62,5 +68,9 @@ public class ClawSubsystem extends SubsystemBase{
     public double getPosition() {
         return motor.getRotorPosition().getValueAsDouble();
     }  
+
+    public double getEncoderValue() {
+        return encoder.get();
+    }
 
 }
