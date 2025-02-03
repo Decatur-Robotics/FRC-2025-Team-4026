@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Ports;
+import frc.robot.constants.WristConstants;
 
 public class ArmSubsystem extends SubsystemBase {
 	
@@ -92,6 +93,13 @@ public class ArmSubsystem extends SubsystemBase {
 	{
 		return encoder.get();
 	}
+
+	public void resetEncoder() {
+        double rawEncoderValue = getEncoderValue();
+        double rotations = rawEncoderValue / (double) ArmConstants.kEncoderCountsPerRevolution;
+        double talonFXValue = rotations * ArmConstants.kTalonFXCountsPerRevolution;
+        motorMain.setPosition(talonFXValue);
+    }
 
 }
 

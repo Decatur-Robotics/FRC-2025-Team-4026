@@ -19,8 +19,10 @@ public class WristSubsystem extends SubsystemBase {
 
     private Encoder encoder;
 
+    private TalonFXConfiguration talonFXconfigs;
+
     public WristSubsystem() {
-        motor = new TalonFX(Ports.WRIST_MOTOR);
+        talonFXconfigs = new TalonFXConfiguration();
 
         TalonFXConfiguration talonFXconfigs = new TalonFXConfiguration();
 
@@ -70,5 +72,12 @@ public class WristSubsystem extends SubsystemBase {
     
     public double getEncoderValue() {
         return encoder.get();
+    }
+
+    public void resetEncoder() {
+        double rawEncoderValue = getEncoderValue();
+        double rotations = rawEncoderValue / (double) WristConstants.kEncoderCountsPerRevolution;
+        double talonFXValue = rotations * WristConstants.kTalonFXCountsPerRevolution;
+        motor.setPosition(talonFXValue);
     }
 }

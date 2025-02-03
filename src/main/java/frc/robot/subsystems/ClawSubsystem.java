@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
+import frc.robot.constants.WristConstants;
 import frc.robot.constants.ClawConstants;
 
 public class ClawSubsystem extends SubsystemBase{
@@ -71,6 +72,13 @@ public class ClawSubsystem extends SubsystemBase{
 
     public double getEncoderValue() {
         return encoder.get();
+    }
+
+    public void resetEncoder() {
+        double rawEncoderValue = getEncoderValue();
+        double rotations = rawEncoderValue / (double) ClawConstants.kEncoderCountsPerRevolution;
+        double talonFXValue = rotations * ClawConstants.kTalonFXCountsPerRevolution;
+        motor.setPosition(talonFXValue);
     }
 
 }
