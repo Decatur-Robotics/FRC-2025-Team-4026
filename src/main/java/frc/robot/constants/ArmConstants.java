@@ -22,6 +22,5 @@ public class ArmConstants {
 
     public static final double INITIAL_POSITION = SuperstructureConstants.CORAL_STOWED_STATE.armPosition;
     public static final double kEncoderCountsPerRevolution = 8192; // how many ticks it takes to complete one rotation for this specific encoder
-    public static final double kTalonFXCountsPerRevolution = 2048; // how many ticks it takes to complete one rotation for a TalonFX
     
 }

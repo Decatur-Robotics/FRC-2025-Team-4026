@@ -17,5 +17,4 @@ public class WristConstants {
     public static final double INITIAL_POSITION = SuperstructureConstants.CORAL_STOWED_STATE.wristPosition;
 
     public static final int kEncoderCountsPerRevolution = 8192; // how many ticks it takes to complete one rotation for this specific encoder
-    public static final int kTalonFXCountsPerRevolution = 2048; // how many ticks it takes to complete one rotation for a TalonFX
 }
