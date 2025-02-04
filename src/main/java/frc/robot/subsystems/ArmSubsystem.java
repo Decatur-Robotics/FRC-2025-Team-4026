@@ -95,7 +95,7 @@ public class ArmSubsystem extends SubsystemBase {
 
 	public void resetEncoder() {
         double rawEncoderValue = getEncoderValue();
-        double rotations = rawEncoderValue / (double) ArmConstants.kEncoderCountsPerRevolution;
+        double rotations = rawEncoderValue / (double) ArmConstants.K_ENCODER_COUNTS_PER_REVOLUTION;
         motorMain.setPosition(rotations);
     }
 
