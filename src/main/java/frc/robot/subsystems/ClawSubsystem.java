@@ -80,8 +80,7 @@ public class ClawSubsystem extends SubsystemBase{
     }
 
     public void resetEncoder() {
-        double rawEncoderValue = getThroughBoreEncoderValue();
-        double rotations = rawEncoderValue / (double) ClawConstants.K_ENCODER_COUNTS_PER_REVOLUTION;
+        double rotations = getThroughBoreEncoderValue() / ClawConstants.K_ENCODER_COUNTS_PER_REVOLUTION;
         encoderOffset = rotations - motor.getRotorPosition().getValueAsDouble();
     }
 

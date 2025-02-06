@@ -79,8 +79,7 @@ public class WristSubsystem extends SubsystemBase {
     }
 
     public void resetEncoder() {
-        double rawEncoderValue = getThroughBoreEncoderValue();
-        double rotations = rawEncoderValue / (double) WristConstants.K_ENCODER_COUNTS_PER_REVOLUTION;
-        encoderOffset = rotations - motor.getRotorPosition().getValueAsDouble();
+        double encoderRotations = getThroughBoreEncoderValue() / WristConstants.K_ENCODER_COUNTS_PER_REVOLUTION;
+        encoderOffset = encoderRotations - motor.getRotorPosition().getValueAsDouble();
     }
 }
