@@ -16,6 +16,7 @@ public class ClawSubsystem extends SubsystemBase{
 
     private double position;
     private MotionMagicDutyCycle controlRequest;
+    private double encoderOffset;
 
     private Encoder encoder;
 
@@ -66,18 +67,22 @@ public class ClawSubsystem extends SubsystemBase{
         motor.setControl(controlRequest);
     }
 
-    public double getPosition() {
-        return motor.getRotorPosition().getValueAsDouble();
+    public double getRawTalonPosition() {
+        return (motor.getRotorPosition().getValueAsDouble());
     }  
 
-    public double getEncoderValue() {
+    public double getThroughBoreEncoderValue() {
         return encoder.get();
     }
 
+    public double getOffsetTalonPosition() {
+        return motor.getRotorPosition().getValueAsDouble() + encoderOffset;
+    }
+
     public void resetEncoder() {
-        double rawEncoderValue = getEncoderValue();
+        double rawEncoderValue = getThroughBoreEncoderValue();
         double rotations = rawEncoderValue / (double) ClawConstants.K_ENCODER_COUNTS_PER_REVOLUTION;
-        motor.setPosition(rotations);
+        encoderOffset = rotations - motor.getRotorPosition().getValueAsDouble();
     }
 
 }

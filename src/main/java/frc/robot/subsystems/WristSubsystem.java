@@ -18,6 +18,7 @@ public class WristSubsystem extends SubsystemBase {
     private MotionMagicDutyCycle motorControlRequest;
 
     private Encoder encoder;
+    private double encoderOffset;
 
     public WristSubsystem() {
         
@@ -65,17 +66,21 @@ public class WristSubsystem extends SubsystemBase {
         motor.setControl(motorControlRequest);
     }
 
-    public double getPosition() {
+    public double getRawTalonPosition() {
         return motor.getRotorPosition().getValueAsDouble();
     }
     
-    public double getEncoderValue() {
+    public double getThroughBoreEncoderValue() {
         return encoder.get();
     }
 
+    public double getOffsetTalonPosition() {
+        return motor.getRotorPosition().getValueAsDouble() + encoderOffset;
+    }
+
     public void resetEncoder() {
-        double rawEncoderValue = getEncoderValue();
+        double rawEncoderValue = getThroughBoreEncoderValue();
         double rotations = rawEncoderValue / (double) WristConstants.K_ENCODER_COUNTS_PER_REVOLUTION;
-        motor.setPosition(rotations);
+        encoderOffset = rotations - motor.getRotorPosition().getValueAsDouble();
     }
 }

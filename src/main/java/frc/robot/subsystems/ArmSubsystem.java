@@ -21,6 +21,7 @@ public class ArmSubsystem extends SubsystemBase {
 	private MotionMagicDutyCycle motorControlRequest;
 
 	private Encoder encoder;
+	private double encoderOffset;
 
 	public ArmSubsystem() {
 		motorFollower = new TalonFX(Ports.ARM_MOTOR_RIGHT);
@@ -84,19 +85,23 @@ public class ArmSubsystem extends SubsystemBase {
 				.withFeedForward(gravityFeedForward));
 	}
 
-    public double getPosition() {
+    public double getRawTalonPosition() {
         return motorFollower.getRotorPosition().getValueAsDouble();
     }
 
 
-	public double getEncoderValue() {
+	public double getThroughBoreEncoderValue() {
 		return encoder.get();
 	}
 
+	public double getOffsetTalonPosition() {
+		return motorMain.getRotorPosition().getValueAsDouble() + encoderOffset;
+	}
+
 	public void resetEncoder() {
-        double rawEncoderValue = getEncoderValue();
+        double rawEncoderValue = getThroughBoreEncoderValue();
         double rotations = rawEncoderValue / (double) ArmConstants.K_ENCODER_COUNTS_PER_REVOLUTION;
-        motorMain.setPosition(rotations);
+        encoderOffset = rotations - motorMain.getRotorPosition().getValueAsDouble();
     }
 
 }

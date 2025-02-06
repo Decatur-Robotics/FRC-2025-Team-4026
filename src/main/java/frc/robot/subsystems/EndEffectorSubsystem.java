@@ -32,7 +32,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     public double getActualClawPosition() {
-        return claw.getPosition();
+        return claw.getOffsetTalonPosition();
     }
 
     public double getActualIntakeVelocity() {
