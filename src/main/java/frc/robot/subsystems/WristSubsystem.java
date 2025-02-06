@@ -18,8 +18,10 @@ public class WristSubsystem extends SubsystemBase {
     private MotionMagicDutyCycle motorControlRequest;
 
     private Encoder encoder;
+    private double encoderOffset;
 
     public WristSubsystem() {
+        
         motor = new TalonFX(Ports.WRIST_MOTOR);
 
         TalonFXConfiguration talonFXconfigs = new TalonFXConfiguration();
@@ -64,11 +66,20 @@ public class WristSubsystem extends SubsystemBase {
         motor.setControl(motorControlRequest);
     }
 
-    public double getPosition() {
+    public double getRawTalonPosition() {
         return motor.getRotorPosition().getValueAsDouble();
     }
     
-    public double getEncoderValue() {
+    public double getThroughBoreEncoderValue() {
         return encoder.get();
+    }
+
+    public double getOffsetTalonPosition() {
+        return motor.getRotorPosition().getValueAsDouble() + encoderOffset;
+    }
+
+    public void resetEncoder() {
+        double encoderRotations = getThroughBoreEncoderValue() / WristConstants.K_ENCODER_COUNTS_PER_REVOLUTION;
+        encoderOffset = encoderRotations - motor.getRotorPosition().getValueAsDouble();
     }
 }

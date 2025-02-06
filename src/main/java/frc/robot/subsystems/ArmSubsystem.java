@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Ports;
+import frc.robot.constants.WristConstants;
 
 public class ArmSubsystem extends SubsystemBase {
 	
@@ -20,6 +21,7 @@ public class ArmSubsystem extends SubsystemBase {
 	private MotionMagicDutyCycle motorControlRequest;
 
 	private Encoder encoder;
+	private double encoderOffset;
 
 	public ArmSubsystem() {
 		motorFollower = new TalonFX(Ports.ARM_MOTOR_RIGHT);
@@ -83,15 +85,23 @@ public class ArmSubsystem extends SubsystemBase {
 				.withFeedForward(gravityFeedForward));
 	}
 
-    public double getPosition() {
+    public double getRawTalonPosition() {
         return motorFollower.getRotorPosition().getValueAsDouble();
     }
 
 
-	public double getEncoderValue()
-	{
+	public double getThroughBoreEncoderValue() {
 		return encoder.get();
 	}
+
+	public double getOffsetTalonPosition() {
+		return motorMain.getRotorPosition().getValueAsDouble() + encoderOffset;
+	}
+
+	public void resetEncoder() {
+        double rotations = getThroughBoreEncoderValue() / ArmConstants.K_ENCODER_COUNTS_PER_REVOLUTION;
+        encoderOffset = rotations - motorMain.getRotorPosition().getValueAsDouble();
+    }
 
 }
 

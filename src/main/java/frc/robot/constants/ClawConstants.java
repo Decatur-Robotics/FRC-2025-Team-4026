@@ -19,6 +19,7 @@ public class ClawConstants {
     
     public static final double CRUISE_VELOCITY = 0;
     public static final double ACCELERATION = 0;
+    public static final double K_ENCODER_COUNTS_PER_REVOLUTION = 8192; // how many ticks it takes to complete one rotation for this specific encoder
 
 
     

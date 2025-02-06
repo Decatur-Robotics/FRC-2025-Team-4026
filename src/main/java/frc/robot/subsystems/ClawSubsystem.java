@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
+import frc.robot.constants.WristConstants;
 import frc.robot.constants.ClawConstants;
 
 public class ClawSubsystem extends SubsystemBase{
@@ -15,6 +16,7 @@ public class ClawSubsystem extends SubsystemBase{
 
     private double position;
     private MotionMagicDutyCycle controlRequest;
+    private double encoderOffset;
 
     private Encoder encoder;
 
@@ -65,12 +67,21 @@ public class ClawSubsystem extends SubsystemBase{
         motor.setControl(controlRequest);
     }
 
-    public double getPosition() {
-        return motor.getRotorPosition().getValueAsDouble();
+    public double getRawTalonPosition() {
+        return (motor.getRotorPosition().getValueAsDouble());
     }  
 
-    public double getEncoderValue() {
+    public double getThroughBoreEncoderValue() {
         return encoder.get();
+    }
+
+    public double getOffsetTalonPosition() {
+        return motor.getRotorPosition().getValueAsDouble() + encoderOffset;
+    }
+
+    public void resetEncoder() {
+        double rotations = getThroughBoreEncoderValue() / ClawConstants.K_ENCODER_COUNTS_PER_REVOLUTION;
+        encoderOffset = rotations - motor.getRotorPosition().getValueAsDouble();
     }
 
 }
