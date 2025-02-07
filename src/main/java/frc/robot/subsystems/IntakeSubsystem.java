@@ -1,11 +1,10 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.ctre.phoenix6.configs.TalonFXSConfiguration;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
@@ -13,41 +12,54 @@ import frc.robot.constants.Ports;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-    private SparkMax motorLeft, motorRight;
-    private SparkClosedLoopController intakeController;
+    private TalonFXS motorLeft, motorRight;
 
     private double velocity;
+    private double velocityFeedForward;
+    private MotionMagicVelocityVoltage motorControlRequest;
     
     public IntakeSubsystem() {
-        motorLeft = new SparkMax(Ports.INTAKE_MOTOR_LEFT, MotorType.kBrushless);
-        motorRight = new SparkMax(Ports.INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
+        motorLeft = new TalonFXS(Ports.INTAKE_MOTOR_LEFT);
+        motorRight = new TalonFXS(Ports.INTAKE_MOTOR_RIGHT);
 
-        SparkMaxConfig followerConfig = new SparkMaxConfig();
-        followerConfig.idleMode(IdleMode.kBrake);
-        followerConfig.smartCurrentLimit(IntakeConstants.CURRENT_LIMIT);
-        followerConfig.follow(motorLeft.getDeviceId());
- 
-        SparkMaxConfig mainConfig = new SparkMaxConfig();
-        mainConfig.idleMode(IdleMode.kBrake);
-        mainConfig.smartCurrentLimit(IntakeConstants.CURRENT_LIMIT);
-        mainConfig.closedLoop.pidf(IntakeConstants.KP, IntakeConstants.KI, IntakeConstants.KD, IntakeConstants.KFF);
+        motorRight.setControl(new Follower(motorLeft.getDeviceID(), true));
 
-        motorLeft.configure(mainConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
-        motorRight.configure(followerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+        TalonFXSConfiguration motorConfigs = new TalonFXSConfiguration();
 
+        motorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+        motorConfigs.CurrentLimits.StatorCurrentLimit = IntakeConstants.CURRENT_LIMIT;
+
+        // Added kS and kV in case they were need for velocity closed-loop control
+        motorConfigs.Slot0.kP = IntakeConstants.KP;
+        motorConfigs.Slot0.kI = IntakeConstants.KI;
+        motorConfigs.Slot0.kD = IntakeConstants.KD;
+        motorConfigs.Slot0.kS = IntakeConstants.KS;
+        motorConfigs.Slot0.kV = IntakeConstants.KV;
+
+        motorConfigs.MotionMagic.MotionMagicAcceleration = IntakeConstants.ACCELERATION;
+        motorConfigs.MotionMagic.MotionMagicCruiseVelocity = IntakeConstants.CRUISE_VELOCITY;
+        motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        
+        motorLeft.getConfigurator().apply(motorConfigs);
+        motorRight.getConfigurator().apply(motorConfigs);
+
+        motorLeft.optimizeBusUtilization();
+        motorRight.optimizeBusUtilization();
+        motorLeft.getVelocity().setUpdateFrequency(20);
+        
+        velocityFeedForward = IntakeConstants.KFF;
         velocity = IntakeConstants.REST_VELOCITY;
-
-        intakeController = motorLeft.getClosedLoopController();
-        intakeController.setReference(velocity, SparkBase.ControlType.kVelocity);
+        
+        motorControlRequest = new MotionMagicVelocityVoltage(velocity);
     }
 
     public void setVelocity(double velocity) {
         this.velocity = velocity;
-        intakeController.setReference(velocity, SparkBase.ControlType.kVelocity);
+        motorLeft.setControl(motorControlRequest.withFeedForward(velocityFeedForward));
     }
 
     public double getVelocity() {
-        return motorLeft.getEncoder().getVelocity();
+        return motorLeft.getVelocity().getValueAsDouble();
     }
 
 }
