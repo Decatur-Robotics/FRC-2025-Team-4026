@@ -4,13 +4,14 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Ports;
-import frc.robot.constants.WristConstants;
 
 public class ArmSubsystem extends SubsystemBase {
 	
@@ -18,10 +19,10 @@ public class ArmSubsystem extends SubsystemBase {
 	
 	private double position;
 
-	private MotionMagicDutyCycle motorControlRequest;
+	private MotionMagicDutyCycle controlRequest;
 
-	private Encoder encoder;
-	private double encoderOffset;
+	private Encoder throughBoreEncoder;
+	private double offset;
 
 	public ArmSubsystem() {
 		motorFollower = new TalonFX(Ports.ARM_MOTOR_RIGHT);
@@ -29,23 +30,25 @@ public class ArmSubsystem extends SubsystemBase {
 
 		motorFollower.setControl(new Follower(motorMain.getDeviceID(), true));
 
-		TalonFXConfiguration mainMotorConfigs = new TalonFXConfiguration();
+		TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
 
-		mainMotorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-		mainMotorConfigs.CurrentLimits.StatorCurrentLimit = ArmConstants.CURRENT_LIMIT;
+		motorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+		motorConfigs.CurrentLimits.StatorCurrentLimit = ArmConstants.CURRENT_LIMIT;
 
-		mainMotorConfigs.Slot0.kP = ArmConstants.KP;
-		mainMotorConfigs.Slot0.kI = ArmConstants.KI;
-		mainMotorConfigs.Slot0.kD = ArmConstants.KD;
-		mainMotorConfigs.Slot0.kS = ArmConstants.KS;
-		mainMotorConfigs.Slot0.kV = ArmConstants.KV;
-		mainMotorConfigs.Slot0.kA = ArmConstants.KA;
+		motorConfigs.Slot0.kP = ArmConstants.KP;
+		motorConfigs.Slot0.kI = ArmConstants.KI;
+		motorConfigs.Slot0.kD = ArmConstants.KD;
+		motorConfigs.Slot0.kS = ArmConstants.KS;
+		motorConfigs.Slot0.kV = ArmConstants.KV;
+		motorConfigs.Slot0.kA = ArmConstants.KA;
 
-        mainMotorConfigs.MotionMagic.MotionMagicAcceleration = ArmConstants.ACCELERATION;
-        mainMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = ArmConstants.CRUISE_VELOCITY;
+        motorConfigs.MotionMagic.MotionMagicAcceleration = ArmConstants.ACCELERATION;
+        motorConfigs.MotionMagic.MotionMagicCruiseVelocity = ArmConstants.CRUISE_VELOCITY;
+
+        motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         
-		motorFollower.getConfigurator().apply(mainMotorConfigs);
-		motorMain.getConfigurator().apply(mainMotorConfigs);
+		motorFollower.getConfigurator().apply(motorConfigs);
+		motorMain.getConfigurator().apply(motorConfigs);
 
         motorFollower.optimizeBusUtilization();
 		motorMain.optimizeBusUtilization();
@@ -53,14 +56,13 @@ public class ArmSubsystem extends SubsystemBase {
 
 		position = ArmConstants.INITIAL_POSITION;
 
-		motorControlRequest = new MotionMagicDutyCycle(position);
+		controlRequest = new MotionMagicDutyCycle(position);
 
-		//k4X is quadrature encoding
-		encoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
+		// k4X is quadrature encoding
+		throughBoreEncoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
 
+		resetEncoderOffset();
 	}
-
-
 	
 	@Override
 	public void periodic() {
@@ -81,7 +83,7 @@ public class ArmSubsystem extends SubsystemBase {
 
 		double gravityFeedForward = Math.cos(angle) * ArmConstants.KG;
 
-		motorMain.setControl(motorControlRequest.withPosition(position)
+		motorMain.setControl(controlRequest.withPosition(position + offset)
 				.withFeedForward(gravityFeedForward));
 	}
 
@@ -91,17 +93,23 @@ public class ArmSubsystem extends SubsystemBase {
 
 
 	public double getThroughBoreEncoderValue() {
-		return encoder.get();
+		return throughBoreEncoder.get();
 	}
 
 	public double getOffsetTalonPosition() {
-		return motorMain.getRotorPosition().getValueAsDouble() + encoderOffset;
+		return motorMain.getRotorPosition().getValueAsDouble() - offset;
 	}
 
-	public void resetEncoder() {
-        double rotations = getThroughBoreEncoderValue() / ArmConstants.K_ENCODER_COUNTS_PER_REVOLUTION;
-        encoderOffset = rotations - motorMain.getRotorPosition().getValueAsDouble();
+	public void resetEncoderOffset() {
+        double rotations = (getThroughBoreEncoderValue() - ArmConstants.ENCODER_ZERO_OFFSET) / ArmConstants.ENCODER_COUNTS_PER_REVOLUTION;
+        offset = rotations - motorMain.getRotorPosition().getValueAsDouble();
     }
+
+	// Commands
+
+	public Command resetArmOffset() {
+		return runOnce(() -> resetEncoderOffset());
+	}
 
 }
 

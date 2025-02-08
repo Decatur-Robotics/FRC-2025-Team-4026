@@ -3,8 +3,10 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
 import frc.robot.constants.WristConstants;
@@ -15,41 +17,45 @@ public class WristSubsystem extends SubsystemBase {
 
     private double position;
 
-    private MotionMagicDutyCycle motorControlRequest;
+    private MotionMagicDutyCycle controlRequest;
 
-    private Encoder encoder;
-    private double encoderOffset;
+    private Encoder throughBoreEncoder;
+    private double offset;
 
     public WristSubsystem() {
         
         motor = new TalonFX(Ports.WRIST_MOTOR);
 
-        TalonFXConfiguration talonFXconfigs = new TalonFXConfiguration();
+        TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
 
-        talonFXconfigs.Slot0.kP = WristConstants.KP;
-        talonFXconfigs.Slot0.kI = WristConstants.KI;
-        talonFXconfigs.Slot0.kD = WristConstants.KD;
-        talonFXconfigs.Slot0.kS = WristConstants.KS;
-        talonFXconfigs.Slot0.kV = WristConstants.KV;
-        talonFXconfigs.Slot0.kA = WristConstants.KA;
+        motorConfigs.Slot0.kP = WristConstants.KP;
+        motorConfigs.Slot0.kI = WristConstants.KI;
+        motorConfigs.Slot0.kD = WristConstants.KD;
+        motorConfigs.Slot0.kS = WristConstants.KS;
+        motorConfigs.Slot0.kV = WristConstants.KV;
+        motorConfigs.Slot0.kA = WristConstants.KA;
 
-        talonFXconfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonFXconfigs.CurrentLimits.StatorCurrentLimit = WristConstants.STATOR_CURRENT_LIMIT;
+        motorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+        motorConfigs.CurrentLimits.StatorCurrentLimit = WristConstants.STATOR_CURRENT_LIMIT;
 
-        talonFXconfigs.MotionMagic.MotionMagicCruiseVelocity = WristConstants.CRUISE_VELOCITY;
-        talonFXconfigs.MotionMagic.MotionMagicAcceleration = WristConstants.ACCELERATION;
+        motorConfigs.MotionMagic.MotionMagicCruiseVelocity = WristConstants.CRUISE_VELOCITY;
+        motorConfigs.MotionMagic.MotionMagicAcceleration = WristConstants.ACCELERATION;
 
-        motor.getConfigurator().apply(talonFXconfigs);
+        motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+        motor.getConfigurator().apply(motorConfigs);
 
         motor.optimizeBusUtilization();
         motor.getRotorPosition().setUpdateFrequency(20);
 
         position = WristConstants.INITIAL_POSITION; 
 
-        motor.setControl(motorControlRequest.withPosition(position));
+        motor.setControl(controlRequest.withPosition(position));
 
-        //k4X is quadrature encoding
-        encoder = new Encoder(Ports.WRIST_ENCODER_A, Ports.WRIST_ENCODER_B, false, Encoder.EncodingType.k4X);
+        // k4X is quadrature encoding
+        throughBoreEncoder = new Encoder(Ports.WRIST_ENCODER_A, Ports.WRIST_ENCODER_B, false, Encoder.EncodingType.k4X);
+
+        resetEncoderOffset();
     }
 
     @Override
@@ -63,7 +69,7 @@ public class WristSubsystem extends SubsystemBase {
     public void setPosition(double position) {
         this.position = position;
 
-        motor.setControl(motorControlRequest);
+        motor.setControl(controlRequest.withPosition(position + offset));
     }
 
     public double getRawTalonPosition() {
@@ -71,15 +77,22 @@ public class WristSubsystem extends SubsystemBase {
     }
     
     public double getThroughBoreEncoderValue() {
-        return encoder.get();
+        return throughBoreEncoder.get();
     }
 
     public double getOffsetTalonPosition() {
-        return motor.getRotorPosition().getValueAsDouble() + encoderOffset;
+        return motor.getRotorPosition().getValueAsDouble() - offset;
     }
 
-    public void resetEncoder() {
-        double encoderRotations = getThroughBoreEncoderValue() / WristConstants.K_ENCODER_COUNTS_PER_REVOLUTION;
-        encoderOffset = encoderRotations - motor.getRotorPosition().getValueAsDouble();
+    public void resetEncoderOffset() {
+        double encoderRotations = (getThroughBoreEncoderValue() - WristConstants.ENCODER_ZERO_OFFSET) / WristConstants.ENCODER_COUNTS_PER_REVOLUTION;
+        offset = encoderRotations - motor.getRotorPosition().getValueAsDouble();
     }
+
+    // Commands
+
+	public Command resetWristOffset() {
+		return runOnce(() -> resetEncoderOffset());
+	}
+
 }
