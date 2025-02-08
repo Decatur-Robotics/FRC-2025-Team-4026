@@ -18,7 +18,6 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.EndEffectorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SuperstructureSubsystem;
 import frc.robot.subsystems.WristSubsystem;
@@ -39,7 +38,6 @@ public class RobotContainer {
     private final ClawSubsystem claw;
     private final IntakeSubsystem intake;
     private final SuperstructureSubsystem superstructure;
-    private final EndEffectorSubsystem endEffector;
     private final CommandSwerveDrivetrain drivetrain;
 
     private final ShuffleboardTab shuffleboardTab;
@@ -59,8 +57,6 @@ public class RobotContainer {
         field = new Field2d();
         SmartDashboard.putData("Field", field);
 
-
-
         shuffleboardTab = Shuffleboard.getTab("Tab 1");
 
         MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
@@ -74,8 +70,7 @@ public class RobotContainer {
         wrist = new WristSubsystem();
         claw = new ClawSubsystem();
         intake = new IntakeSubsystem();
-        superstructure = new SuperstructureSubsystem(elevator, arm, wrist);
-        endEffector = new EndEffectorSubsystem(claw, intake);
+        superstructure = new SuperstructureSubsystem(elevator, arm, wrist, claw, intake);
         drivetrain = TunerConstants.createDrivetrain();
 
         PathPlannerLogging.setLogCurrentPoseCallback((Pose2d pose) -> {
