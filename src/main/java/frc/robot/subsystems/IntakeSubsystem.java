@@ -15,7 +15,6 @@ public class IntakeSubsystem extends SubsystemBase {
     private TalonFXS motorLeft, motorRight;
 
     private double velocity;
-    private double velocityFeedForward;
     private MotionMagicVelocityVoltage motorControlRequest;
     
     public IntakeSubsystem() {
@@ -29,12 +28,12 @@ public class IntakeSubsystem extends SubsystemBase {
         motorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
         motorConfigs.CurrentLimits.StatorCurrentLimit = IntakeConstants.CURRENT_LIMIT;
 
-        // Added kS and kV in case they were need for velocity closed-loop control
         motorConfigs.Slot0.kP = IntakeConstants.KP;
         motorConfigs.Slot0.kI = IntakeConstants.KI;
         motorConfigs.Slot0.kD = IntakeConstants.KD;
         motorConfigs.Slot0.kS = IntakeConstants.KS;
         motorConfigs.Slot0.kV = IntakeConstants.KV;
+        motorConfigs.Slot0.kA = IntakeConstants.KA;
 
         motorConfigs.MotionMagic.MotionMagicAcceleration = IntakeConstants.ACCELERATION;
         motorConfigs.MotionMagic.MotionMagicCruiseVelocity = IntakeConstants.CRUISE_VELOCITY;
@@ -47,7 +46,6 @@ public class IntakeSubsystem extends SubsystemBase {
         motorRight.optimizeBusUtilization();
         motorLeft.getVelocity().setUpdateFrequency(20);
         
-        velocityFeedForward = IntakeConstants.KFF;
         velocity = IntakeConstants.REST_VELOCITY;
         
         motorControlRequest = new MotionMagicVelocityVoltage(velocity);
@@ -55,7 +53,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void setVelocity(double velocity) {
         this.velocity = velocity;
-        motorLeft.setControl(motorControlRequest.withFeedForward(velocityFeedForward));
+        motorLeft.setControl(motorControlRequest.withVelocity(velocity));
     }
 
     public double getVelocity() {
