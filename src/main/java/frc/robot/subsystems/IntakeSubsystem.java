@@ -6,6 +6,7 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.Ports;
@@ -16,6 +17,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private double velocity;
     private MotionMagicVelocityVoltage motorControlRequest;
+
+    private LinearFilter currentFilter;
+    private double filteredCurrent;
     
     public IntakeSubsystem() {
         motorLeft = new TalonFXS(Ports.INTAKE_MOTOR_LEFT);
@@ -49,6 +53,13 @@ public class IntakeSubsystem extends SubsystemBase {
         velocity = IntakeConstants.REST_VELOCITY;
         
         motorControlRequest = new MotionMagicVelocityVoltage(velocity);
+
+        currentFilter = LinearFilter.movingAverage(10);
+    }
+
+    @Override
+    public void periodic() {
+        filteredCurrent = currentFilter.calculate(getCurrent());
     }
 
     public void setVelocity(double velocity) {
@@ -58,6 +69,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public double getVelocity() {
         return motorLeft.getVelocity().getValueAsDouble();
+    }
+
+    public double getCurrent() {
+        return motorLeft.getStatorCurrent().getValueAsDouble();
+    }
+
+    public double getFilteredCurrent() {
+        return filteredCurrent;
     }
 
 }

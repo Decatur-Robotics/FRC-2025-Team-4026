@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.SuperstructureConstants;
@@ -73,6 +76,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
         wrist.setPosition(targetState.wristPosition);
     }
 
+    // Is at targets
+
     public boolean isAtTargetState() {
         return isElevatorAtTargetPosition() &&
                 isArmAtTargetPosition() &&
@@ -112,6 +117,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return true;
     }
 
+    // Get goal states
+
     public SuperstructureState getGoalState() {
         return goalTargetState;
     }
@@ -119,6 +126,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
     public double getTargetIntakeVelocity() {
         return targetIntakeVelocity;
     }
+
+    // Get actual states
 
     public SuperstructureState getActualState() {
         return new SuperstructureState(getActualElevatorPosition(), getActualArmPosition(), getActualWristPosition(), getActualClawPosition());
@@ -176,8 +185,33 @@ public class SuperstructureSubsystem extends SubsystemBase {
         claw.setPosition(velocity);
     }
 
-    // Commands
+    // Get other subsystem information
 
+    public double getFilteredIntakeCurrent() {
+        return intake.getFilteredCurrent();
+    }
 
+    // Intaking commands
+
+    public Command intakeCoralGroundCommand() {
+        Debouncer debouncer = new Debouncer(IntakeConstants.STALL_DEBOUNCE_TIME, DebounceType.kRising);
+
+        return runOnce(
+            () -> {
+                debouncer.calculate(false);
+            })
+            .andThen(
+                run(() -> setState(SuperstructureConstants.CORAL_GROUND_INTAKING_STATE))
+            )
+            .alongWith(
+                run(() -> setIntakeVelocity(IntakeConstants.INTAKE_VELOCITY))
+            )
+            .until(
+                () -> debouncer.calculate(getFilteredIntakeCurrent() > IntakeConstants.STALL_CURRENT)
+            )
+            .finallyDo(
+                () -> run(() -> setState(SuperstructureConstants.CORAL_STOWED_STATE))
+            );
+    }
 
 }
