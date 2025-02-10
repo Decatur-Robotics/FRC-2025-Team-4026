@@ -49,37 +49,73 @@ public class SuperstructureConstants {
             0);
 
     // Scoring states
-    public static final SuperstructureState L1_SCORING_STATE = new SuperstructureState(
+    public static final SuperstructureState MOVE_TO_L1_STATE = new SuperstructureState(
             0, 
             0, 
             0, 
             0);
 
-    public static final SuperstructureState L2_SCORING_STATE = new SuperstructureState(
+    public static final SuperstructureState MOVE_TO_L2_STATE = new SuperstructureState(
             0, 
             0, 
             0, 
             0);
 
-    public static final SuperstructureState L3_SCORING_STATE = new SuperstructureState(
+    public static final SuperstructureState MOVE_TO_L3_STATE = new SuperstructureState(
             0, 
             0, 
             0, 
             0);
 
-    public static final SuperstructureState L4_SCORING_STATE = new SuperstructureState(
+    public static final SuperstructureState MOVE_TO_L4_STATE = new SuperstructureState(
             0, 
             0, 
             0, 
             0);
 
-    public static final SuperstructureState PROCESSOR_SCORING_STATE = new SuperstructureState(
+    public static final SuperstructureState MOVE_TO_PROCESSOR_STATE = new SuperstructureState(
             0, 
             0, 
             0, 
             0);
 
-    public static final SuperstructureState NET_SCORING_STATE = new SuperstructureState(
+    public static final SuperstructureState MOVE_TO_NET_STATE = new SuperstructureState(
+            0, 
+            0, 
+            0, 
+            0);
+
+    public static final SuperstructureState SCORE_L1_STATE = new SuperstructureState(
+            0, 
+            0, 
+            0, 
+            0);
+
+    public static final SuperstructureState SCORE_L2_STATE = new SuperstructureState(
+            0, 
+            0, 
+            0, 
+            0);
+
+    public static final SuperstructureState SCORE_L3_STATE = new SuperstructureState(
+            0, 
+            0, 
+            0, 
+            0);
+
+    public static final SuperstructureState SCORE_L4_STATE = new SuperstructureState(
+            0, 
+            0, 
+            0, 
+            0);
+
+    public static final SuperstructureState SCORE_PROCESSOR_STATE = new SuperstructureState(
+            0, 
+            0, 
+            0, 
+            0);
+
+    public static final SuperstructureState SCORE_NET_STATE = new SuperstructureState(
             0, 
             0, 
             0, 
