@@ -4,6 +4,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.SuperstructureConstants;
 import frc.robot.util.SuperstructureState;
@@ -199,18 +200,17 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return runOnce(
             () -> {
                 debouncer.calculate(false);
+                setState(SuperstructureConstants.CORAL_GROUND_INTAKING_STATE);
+                setIntakeVelocity(IntakeConstants.INTAKE_VELOCITY);
             })
             .andThen(
-                run(() -> setState(SuperstructureConstants.CORAL_GROUND_INTAKING_STATE))
-            )
-            .alongWith(
-                run(() -> setIntakeVelocity(IntakeConstants.INTAKE_VELOCITY))
-            )
-            .until(
-                () -> debouncer.calculate(getFilteredIntakeCurrent() > IntakeConstants.STALL_CURRENT)
+                new WaitUntilCommand(() -> debouncer.calculate(getFilteredIntakeCurrent() > IntakeConstants.STALL_CURRENT))
             )
             .finallyDo(
-                () -> run(() -> setState(SuperstructureConstants.CORAL_STOWED_STATE))
+                () -> {
+                    setState(SuperstructureConstants.CORAL_STOWED_STATE);
+                    setIntakeVelocity(IntakeConstants.REST_VELOCITY);
+                }
             );
     }
 
