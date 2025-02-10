@@ -228,7 +228,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Commands.runOnce(() -> {
                 setState(SuperstructureConstants.SCORE_L1_STATE);
                 setIntakeVelocity(IntakeConstants.L1_EJECT_VELOCITY);
-            })
+            }),
+            Commands.waitSeconds(0.25)
         )
         .finallyDo(() -> {
             setState(SuperstructureConstants.CORAL_STOWED_STATE);
