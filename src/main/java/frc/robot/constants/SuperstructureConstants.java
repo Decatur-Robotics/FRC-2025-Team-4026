@@ -130,5 +130,8 @@ public class SuperstructureConstants {
     // Stowability
     public static final double ARM_MINIMUM_STOWED_POSITION = 0;
     public static final double ELEVATOR_MINIMUM_UNSTOWED_POSITION = 0;
+
+    /** Seconds to wait before stowing superstructure after scoring */
+    public static final double SCORE_TO_STOW_DELAY = 0.25;
             
 }

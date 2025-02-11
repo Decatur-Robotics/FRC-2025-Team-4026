@@ -5,8 +5,6 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.SuperstructureConstants;
 import frc.robot.util.SuperstructureState;
@@ -229,7 +227,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 setState(SuperstructureConstants.SCORE_L1_STATE);
                 setIntakeVelocity(IntakeConstants.L1_EJECT_VELOCITY);
             }),
-            Commands.waitSeconds(0.25)
+            Commands.waitSeconds(SuperstructureConstants.SCORE_TO_STOW_DELAY)
         )
         .finallyDo(() -> {
             setState(SuperstructureConstants.CORAL_STOWED_STATE);
