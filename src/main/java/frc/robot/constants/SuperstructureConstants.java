@@ -131,7 +131,9 @@ public class SuperstructureConstants {
     public static final double ARM_MINIMUM_STOWED_POSITION = 0;
     public static final double ELEVATOR_MINIMUM_UNSTOWED_POSITION = 0;
 
-    /** Seconds to wait before stowing superstructure after scoring */
-    public static final double SCORE_TO_STOW_DELAY = 0.25;
+    /** Seconds to wait before stowing superstructure after scoring coral */
+    public static final double CORAL_SCORE_TO_STOW_DELAY = 0.25;
+    /** Seconds to wait before stowing superstructure after scoring algae */
+    public static final double ALGAE_SCORE_TO_STOW_DELAY = 0.25;
             
 }
