@@ -1,0 +1,45 @@
+
+name: Add Issues/PRs to TODO list
+
+on: 
+  issues:
+    types:
+      - opened
+  pull_request:
+    types:
+      - opened
+    branches: [ main, dev ]
+
+jobs:
+  add-to-project:
+    name: Add issue to todo list
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: add Issues/PRs to project
+        uses: actions/add-to-project@v0.5.0
+        with:
+          project-url: https://github.com/orgs/Decatur-Robotics/projects/1
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+  add-labels:
+    name: Add labels to Issues/PRs
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: PR branch label
+        if: ${{ github.event_name == 'pull_request' }}
+        run: gh pr edit "$NUMBER" --add-label "$LABELS"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          LABELS: branch
+
+      - name: PR feature label
+        if: startsWith(github.head_ref, 'feature-')
+        run: gh pr edit "$NUMBER" --add-label "$LABELS"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          LABELS: robot feature
