@@ -203,13 +203,89 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Commands.runOnce(() -> {
                 debouncer.calculate(false);
                 setState(SuperstructureConstants.CORAL_GROUND_INTAKING_STATE);
-                setIntakeVelocity(IntakeConstants.INTAKE_VELOCITY);
+                setIntakeVelocity(IntakeConstants.CORAL_INTAKE_VELOCITY);
             }),
             Commands.waitUntil(() -> debouncer.calculate(getFilteredIntakeCurrent() > IntakeConstants.STALL_CURRENT))
         )
         .finallyDo(
             () -> {
                 setState(SuperstructureConstants.CORAL_STOWED_STATE);
+                setIntakeVelocity(IntakeConstants.REST_VELOCITY);
+            }
+        );
+    }
+
+    public Command intakeCoralHumanPlayerCommand() {
+        Debouncer debouncer = new Debouncer(IntakeConstants.STALL_DEBOUNCE_TIME, DebounceType.kRising);
+
+        return Commands.sequence(
+            Commands.runOnce(() -> {
+                debouncer.calculate(false);
+                setState(SuperstructureConstants.CORAL_HUMAN_PLAYER_INTAKING_STATE);
+                setIntakeVelocity(IntakeConstants.CORAL_INTAKE_VELOCITY);
+            }),
+            Commands.waitUntil(() -> debouncer.calculate(getFilteredIntakeCurrent() > IntakeConstants.STALL_CURRENT))
+        )
+        .finallyDo(
+            () -> {
+                setState(SuperstructureConstants.CORAL_STOWED_STATE);
+                setIntakeVelocity(IntakeConstants.REST_VELOCITY);
+            }
+        );
+    }
+
+    public Command intakeAlgaeGroundCommand() {
+        Debouncer debouncer = new Debouncer(IntakeConstants.STALL_DEBOUNCE_TIME, DebounceType.kRising);
+
+        return Commands.sequence(
+            Commands.runOnce(() -> {
+                debouncer.calculate(false);
+                setState(SuperstructureConstants.ALGAE_GROUND_INTAKING_STATE);
+                setIntakeVelocity(IntakeConstants.ALGAE_INTAKE_VELOCITY);
+            }),
+            Commands.waitUntil(() -> debouncer.calculate(getFilteredIntakeCurrent() > IntakeConstants.STALL_CURRENT))
+        )
+        .finallyDo(
+            () -> {
+                setState(SuperstructureConstants.ALGAE_STOWED_STATE);
+                setIntakeVelocity(IntakeConstants.REST_VELOCITY);
+            }
+        );
+    }
+
+    public Command intakeAlgaeLowReefCommand() {
+        Debouncer debouncer = new Debouncer(IntakeConstants.STALL_DEBOUNCE_TIME, DebounceType.kRising);
+
+        return Commands.sequence(
+            Commands.runOnce(() -> {
+                debouncer.calculate(false);
+                setState(SuperstructureConstants.ALGAE_LOW_REEF_INTAKING_STATE);
+                setIntakeVelocity(IntakeConstants.ALGAE_INTAKE_VELOCITY);
+            }),
+            Commands.waitUntil(() -> debouncer.calculate(getFilteredIntakeCurrent() > IntakeConstants.STALL_CURRENT))
+        )
+        .finallyDo(
+            () -> {
+                setState(SuperstructureConstants.ALGAE_STOWED_STATE);
+                setIntakeVelocity(IntakeConstants.REST_VELOCITY);
+            }
+        );
+    }
+
+    public Command intakeAlgaeHighReefCommand() {
+        Debouncer debouncer = new Debouncer(IntakeConstants.STALL_DEBOUNCE_TIME, DebounceType.kRising);
+
+        return Commands.sequence(
+            Commands.runOnce(() -> {
+                debouncer.calculate(false);
+                setState(SuperstructureConstants.ALGAE_HIGH_REEF_INTAKING_STATE);
+                setIntakeVelocity(IntakeConstants.ALGAE_INTAKE_VELOCITY);
+            }),
+            Commands.waitUntil(() -> debouncer.calculate(getFilteredIntakeCurrent() > IntakeConstants.STALL_CURRENT))
+        )
+        .finallyDo(
+            () -> {
+                setState(SuperstructureConstants.ALGAE_STOWED_STATE);
                 setIntakeVelocity(IntakeConstants.REST_VELOCITY);
             }
         );
