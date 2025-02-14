@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
@@ -16,6 +19,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
@@ -23,6 +27,7 @@ import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
@@ -50,7 +55,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double m_lastSimTime;
     private ChassisSpeeds currentSpeeds;
 
-    private Pose2d robotPose;
+    private Double coralPose;
+    private Double coralShift;
+    private Double algaePose;
+    private Double coralDistance;
+    private Double algaeDistance;
+    private Double robotRotationCoral;
+
+    private Pose2d robotPose;  
     private Pose2d targetPose;
     //pathgen variables
     private final SwerveSetpointGenerator setpointGenerator;
@@ -244,6 +256,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
+
+
     // TODO: We are currently not using the swerve setpoint generator
     private SwerveSetpointGenerator getConfiguredSwerveSetpointGenerator() {
         RobotConfig config = SwerveConstants.CONFIG;
@@ -430,5 +444,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         });
         return AutoBuilder.pathfindToPose(PathSetpoints.NET, SwerveConstants.CONSTRAINTS, 0);
     }
+
+    //I can explain this at some point, cant think of a good name
+    public void orbitWowCoolThing() {
+        robotRotationCoral = Math.asin(coralPose/coralDistance);
+        coralShift = robotRotationCoral*Math.sin(1/robotRotationCoral) + robotRotationCoral;
+    }
+
+
+
 
 }

@@ -35,4 +35,5 @@ public class PathSetpoints {
     public final static Pose2d PROCESSOR = new Pose2d(20, 20, Rotation2d.fromDegrees(0));
     // Would be cool to get net pathing so that it locks the x axis and rotation but lets us control the y axis
     public final static Pose2d NET = new Pose2d(20, 20, Rotation2d.fromDegrees(0));
+    
 }
