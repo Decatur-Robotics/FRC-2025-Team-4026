@@ -2,7 +2,12 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
+
+import org.opencv.core.Mat;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
@@ -16,6 +21,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
@@ -23,6 +29,7 @@ import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
@@ -30,6 +37,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -50,7 +58,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double m_lastSimTime;
     private ChassisSpeeds currentSpeeds;
 
-    private Pose2d robotPose;
+    private Double coralPose;
+    private Double coralShift;
+    private Double coralRotation;
+    private Double algaePose;
+    private Double coralDistance;
+    private Double algaeDistance;
+    private Double robotRotationCoral;
+    private Double activeShift;
+    
+
+    private Pose2d robotPose;  
     private Pose2d targetPose;
     //pathgen variables
     private final SwerveSetpointGenerator setpointGenerator;
@@ -244,6 +262,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
+
+
     // TODO: We are currently not using the swerve setpoint generator
     private SwerveSetpointGenerator getConfiguredSwerveSetpointGenerator() {
         RobotConfig config = SwerveConstants.CONFIG;
@@ -415,5 +435,40 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
         }
     }
+    public Command pathfindToProcessor() {
+        return AutoBuilder.pathfindToPose(PathSetpoints.PROCESSOR, SwerveConstants.CONSTRAINTS, 0);
+    }
+
+    public Command pathfindToNet(Joystick joystick) {
+        PPHolonomicDriveController.overrideYFeedback(() -> {
+            // Calculate feedback
+            return 0.0;
+        });
+        
+        return AutoBuilder.pathfindToPose(PathSetpoints.NET, SwerveConstants.CONSTRAINTS, 0)
+                .finallyDo(() -> PPHolonomicDriveController.clearFeedbackOverrides());
+    }
+
+    // TODO: Some edits will need to be made to these methods in the future
+    // I can explain these at some point, cant think of a good name
+    // public void orbitWowCoolThing() {
+    //     robotRotationCoral = Math.asin(coralPose/coralDistance);
+    //     activeShift = coralDistance;
+    //     //will be added with button bindings, theres probably a better way to do this
+    //    // while (buttonPressed) {
+    //      activeShift = activeShift - 0.01;
+    //     coralShift = robotRotationCoral*Math.sin(coralDistance/(2*Math.PI)*activeShift) + robotRotationCoral;
+    //     m_rotationCharacterization.withRotationalRate(coralShift);
+        
+    //   //  }
+    // }
+
+    
+    // public Command coralMeta(){
+    //   return AutoBuilder.pathfindToPose(new Pose2d(coralPose + 0.5, Math.pow(coralDistance, 2) - Math.pow(coralPose, 2), new Rotation2d(coralRotation)), SwerveConstants.CONSTRAINTS, 0);  
+    // }
+
+
+
 
 }
