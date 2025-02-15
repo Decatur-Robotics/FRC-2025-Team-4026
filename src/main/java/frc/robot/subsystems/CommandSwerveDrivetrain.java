@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
+import org.opencv.core.Mat;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
@@ -57,10 +59,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private Double coralPose;
     private Double coralShift;
+    private Double coralRotation;
     private Double algaePose;
     private Double coralDistance;
     private Double algaeDistance;
     private Double robotRotationCoral;
+    private Double activeShift;
+    
 
     private Pose2d robotPose;  
     private Pose2d targetPose;
@@ -445,11 +450,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return AutoBuilder.pathfindToPose(PathSetpoints.NET, SwerveConstants.CONSTRAINTS, 0);
     }
 
-    //I can explain this at some point, cant think of a good name
-    public void orbitWowCoolThing() {
-        robotRotationCoral = Math.asin(coralPose/coralDistance);
-        coralShift = robotRotationCoral*Math.sin(1/robotRotationCoral) + robotRotationCoral;
-    }
+    //Some edits will need to be made to these methods in the future
+    //I can explain these at some point, cant think of a good name
+    //public void orbitWowCoolThing() {
+    //     robotRotationCoral = Math.asin(coralPose/coralDistance);
+    //     activeShift = coralDistance;
+    //     //will be added with button bindings, theres probably a better way to do this
+    //    // while (buttonPressed) {
+    //      activeShift = activeShift - 0.01;
+    //     coralShift = robotRotationCoral*Math.sin(coralDistance/(2*Math.PI)*activeShift) + robotRotationCoral;
+    //     m_rotationCharacterization.withRotationalRate(coralShift);
+        
+    //   //  }
+    // }
+
+    
+    // public Command coralMeta(){
+    //   return AutoBuilder.pathfindToPose(new Pose2d(coralPose + 0.5, Math.pow(coralDistance, 2) - Math.pow(coralPose, 2), new Rotation2d(coralRotation)), SwerveConstants.CONSTRAINTS, 0);  
+    // }
 
 
 
