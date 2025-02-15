@@ -29,7 +29,7 @@ public class PathSetpoints {
     public final static Pose2d REEF_IJ = new Pose2d(10, 10, Rotation2d.fromDegrees(0));
     public final static Pose2d REEF_KL = new Pose2d(15, 5, Rotation2d.fromDegrees(0));
 
-    public final static Pose2d[] ALGAE_REEF_POSES = {REEF_AB, REEF_CD, REEF_EF, REEF_GH, REEF_IJ, REEF_KL};
+    public final static Pose2d[] REEF_ALGAE_POSES = {REEF_AB, REEF_CD, REEF_EF, REEF_GH, REEF_IJ, REEF_KL};
 
     // Algae scoring locations
     public final static Pose2d PROCESSOR = new Pose2d(20, 20, Rotation2d.fromDegrees(0));

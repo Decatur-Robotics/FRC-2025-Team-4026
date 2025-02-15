@@ -27,7 +27,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -57,8 +56,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private Double robotRotationCoral;
     private Double activeShift;
 
-    private Pose2d robotPose;  
-    private Pose2d targetPose;
     //pathgen variables
     private final SwerveSetpointGenerator setpointGenerator;
     private SwerveSetpoint previousSetpoint;
@@ -319,8 +316,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-
-        
     }
 
     private void startSimThread() {
@@ -376,59 +371,41 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return true;
     }
 
-    public Command pathfindToBestTarget() {
-        double poseNum;
+    public Pose2d getClosestPoseFromArray(Pose2d[] poses) {
+        double distanceToClosestPose;
+        Pose2d closestPose;
 
-        if (isCoral()) {
-            Pose2d[] poses = PathSetpoints.CORAL_SCORING_POSES;
-            
-            poseNum = poses.length;
-            int left = 0, right = (int)poseNum - 1;
+        distanceToClosestPose = poses[0].getTranslation().getDistance(getState().Pose.getTranslation());
+        closestPose = poses[0];
 
-            // Finds the closest pose in the array
-            while (left < right){
-                if (poses[left].getTranslation().getDistance(robotPose.getTranslation())
-                        <= poses[right].getTranslation().getDistance(robotPose.getTranslation())) {
-                    right--;
-                }
-                else {
-                    left++;
-                }
+        for (Pose2d pose : poses) {
+            double distanceToPose = pose.getTranslation().getDistance(getState().Pose.getTranslation());
+            if (distanceToPose < distanceToClosestPose) {
+                distanceToClosestPose = distanceToPose;
+                closestPose = pose;
             }
-
-            targetPose = poses[left];
-
-            //This is used as the command for pathfinding
-            return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
         }
-        else { 
-            Pose2d[] poses = PathSetpoints.ALGAE_REEF_POSES;
-            
-            poseNum = poses.length;
-            int left = 0, right = (int)poseNum - 1;
 
-            // Finds the closest pose in the array
-            while (left < right) {
-                if (poses[left].getTranslation().getDistance(robotPose.getTranslation())
-                        <= poses[right].getTranslation().getDistance(robotPose.getTranslation())) {
-                    right--;
-                }
-                else {
-                    left++;
-                }
-            }
-
-            targetPose = poses[left];
-
-            //This is used as the command for pathfinding
-            return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
-        }
+        return closestPose;
     }
+
+    public Command pathfindToClosestBranch() {
+        Pose2d targetPose = getClosestPoseFromArray(PathSetpoints.CORAL_SCORING_POSES);
+
+        return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
+    }
+
+    public Command pathfindToClosestReefAlgae() {
+        Pose2d targetPose = getClosestPoseFromArray(PathSetpoints.REEF_ALGAE_POSES);
+        
+        return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
+    }
+
     public Command pathfindToProcessor() {
         return AutoBuilder.pathfindToPose(PathSetpoints.PROCESSOR, SwerveConstants.CONSTRAINTS, 0);
     }
 
-    public Command pathfindToNet(Joystick joystick) {
+    public Command pathfindToNet() {
         PPHolonomicDriveController.overrideYFeedback(() -> {
             // Calculate feedback
             return 0.0;
