@@ -37,6 +37,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -438,21 +439,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return AutoBuilder.pathfindToPose(PathSetpoints.PROCESSOR, SwerveConstants.CONSTRAINTS, 0);
     }
 
-    public Command pathfindToNet() {
-        PPHolonomicDriveController.overrideXFeedback(() -> {
+    public Command pathfindToNet(Joystick joystick) {
+        PPHolonomicDriveController.overrideYFeedback(() -> {
             // Calculate feedback
             return 0.0;
         });
-        PPHolonomicDriveController.overrideRotationFeedback(() -> {
-            // Calculate feedback
-            return 0.0;
-        });
-        return AutoBuilder.pathfindToPose(PathSetpoints.NET, SwerveConstants.CONSTRAINTS, 0);
+        
+        return AutoBuilder.pathfindToPose(PathSetpoints.NET, SwerveConstants.CONSTRAINTS, 0)
+                .finallyDo(() -> PPHolonomicDriveController.clearFeedbackOverrides());
     }
 
-    //Some edits will need to be made to these methods in the future
-    //I can explain these at some point, cant think of a good name
-    //public void orbitWowCoolThing() {
+    // TODO: Some edits will need to be made to these methods in the future
+    // I can explain these at some point, cant think of a good name
+    // public void orbitWowCoolThing() {
     //     robotRotationCoral = Math.asin(coralPose/coralDistance);
     //     activeShift = coralDistance;
     //     //will be added with button bindings, theres probably a better way to do this
