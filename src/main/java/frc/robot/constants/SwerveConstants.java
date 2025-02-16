@@ -16,4 +16,7 @@ public class SwerveConstants {
     /* Not tuned */
     public static final double MAX_ANGULAR_VELOCITY = 10;
 
+    public static final double TRANSLATIONAL_DEADBAND = MAX_TRANSLATION_VELOCITY * 0.05;
+    public static final double ANGULAR_DEADBAND = MAX_ANGULAR_VELOCITY * 0.05;
+
 }

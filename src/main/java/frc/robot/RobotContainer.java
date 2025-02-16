@@ -7,12 +7,17 @@ import java.util.List;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.constants.SwerveConstants;
+import frc.robot.core.LogitechControllerButtons;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
@@ -38,7 +43,7 @@ public class RobotContainer {
     private final ClawSubsystem claw;
     private final IntakeSubsystem intake;
     private final SuperstructureSubsystem superstructure;
-    private final CommandSwerveDrivetrain drivetrain;
+    private final CommandSwerveDrivetrain swerve;
 
     private final ShuffleboardTab shuffleboardTab;
 
@@ -71,7 +76,7 @@ public class RobotContainer {
         claw = new ClawSubsystem();
         intake = new IntakeSubsystem();
         superstructure = new SuperstructureSubsystem(elevator, arm, wrist, claw, intake);
-        drivetrain = TunerConstants.createDrivetrain();
+        swerve = TunerConstants.createDrivetrain();
 
         PathPlannerLogging.setLogCurrentPoseCallback((Pose2d pose) -> {
             field.setRobotPose(pose);
@@ -101,6 +106,20 @@ public class RobotContainer {
      */
 
     private void configurePrimaryBindings() {
+        Joystick joystick = new Joystick(0);
+
+        JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a);
+        JoystickButton b = new JoystickButton(joystick, LogitechControllerButtons.b);
+        JoystickButton x = new JoystickButton(joystick, LogitechControllerButtons.x);
+        JoystickButton y = new JoystickButton(joystick, LogitechControllerButtons.y);
+
+        swerve.setDefaultCommand(swerve.driveTeleop(() -> new ChassisSpeeds(
+            joystick.getY() * SwerveConstants.MAX_TRANSLATION_VELOCITY, 
+            joystick.getX() * SwerveConstants.MAX_TRANSLATION_VELOCITY, 
+            joystick.getTwist() * SwerveConstants.MAX_ANGULAR_VELOCITY)));
+
+        // Reset heading
+        a.onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));
         
     }
 
