@@ -11,7 +11,9 @@ public class SwerveConstants {
 
     public static final PathConstraints CONSTRAINTS = new PathConstraints(0, 0, 
                                                                           Units.degreesToRadians(0), Units.degreesToRadians(0));
-    
-    public static final double MAX_ROTATION_VELOCITY = 10;
+    /* Translation velocity from SDS, not tuned to robot */
+    public static final double MAX_TRANSLATION_VELOCITY = 15.5;
+    /* Not tuned */
+    public static final double MAX_ANGULAR_VELOCITY = 10;
 
 }
