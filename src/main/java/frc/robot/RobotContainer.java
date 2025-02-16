@@ -122,14 +122,18 @@ public class RobotContainer {
         };
 
         JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a);
-        JoystickButton b = new JoystickButton(joystick, LogitechControllerButtons.b);
-        JoystickButton x = new JoystickButton(joystick, LogitechControllerButtons.x);
-        JoystickButton y = new JoystickButton(joystick, LogitechControllerButtons.y);
+        JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
+        JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
+        JoystickButton bumperLeft = new JoystickButton(joystick, LogitechControllerButtons.bumperLeft);
+        JoystickButton bumperRight = new JoystickButton(joystick, LogitechControllerButtons.bumperRight);
 
 
         swerve.setDefaultCommand(swerve.driveFieldRelative(desiredChassisSpeeds));
 
-        b.whileTrue(swerve.driveToClosestBranch(desiredChassisSpeeds));
+        triggerLeft.whileTrue(swerve.driveToNet(desiredChassisSpeeds));
+        triggerRight.whileTrue(swerve.driveToClosestBranch(desiredChassisSpeeds));
+        bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
+        bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
 
         // Reset heading
         a.onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));
