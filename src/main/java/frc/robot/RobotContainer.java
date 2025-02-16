@@ -129,7 +129,7 @@ public class RobotContainer {
 
         swerve.setDefaultCommand(swerve.driveFieldRelative(desiredChassisSpeeds));
 
-        b.whileTrue(swerve.pathfindToClosestBranch());
+        b.whileTrue(swerve.driveToClosestBranch(desiredChassisSpeeds));
 
         // Reset heading
         a.onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));

@@ -68,13 +68,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean m_hasAppliedOperatorPerspective = false;
 
-    /** Swerve request to apply during field-centric teleop control */
-    private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
-        .withDeadband(SwerveConstants.MAX_TRANSLATION_VELOCITY * 0.05)
-        .withRotationalDeadband(SwerveConstants.MAX_ANGULAR_VELOCITY * 0.05)
-        .withDriveRequestType(DriveRequestType.Velocity)
-        .withSteerRequestType(SteerRequestType.MotionMagicExpo);
-
     private final ModuleRequest moduleRequest = new ModuleRequest()
         .withDriveRequest(DriveRequestType.Velocity)
         .withSteerRequest(SteerRequestType.MotionMagicExpo);
@@ -373,11 +366,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
 
-    // TODO: Return true only if pathing should target coral scoring locations
-    public boolean isCoral() {
-        return true;
-    }
-
     public Pose2d getClosestPoseFromArray(Pose2d[] poses) {
         double distanceToClosestPose;
         Pose2d closestPose;
@@ -396,30 +384,42 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return closestPose;
     }
 
-    public Command pathfindToClosestBranch() {
+    public Command driveToPose(Supplier<ChassisSpeeds> speeds, Pose2d targetPose) {
+        return run(() -> {
+            if (speeds.get().vxMetersPerSecond == 0 && speeds.get().vyMetersPerSecond == 0) {
+                speeds.get().vxMetersPerSecond = SwerveConstants.TRANSLATIONAL_CONTROLLER.calculate(
+                    getState().Pose.getX(), targetPose.getX());
+                speeds.get().vyMetersPerSecond = SwerveConstants.TRANSLATIONAL_CONTROLLER.calculate(
+                    getState().Pose.getY(), targetPose.getY());
+            }
+
+            if (speeds.get().omegaRadiansPerSecond == 0) {
+                speeds.get().omegaRadiansPerSecond = SwerveConstants.ANGULAR_CONTROLLER.calculate(
+                    getState().Pose.getRotation().getRadians(), targetPose.getRotation().getRadians());
+            }
+
+            driveFieldRelative(speeds);
+        });
+    }
+
+    public Command driveToClosestBranch(Supplier<ChassisSpeeds> speeds) {
         Pose2d targetPose = getClosestPoseFromArray(PathSetpoints.CORAL_SCORING_POSES);
 
-        return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
+        return driveToPose(speeds, targetPose);
     }
 
-    public Command pathfindToClosestReefAlgae() {
+    public Command driveToClosestReefAlgae(Supplier<ChassisSpeeds> speeds) {
         Pose2d targetPose = getClosestPoseFromArray(PathSetpoints.REEF_ALGAE_POSES);
         
-        return AutoBuilder.pathfindToPose(targetPose, SwerveConstants.CONSTRAINTS, 0);
+        return driveToPose(speeds, targetPose);
     }
 
-    public Command pathfindToProcessor() {
-        return AutoBuilder.pathfindToPose(PathSetpoints.PROCESSOR, SwerveConstants.CONSTRAINTS, 0);
+    public Command driveToProcessor(Supplier<ChassisSpeeds> speeds) {
+        return driveToPose(speeds, PathSetpoints.PROCESSOR);
     }
 
-    public Command pathfindToNet(Supplier<Double> velocityY) {
-        PPHolonomicDriveController.overrideYFeedback(() -> {
-            // Calculate feedback
-            return velocityY.get();
-        });
-        
-        return AutoBuilder.pathfindToPose(PathSetpoints.NET, SwerveConstants.CONSTRAINTS, 0)
-                .finallyDo(() -> PPHolonomicDriveController.clearFeedbackOverrides());
+    public Command driveToNet(Supplier<ChassisSpeeds> speeds) {
+        return driveToPose(speeds, PathSetpoints.NET);
     }
 
     // TODO: Some edits will need to be made to these methods in the future

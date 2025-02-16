@@ -3,6 +3,7 @@ package frc.robot.constants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 
 public class SwerveConstants {
@@ -11,6 +12,10 @@ public class SwerveConstants {
 
     public static final PathConstraints CONSTRAINTS = new PathConstraints(0, 0, 
                                                                           Units.degreesToRadians(0), Units.degreesToRadians(0));
+
+    public static final PIDController TRANSLATIONAL_CONTROLLER = new PIDController(0, 0, 0);
+    public static final PIDController ANGULAR_CONTROLLER = new PIDController(0, 0, 0);
+
     /* Translation velocity from SDS, not tuned to robot */
     public static final double MAX_TRANSLATION_VELOCITY = 15.5;
     /* Not tuned */
