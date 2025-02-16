@@ -61,6 +61,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveSetpointGenerator setpointGenerator;
     private SwerveSetpoint previousSetpoint;
 
+    private Pose2d targetPose = new Pose2d();
+
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
     /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
@@ -385,6 +387,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public Command driveToPose(Supplier<ChassisSpeeds> speeds, Pose2d targetPose) {
+        this.targetPose = targetPose;
+        
         return run(() -> {
             if (speeds.get().vxMetersPerSecond == 0 && speeds.get().vyMetersPerSecond == 0) {
                 speeds.get().vxMetersPerSecond = SwerveConstants.TRANSLATIONAL_CONTROLLER.calculate(
@@ -399,19 +403,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
 
             driveFieldRelative(speeds);
-        });
+        })
+        .finallyDo(() -> this.targetPose = null);
     }
 
     public Command driveToClosestBranch(Supplier<ChassisSpeeds> speeds) {
-        Pose2d targetPose = getClosestPoseFromArray(PathSetpoints.CORAL_SCORING_POSES);
+        Pose2d pose = getClosestPoseFromArray(PathSetpoints.CORAL_SCORING_POSES);
 
-        return driveToPose(speeds, targetPose);
+        return driveToPose(speeds, pose);
     }
 
     public Command driveToClosestReefAlgae(Supplier<ChassisSpeeds> speeds) {
-        Pose2d targetPose = getClosestPoseFromArray(PathSetpoints.REEF_ALGAE_POSES);
+        Pose2d pose = getClosestPoseFromArray(PathSetpoints.REEF_ALGAE_POSES);
         
-        return driveToPose(speeds, targetPose);
+        return driveToPose(speeds, pose);
     }
 
     public Command driveToProcessor(Supplier<ChassisSpeeds> speeds) {
@@ -420,6 +425,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public Command driveToNet(Supplier<ChassisSpeeds> speeds) {
         return driveToPose(speeds, PathSetpoints.NET);
+    }
+
+    public boolean isAtTargetPose() {
+        if (targetPose.equals(null)) return false;
+        
+        boolean isAtTargetX = getState().Pose.getX() - targetPose.getX() < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
+        boolean isAtTargetY = getState().Pose.getY() - targetPose.getY() < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
+        boolean isAtTargetRotation = getState().Pose.getRotation().getRadians() - targetPose.getRotation().getRadians() < SwerveConstants.ANGULAR_ERROR_MARGIN;
+
+        return isAtTargetX && isAtTargetY && isAtTargetRotation;
     }
 
     // TODO: Some edits will need to be made to these methods in the future
