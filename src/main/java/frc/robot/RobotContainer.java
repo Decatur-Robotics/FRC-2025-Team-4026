@@ -3,6 +3,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.pathplanner.lib.util.PathPlannerLogging;
 
@@ -108,15 +109,27 @@ public class RobotContainer {
     private void configurePrimaryBindings() {
         Joystick joystick = new Joystick(0);
 
+        Supplier<ChassisSpeeds> desiredChassisSpeeds = () -> { 
+            double velocityX = joystick.getY() * SwerveConstants.MAX_TRANSLATION_VELOCITY;
+            double velocityY = joystick.getX() * SwerveConstants.MAX_TRANSLATION_VELOCITY;
+            double velocityAngular = joystick.getTwist() * SwerveConstants.MAX_ANGULAR_VELOCITY;
+
+            if (Math.abs(velocityX) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityX = 0;
+            if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityY = 0;
+            if (Math.abs(velocityAngular) < SwerveConstants.ANGULAR_DEADBAND) velocityAngular = 0;
+
+            return new ChassisSpeeds(velocityX, velocityY, velocityAngular);
+        };
+
         JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a);
         JoystickButton b = new JoystickButton(joystick, LogitechControllerButtons.b);
         JoystickButton x = new JoystickButton(joystick, LogitechControllerButtons.x);
         JoystickButton y = new JoystickButton(joystick, LogitechControllerButtons.y);
 
-        swerve.setDefaultCommand(swerve.driveTeleop(() -> new ChassisSpeeds(
-            joystick.getY() * SwerveConstants.MAX_TRANSLATION_VELOCITY, 
-            joystick.getX() * SwerveConstants.MAX_TRANSLATION_VELOCITY, 
-            joystick.getTwist() * SwerveConstants.MAX_ANGULAR_VELOCITY)));
+
+        swerve.setDefaultCommand(swerve.driveFieldRelative(desiredChassisSpeeds));
+
+        b.whileTrue(swerve.pathfindToClosestBranch());
 
         // Reset heading
         a.onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));

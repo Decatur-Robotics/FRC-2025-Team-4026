@@ -227,27 +227,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     /**
      * Returns a command that applies specified a swerve setpoint from specified field relative chassis speeds to this swerve drivetrain.
-     * For teleop.
-     * 
-     * @param speeds Function returning the field relative chassis speeds to apply
-     * @return Command to run
-     */
-    public Command driveTeleop(Supplier<ChassisSpeeds> speeds) {
-        return run(() -> {
-            ChassisSpeeds deadbandedSpeeds = speeds.get();
-            deadbandedSpeeds.vxMetersPerSecond = (Math.abs(deadbandedSpeeds.vxMetersPerSecond) < SwerveConstants.TRANSLATIONAL_DEADBAND) ? 
-                0 : deadbandedSpeeds.vxMetersPerSecond;
-            deadbandedSpeeds.vyMetersPerSecond = (Math.abs(deadbandedSpeeds.vyMetersPerSecond) < SwerveConstants.TRANSLATIONAL_DEADBAND) ? 
-                0 : deadbandedSpeeds.vyMetersPerSecond;
-            deadbandedSpeeds.omegaRadiansPerSecond = (Math.abs(deadbandedSpeeds.omegaRadiansPerSecond) < SwerveConstants.ANGULAR_DEADBAND) ? 
-                0 : deadbandedSpeeds.omegaRadiansPerSecond;
-
-            driveFieldRelative(() -> deadbandedSpeeds);
-        });
-    }
-
-    /**
-     * Returns a command that applies specified a swerve setpoint from specified field relative chassis speeds to this swerve drivetrain.
      * 
      * @param speeds Function returning the field relative chassis speeds to apply
      * @return Command to run
