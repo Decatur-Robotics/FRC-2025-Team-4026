@@ -22,6 +22,7 @@ import frc.robot.core.LogitechControllerButtons;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -38,6 +39,7 @@ public class RobotContainer {
 
     private static RobotContainer instance;
 
+    private final ClimberSubsystem climber;
     private final ElevatorSubsystem elevator;
     private final ArmSubsystem arm;
     private final WristSubsystem wrist;
@@ -64,6 +66,7 @@ public class RobotContainer {
         logger = new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
         // Instantiate Subsystems
+        climber = new ClimberSubsystem();
         elevator = new ElevatorSubsystem();
         arm = new ArmSubsystem();
         wrist = new WristSubsystem();
@@ -133,13 +136,37 @@ public class RobotContainer {
     private void configureSecondaryBindings() {
         Joystick joystick = new Joystick(1);
 
+        JoystickButton down = new JoystickButton(joystick, LogitechControllerButtons.down);
+        JoystickButton up = new JoystickButton(joystick, LogitechControllerButtons.up);
+        JoystickButton left = new JoystickButton(joystick, LogitechControllerButtons.left);
+        JoystickButton right = new JoystickButton(joystick, LogitechControllerButtons.right);
         JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a);
         JoystickButton b = new JoystickButton(joystick, LogitechControllerButtons.b);
+        JoystickButton x = new JoystickButton(joystick, LogitechControllerButtons.x);
+        JoystickButton y = new JoystickButton(joystick, LogitechControllerButtons.y);
+        JoystickButton bumperLeft = new JoystickButton(joystick, LogitechControllerButtons.bumperLeft);
+        JoystickButton bumperRight = new JoystickButton(joystick, LogitechControllerButtons.bumperRight);
+        JoystickButton triggerrLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
+        JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
 
-        Supplier<Boolean> overrideLineUp = () -> a.getAsBoolean();
+        Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
         Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
 
-        b.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
+        up.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
+        left.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
+        right.whileTrue(superstructure.scoreCoralL3Command(isAtTargetPose, overrideLineUp));
+        down.whileTrue(superstructure.scoreCoralL4Command(isAtTargetPose, overrideLineUp));
+        triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isAtTargetPose, overrideLineUp));
+        triggerrLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAtTargetPose, overrideLineUp));
+
+        b.whileTrue(superstructure.intakeCoralGroundCommand());
+        y.whileTrue(superstructure.intakeCoralHumanPlayerCommand());
+        a.whileTrue(superstructure.intakeAlgaeGroundCommand());
+        x.whileTrue(superstructure.intakeAlgaeReefCommand(() -> swerve.getTargetPose()));
+
+        bumperRight.whileTrue(climber.climbCommand());
+
+        bumperLeft.onTrue(null); // TODO: make this zero superstructure motors
     }
 
     public static ShuffleboardTab getShuffleboardTab() {

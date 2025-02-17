@@ -4,10 +4,12 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.PathSetpoints;
 import frc.robot.constants.SuperstructureConstants;
 import frc.robot.util.SuperstructureState;
 
@@ -255,13 +257,23 @@ public class SuperstructureSubsystem extends SubsystemBase {
         );
     }
 
-    public Command intakeAlgaeLowReefCommand() {
+    public Command intakeAlgaeReefCommand(Supplier<Pose2d> targetPose) {
         Debouncer debouncer = new Debouncer(IntakeConstants.STALL_DEBOUNCE_TIME, DebounceType.kRising);
+
+        Supplier<SuperstructureState> intakingState = () -> {
+            if (targetPose.get().equals(PathSetpoints.REEF_AB) || targetPose.get().equals(PathSetpoints.REEF_EF) 
+                    || targetPose.get().equals(PathSetpoints.REEF_IJ)) 
+                return SuperstructureConstants.ALGAE_HIGH_REEF_INTAKING_STATE;
+            // else if (targetPose.get().equals(PathSetpoints.REEF_CD) || targetPose.get().equals(PathSetpoints.REEF_GH) 
+            //         || targetPose.get().equals(PathSetpoints.REEF_KL)) 
+            //     return SuperstructureConstants.ALGAE_LOW_REEF_INTAKING_STATE;
+            else return SuperstructureConstants.ALGAE_LOW_REEF_INTAKING_STATE;
+        };
 
         return Commands.sequence(
             Commands.runOnce(() -> {
                 debouncer.calculate(false);
-                setState(SuperstructureConstants.ALGAE_LOW_REEF_INTAKING_STATE);
+                setState(intakingState.get());
                 setIntakeVelocity(IntakeConstants.ALGAE_INTAKE_VELOCITY);
             }),
             Commands.waitUntil(() -> debouncer.calculate(getFilteredIntakeCurrent() > IntakeConstants.STALL_CURRENT))

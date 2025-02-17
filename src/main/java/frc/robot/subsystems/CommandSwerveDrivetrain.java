@@ -437,6 +437,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return isAtTargetX && isAtTargetY && isAtTargetRotation;
     }
 
+    public Pose2d getTargetPose() {
+        return targetPose;
+    }
+
     // TODO: Some edits will need to be made to these methods in the future
     // I can explain these at some point, cant think of a good name
     // public void orbitWowCoolThing() {
