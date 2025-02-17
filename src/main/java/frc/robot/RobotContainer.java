@@ -48,13 +48,9 @@ public class RobotContainer {
 
     private final ShuffleboardTab shuffleboardTab;
 
-    private double MaxSpeed;
-    private double MaxAngularRate;
-
     private final Telemetry logger;
 
     private Field2d field;
-    
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -65,10 +61,7 @@ public class RobotContainer {
 
         shuffleboardTab = Shuffleboard.getTab("Tab 1");
 
-        MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-        MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
-
-        logger = new Telemetry(MaxSpeed);
+        logger = new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
         // Instantiate Subsystems
         elevator = new ElevatorSubsystem();
@@ -105,7 +98,6 @@ public class RobotContainer {
      * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
      */
-
     private void configurePrimaryBindings() {
         Joystick joystick = new Joystick(0);
 
@@ -136,7 +128,6 @@ public class RobotContainer {
 
         // Reset heading
         a.onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));
-        
     }
 
     private void configureSecondaryBindings() {
