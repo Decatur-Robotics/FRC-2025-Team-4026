@@ -294,103 +294,50 @@ public class SuperstructureSubsystem extends SubsystemBase {
     // Scoring commands
 
     public Command scoreCoralL1Command() {
-        return Commands.sequence(
-            Commands.runOnce(() -> {
-                setState(SuperstructureConstants.MOVE_TO_L1_STATE);
-            }),
-            Commands.waitUntil(() -> isAtGoalTargetState()),
-            Commands.runOnce(() -> {
-                setState(SuperstructureConstants.SCORE_L1_STATE);
-                setIntakeVelocity(IntakeConstants.L1_EJECT_VELOCITY);
-            }),
-            Commands.waitSeconds(SuperstructureConstants.CORAL_SCORE_TO_STOW_DELAY)
-        )
-        .finallyDo(() -> {
-            setState(SuperstructureConstants.CORAL_STOWED_STATE);
-            setIntakeVelocity(IntakeConstants.REST_VELOCITY);
-        });
+        return scoreCommand(SuperstructureConstants.MOVE_TO_L1_STATE, SuperstructureConstants.SCORE_L1_STATE,
+            IntakeConstants.L1_EJECT_VELOCITY, SuperstructureConstants.CORAL_SCORE_TO_STOW_DELAY, SuperstructureConstants.CORAL_STOWED_STATE);
     }
 
     public Command scoreCoralL2Command() {
-        return Commands.sequence(
-            Commands.runOnce(() -> {
-                setState(SuperstructureConstants.MOVE_TO_L2_STATE);
-            }),
-            Commands.waitUntil(() -> isAtGoalTargetState()),
-            Commands.runOnce(() -> {
-                setState(SuperstructureConstants.SCORE_L2_STATE);
-            }),
-            Commands.waitSeconds(SuperstructureConstants.CORAL_SCORE_TO_STOW_DELAY)
-        )
-        .finallyDo(() -> {
-            setState(SuperstructureConstants.CORAL_STOWED_STATE);
-        });
+        return scoreCommand(SuperstructureConstants.MOVE_TO_L2_STATE, SuperstructureConstants.SCORE_L2_STATE,
+            IntakeConstants.REST_VELOCITY, SuperstructureConstants.CORAL_SCORE_TO_STOW_DELAY, SuperstructureConstants.CORAL_STOWED_STATE);
     }
 
     public Command scoreCoralL3Command() {
-        return Commands.sequence(
-            Commands.runOnce(() -> {
-                setState(SuperstructureConstants.MOVE_TO_L3_STATE);
-            }),
-            Commands.waitUntil(() -> isAtGoalTargetState()),
-            Commands.runOnce(() -> {
-                setState(SuperstructureConstants.SCORE_L3_STATE);
-            }),
-            Commands.waitSeconds(SuperstructureConstants.CORAL_SCORE_TO_STOW_DELAY)
-        )
-        .finallyDo(() -> {
-            setState(SuperstructureConstants.CORAL_STOWED_STATE);
-        });
+        return scoreCommand(SuperstructureConstants.MOVE_TO_L3_STATE, SuperstructureConstants.SCORE_L3_STATE,
+            IntakeConstants.REST_VELOCITY, SuperstructureConstants.CORAL_SCORE_TO_STOW_DELAY, SuperstructureConstants.CORAL_STOWED_STATE);
     }
 
     public Command scoreCoralL4Command() {
-        return Commands.sequence(
-            Commands.runOnce(() -> {
-                setState(SuperstructureConstants.MOVE_TO_L4_STATE);
-            }),
-            Commands.waitUntil(() -> isAtGoalTargetState()),
-            Commands.runOnce(() -> {
-                setState(SuperstructureConstants.SCORE_L4_STATE);
-            }),
-            Commands.waitSeconds(SuperstructureConstants.CORAL_SCORE_TO_STOW_DELAY)
-        )
-        .finallyDo(() -> {
-            setState(SuperstructureConstants.CORAL_STOWED_STATE);
-        });
+        return scoreCommand(SuperstructureConstants.MOVE_TO_L4_STATE, SuperstructureConstants.SCORE_L4_STATE,
+            IntakeConstants.REST_VELOCITY, SuperstructureConstants.CORAL_SCORE_TO_STOW_DELAY, SuperstructureConstants.CORAL_STOWED_STATE);
     }
 
     public Command scoreAlgaeProcessorCommand() {
-        return Commands.sequence(
-            Commands.runOnce(() -> {
-                setState(SuperstructureConstants.MOVE_TO_PROCESSOR_STATE);
-            }),
-            Commands.waitUntil(() -> isAtGoalTargetState()),
-            Commands.runOnce(() -> {
-                setState(SuperstructureConstants.SCORE_PROCESSOR_STATE);
-                setIntakeVelocity(IntakeConstants.PROCESSOR_EJECT_VELOCITY);
-            }),
-            Commands.waitSeconds(SuperstructureConstants.ALGAE_SCORE_TO_STOW_DELAY)
-        )
-        .finallyDo(() -> {
-            setState(SuperstructureConstants.ALGAE_STOWED_STATE);
-            setIntakeVelocity(IntakeConstants.REST_VELOCITY);
-        });
+        return scoreCommand(SuperstructureConstants.MOVE_TO_PROCESSOR_STATE, SuperstructureConstants.SCORE_PROCESSOR_STATE,
+            IntakeConstants.PROCESSOR_EJECT_VELOCITY, SuperstructureConstants.ALGAE_SCORE_TO_STOW_DELAY, SuperstructureConstants.ALGAE_STOWED_STATE);
     }
 
     public Command scoreAlgaeNetCommand() {
+        return scoreCommand(SuperstructureConstants.MOVE_TO_NET_STATE, SuperstructureConstants.SCORE_NET_STATE,
+            IntakeConstants.NET_EJECT_VELOCITY, SuperstructureConstants.ALGAE_SCORE_TO_STOW_DELAY, SuperstructureConstants.ALGAE_STOWED_STATE);
+    }
+
+    public Command scoreCommand(SuperstructureState stagingState, SuperstructureState scoringState, 
+            double ejectVelocity, double scoreToStowDelay, SuperstructureState stowState) {
         return Commands.sequence(
             Commands.runOnce(() -> {
-                setState(SuperstructureConstants.MOVE_TO_NET_STATE);
+                setState(stagingState);
             }),
             Commands.waitUntil(() -> isAtGoalTargetState()),
             Commands.runOnce(() -> {
-                setState(SuperstructureConstants.SCORE_NET_STATE);
-                setIntakeVelocity(IntakeConstants.NET_EJECT_VELOCITY);
+                setState(scoringState);
+                setIntakeVelocity(ejectVelocity);
             }),
-            Commands.waitSeconds(SuperstructureConstants.ALGAE_SCORE_TO_STOW_DELAY)
+            Commands.waitSeconds(scoreToStowDelay)
         )
         .finallyDo(() -> {
-            setState(SuperstructureConstants.ALGAE_STOWED_STATE);
+            setState(stowState);
             setIntakeVelocity(IntakeConstants.REST_VELOCITY);
         });
     }
