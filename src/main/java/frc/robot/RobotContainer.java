@@ -109,6 +109,12 @@ public class RobotContainer {
     private void configurePrimaryBindings() {
         Joystick joystick = new Joystick(0);
 
+        JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a);
+        JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
+        JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
+        JoystickButton bumperLeft = new JoystickButton(joystick, LogitechControllerButtons.bumperLeft);
+        JoystickButton bumperRight = new JoystickButton(joystick, LogitechControllerButtons.bumperRight);
+
         Supplier<ChassisSpeeds> desiredChassisSpeeds = () -> { 
             double velocityX = joystick.getY() * SwerveConstants.MAX_TRANSLATION_VELOCITY;
             double velocityY = joystick.getX() * SwerveConstants.MAX_TRANSLATION_VELOCITY;
@@ -120,13 +126,6 @@ public class RobotContainer {
 
             return new ChassisSpeeds(velocityX, velocityY, velocityAngular);
         };
-
-        JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a);
-        JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
-        JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
-        JoystickButton bumperLeft = new JoystickButton(joystick, LogitechControllerButtons.bumperLeft);
-        JoystickButton bumperRight = new JoystickButton(joystick, LogitechControllerButtons.bumperRight);
-
 
         swerve.setDefaultCommand(swerve.driveFieldRelative(desiredChassisSpeeds));
 
@@ -141,7 +140,15 @@ public class RobotContainer {
     }
 
     private void configureSecondaryBindings() {
+        Joystick joystick = new Joystick(1);
 
+        JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a);
+        JoystickButton b = new JoystickButton(joystick, LogitechControllerButtons.b);
+
+        Supplier<Boolean> overrideLineUp = () -> a.getAsBoolean();
+        Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
+
+        b.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
     }
 
     public static ShuffleboardTab getShuffleboardTab() {
