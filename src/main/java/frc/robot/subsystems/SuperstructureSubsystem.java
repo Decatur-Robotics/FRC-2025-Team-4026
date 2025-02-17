@@ -198,6 +198,14 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return intake.getFilteredCurrent();
     }
 
+    // Reset offsets commands
+
+    public Command resetElevatorOffsetCommand() {
+        return Commands.sequence(Commands.runOnce(() -> setArmPosition(SuperstructureConstants.CORAL_STOWED_STATE.armPosition)),
+            Commands.waitUntil(() -> isArmAtGoalTargetPosition()),
+            Commands.runOnce(() -> elevator.resetOffsetCommand()));
+    }
+
     // Intaking commands
 
     public Command intakeCoralGroundCommand() {

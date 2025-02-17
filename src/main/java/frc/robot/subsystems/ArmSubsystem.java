@@ -78,6 +78,8 @@ public class ArmSubsystem extends SubsystemBase {
 	public void setPosition(double position) {
 		this.position = position;
 
+		resetEncoderOffset();
+
 		// Arm angle in radians (0 is parallel to the floor)
 		double angle = (position - ArmConstants.LEVEL_POSITION) * ArmConstants.ENCODER_TO_RADIANS_FACTOR;
 

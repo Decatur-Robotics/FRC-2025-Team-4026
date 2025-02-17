@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
 import frc.robot.constants.ElevatorConstants;
@@ -18,6 +19,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double position;
     
     private MotionMagicDutyCycle motorControlRequest;
+    
 
     private DigitalInput limitSwitch;
     
@@ -77,6 +79,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public boolean getLimitSwitch() {
         return limitSwitch.get();
+    }
+
+    public Command resetOffsetCommand() {
+        return runOnce(() -> {
+            
+        });
     }
 
 }
