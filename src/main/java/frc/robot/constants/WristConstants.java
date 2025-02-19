@@ -9,4 +9,6 @@ public class WristConstants {
 
     public static final double MAX_SLAMMED_VELOCITY = 0;
 
+    public static final double SLAM_DEBOUNCE_TIME = 0;
+
 }

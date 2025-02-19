@@ -5,6 +5,8 @@ import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
 import frc.robot.constants.ClawConstants;
@@ -16,6 +18,11 @@ public class ClawSubsystem extends SubsystemBase {
     private double current;
 
     private TorqueCurrentFOC controlRequest;
+
+    private LinearFilter velocityFilter;
+    private double filteredVelocity;
+
+    private Debouncer slamDebouncer;
 
     public ClawSubsystem() {
         motor = new TalonFX(Ports.CLAW_MOTOR); 
@@ -35,6 +42,10 @@ public class ClawSubsystem extends SubsystemBase {
 
         controlRequest = new TorqueCurrentFOC(current);
         motor.setControl(controlRequest);
+
+        velocityFilter = LinearFilter.movingAverage(10);
+
+        slamDebouncer = new Debouncer(ClawConstants.SLAM_DEBOUNCE_TIME);
     }
 
     @Override
@@ -42,6 +53,8 @@ public class ClawSubsystem extends SubsystemBase {
         if (motor.hasResetOccurred()) {
 			motor.optimizeBusUtilization();
 		}
+
+        filteredVelocity = velocityFilter.calculate(motor.getVelocity().getValueAsDouble());
     }
 
     public void setCurrent(double current) {
@@ -54,7 +67,7 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public boolean isSlammed() {
-        return motor.getVelocity().getValueAsDouble() < ClawConstants.MAX_SLAMMED_VELOCITY;
+        return slamDebouncer.calculate(filteredVelocity < ClawConstants.MAX_SLAMMED_VELOCITY);
     }
 
 }

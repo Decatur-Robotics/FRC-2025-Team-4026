@@ -8,5 +8,7 @@ public class ClawConstants {
     public static final double ALGAE_CURRENT = 0;
 
     public static final double MAX_SLAMMED_VELOCITY = 0;
+
+    public static final double SLAM_DEBOUNCE_TIME = 0;
     
 }
