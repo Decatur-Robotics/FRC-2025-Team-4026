@@ -137,7 +137,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
 
     public double getActualArmPosition() {
-        return arm.getOffsetTalonPosition();
+        return arm.getTalonPosition();
     }
 
     public double getActualWristCurrent() {

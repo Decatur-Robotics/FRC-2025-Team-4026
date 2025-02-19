@@ -22,7 +22,6 @@ public class ArmSubsystem extends SubsystemBase {
 	private MotionMagicVoltage controlRequest;
 
 	private Encoder throughBoreEncoder;
-	private double offset;
 
 	public ArmSubsystem() {
 		motorFollower = new TalonFX(Ports.ARM_MOTOR_RIGHT);
@@ -61,7 +60,7 @@ public class ArmSubsystem extends SubsystemBase {
 		// k4X is quadrature encoding
 		throughBoreEncoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
 
-		resetEncoderOffset();
+		resetTalonEncoder();
 	}
 	
 	@Override
@@ -78,39 +77,36 @@ public class ArmSubsystem extends SubsystemBase {
 	public void setPosition(double position) {
 		this.position = position;
 
-		resetEncoderOffset();
+		resetTalonEncoder();
 
 		// Arm angle in radians (0 is parallel to the floor)
 		double angle = (position - ArmConstants.LEVEL_POSITION) * ArmConstants.ENCODER_TO_RADIANS_FACTOR;
 
 		double gravityFeedForward = Math.cos(angle) * ArmConstants.KG;
 
-		motorMain.setControl(controlRequest.withPosition(position + offset)
+		motorMain.setControl(controlRequest.withPosition(position)
 				.withFeedForward(gravityFeedForward));
 	}
 
-    public double getRawTalonPosition() {
+    public double getTalonPosition() {
         return motorFollower.getRotorPosition().getValueAsDouble();
     }
 
 
-	public double getThroughBoreEncoderValue() {
+	public double getThroughBoreEncoderPosition() {
 		return throughBoreEncoder.get();
 	}
 
-	public double getOffsetTalonPosition() {
-		return motorMain.getRotorPosition().getValueAsDouble() - offset;
-	}
-
-	public void resetEncoderOffset() {
-        double rotations = (getThroughBoreEncoderValue() - ArmConstants.ENCODER_ZERO_OFFSET) / ArmConstants.ENCODER_COUNTS_PER_REVOLUTION;
+	public void resetTalonEncoder() {
+        double rotations = (getThroughBoreEncoderPosition() - ArmConstants.THROUGH_BORE_ENCODER_ZERO_OFFSET) 
+			/ ArmConstants.THROUGH_BORE_ENCODER_TO_TALON_ENCODER_RATIO;
 		motorMain.setPosition(rotations);
     }
 
 	// Commands
 
-	public Command resetArmOffset() {
-		return runOnce(() -> resetEncoderOffset());
+	public Command resetArmTalonEncoder() {
+		return runOnce(() -> resetTalonEncoder());
 	}
 
 }

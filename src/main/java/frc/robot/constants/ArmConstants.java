@@ -22,7 +22,8 @@ public class ArmConstants {
 
     public static final double INITIAL_POSITION = SuperstructureConstants.CORAL_STOWED_STATE.armPosition;
 
-    public static final int ENCODER_ZERO_OFFSET = 0;
-    public static final int ENCODER_COUNTS_PER_REVOLUTION = 8192; // how many encoder ticks it takes to complete one rotation of the mechanism for this specific encoder
+    /** The encoder value when the arm is straight up */
+    public static final int THROUGH_BORE_ENCODER_ZERO_OFFSET = 0;
+    public static final int THROUGH_BORE_ENCODER_TO_TALON_ENCODER_RATIO = 8192; // how many encoder ticks it takes to complete one rotation of the mechanism for this specific encoder
     
 }
