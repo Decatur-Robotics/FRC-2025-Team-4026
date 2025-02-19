@@ -27,7 +27,7 @@ public class ArmSubsystem extends SubsystemBase {
 		motorMain.optimizeBusUtilization();
 		motorMain.getRotorPosition().setUpdateFrequency(20);
 
-		position = ArmConstants.INITIAL_POSITION;
+		position = ArmConstants.STOWED_POSITION;
 
 		controlRequest = new MotionMagicVoltage(position).withEnableFOC(true);
 

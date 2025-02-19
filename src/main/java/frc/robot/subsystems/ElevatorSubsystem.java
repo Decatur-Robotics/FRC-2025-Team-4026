@@ -44,7 +44,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         motorFollower.optimizeBusUtilization();
         motorMain.getRotorPosition().setUpdateFrequency(20);
 
-        position = ElevatorConstants.INITIAL_POSITION;
+        position = ElevatorConstants.STOWED_POSITION;
         voltage = 0;
 
         motorFollower.setControl(new Follower(motorMain.getDeviceID(), true));
@@ -100,7 +100,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             Commands.waitUntil(() -> debouncer.calculate(filteredCurrent > ElevatorConstants.STALL_CURRENT))
         ).finallyDo(() -> {
             motorMain.setPosition(0);
-            setPosition(ElevatorConstants.INITIAL_POSITION);
+            setPosition(ElevatorConstants.STOWED_POSITION);
             motorMain.getConfigurator().apply(ElevatorConstants.CURRENT_LIMITS_CONFIGS);
         });
     }

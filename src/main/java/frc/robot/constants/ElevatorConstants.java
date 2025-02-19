@@ -10,7 +10,26 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public final class ElevatorConstants {
 
-    public static final double INITIAL_POSITION = SuperstructureConstants.CORAL_STOWED_STATE.elevatorPosition;
+    // Intaking positions
+    public static final double CORAL_GROUND_INTAKING_POSITION = 0;
+    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 0;
+    public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
+    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 0;
+    public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = 0;
+
+    // Stowed polsition
+    public static final double STOWED_POSITION = 0;
+
+    // Scoring positions
+    public static final double L1_POSITION = 0;
+    public static final double MOVE_TO_L2_POSITION = 0;
+    public static final double SCORE_L2_POSITION = 0;
+    public static final double MOVE_TO_L3_POSITION = 0;
+    public static final double SCORE_L3_POSITION = 0;
+    public static final double MOVE_TO_L4_POSITION = 0;
+    public static final double SCORE_L4_POSITION = 0;
+    public static final double PROCESSOR_POSITION = 0;
+    public static final double NET_POSITION = 0;
 
     public static final double ZEROING_VOLTAGE = 0;
 
