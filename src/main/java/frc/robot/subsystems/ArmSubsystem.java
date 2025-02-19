@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -19,7 +19,7 @@ public class ArmSubsystem extends SubsystemBase {
 	
 	private double position;
 
-	private MotionMagicDutyCycle controlRequest;
+	private MotionMagicVoltage controlRequest;
 
 	private Encoder throughBoreEncoder;
 	private double offset;
@@ -56,7 +56,7 @@ public class ArmSubsystem extends SubsystemBase {
 
 		position = ArmConstants.INITIAL_POSITION;
 
-		controlRequest = new MotionMagicDutyCycle(position);
+		controlRequest = new MotionMagicVoltage(position);
 
 		// k4X is quadrature encoding
 		throughBoreEncoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
