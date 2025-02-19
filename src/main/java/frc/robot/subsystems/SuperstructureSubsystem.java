@@ -24,8 +24,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private SuperstructureState goalTargetState;
     private SuperstructureState targetState;
 
-    private double targetIntakeVelocity;
-
     public SuperstructureSubsystem(ElevatorSubsystem elevator, ArmSubsystem arm, WristSubsystem wrist,
             ClawSubsystem claw, IntakeSubsystem intake) {
         this.elevator = elevator;
@@ -36,23 +34,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
         goalTargetState = SuperstructureConstants.CORAL_STOWED_STATE.copyInstance();
         targetState = SuperstructureConstants.CORAL_STOWED_STATE.copyInstance();
-
-        targetIntakeVelocity = IntakeConstants.REST_VELOCITY;
     }
 
     @Override
     public void periodic() {
         if (!targetState.equals(goalTargetState)) {
-            SuperstructureState oldTargetState = targetState.copyInstance();
-
-            calculateCollisionAvoidanceState();
-
-            if (!targetState.equals(oldTargetState)) {
-                elevator.setPosition(targetState.elevatorPosition);
-                arm.setPosition(targetState.armPosition);
-                wrist.setCurrent(targetState.wristCurrent);
-                claw.setCurrent(targetState.clawCurrent);
-            }
+            setState(goalTargetState);
         }
     }
 
@@ -60,12 +47,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
         if (getActualElevatorPosition() < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION) {
             targetState = new SuperstructureState(goalTargetState.elevatorPosition, 
                     Math.max(SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION, goalTargetState.armPosition), 
-                    goalTargetState.wristCurrent, goalTargetState.clawCurrent);
+                    goalTargetState.wristCurrent, goalTargetState.clawCurrent, goalTargetState.intakeVelocity);
         }
         else if (getActualArmPosition() < SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION) {
             targetState = new SuperstructureState(
                     Math.max(SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION, goalTargetState.elevatorPosition), 
-                    goalTargetState.armPosition, goalTargetState.wristCurrent, goalTargetState.clawCurrent);
+                    goalTargetState.armPosition, goalTargetState.wristCurrent, goalTargetState.clawCurrent, goalTargetState.intakeVelocity);
         }
         else {
             targetState = goalTargetState.copyInstance();
@@ -74,13 +61,18 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public void setState(SuperstructureState goalTargetState) {
         this.goalTargetState = goalTargetState.copyInstance();
+
+        SuperstructureState oldTargetState = targetState.copyInstance();
         
         calculateCollisionAvoidanceState();
 
-        elevator.setPosition(targetState.elevatorPosition);
-        arm.setPosition(targetState.armPosition);
-        wrist.setCurrent(targetState.wristCurrent);
-        claw.setCurrent(targetState.clawCurrent);
+        if (!targetState.equals(oldTargetState)) {
+            elevator.setPosition(targetState.elevatorPosition);
+            arm.setPosition(targetState.armPosition);
+            wrist.setCurrent(targetState.wristCurrent);
+            claw.setCurrent(targetState.clawCurrent);
+            intake.setVelocity(targetState.intakeVelocity);
+        }
     }
 
     // Is at targets
@@ -122,14 +114,11 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return goalTargetState;
     }
 
-    public double getTargetIntakeVelocity() {
-        return targetIntakeVelocity;
-    }
-
     // Get actual states
 
     public SuperstructureState getActualState() {
-        return new SuperstructureState(getActualElevatorPosition(), getActualArmPosition(), getActualWristCurrent(), getActualClawCurrent());
+        return new SuperstructureState(getActualElevatorPosition(), getActualArmPosition(), 
+            getActualWristCurrent(), getActualClawCurrent(), getActualIntakeVelocity());
     }
 
     public double getActualElevatorPosition() {
@@ -155,33 +144,38 @@ public class SuperstructureSubsystem extends SubsystemBase {
     // Directly set subsystem targets
 
     public void setElevatorPosition(double position) {
+        goalTargetState.elevatorPosition = position;
         targetState.elevatorPosition = position;
         
         elevator.setPosition(position);
     }
 
     public void setArmPosition(double position) {
+        goalTargetState.armPosition = position;
         targetState.armPosition = position;
         
         arm.setPosition(position);
     }
 
     public void setWristCurrent(double current) {
+        goalTargetState.wristCurrent = current;
         targetState.wristCurrent = current;
         
         wrist.setCurrent(current);
     }
 
     public void setClawCurrent(double current) {
+        goalTargetState.clawCurrent = current;
         targetState.clawCurrent = current;
         
         claw.setCurrent(current);
     }
 
     public void setIntakeVelocity(double velocity) {
-        targetIntakeVelocity = velocity;
+        goalTargetState.intakeVelocity = velocity;
+        targetState.intakeVelocity = velocity;
         
-        claw.setCurrent(velocity);
+        intake.setVelocity(velocity);
     }
 
     // Reset offsets commands
@@ -230,14 +224,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Commands.runOnce(() -> {
                 debouncer.calculate(false);
                 setState(intakingState.get());
-                setIntakeVelocity(IntakeConstants.INTAKE_VELOCITY);
             }),
             Commands.waitUntil(() -> debouncer.calculate(intake.getFilteredCurrent() > IntakeConstants.STALL_CURRENT))
         )
         .finallyDo(
             () -> {
                 setState(stowedState);
-                setIntakeVelocity(IntakeConstants.REST_VELOCITY);
             }
         );
     }
@@ -281,7 +273,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
 
     public Command scoreCommand(SuperstructureState stagingState, SuperstructureState scoringState, 
-            double ejectVelocity, double scoreToStowDelay, SuperstructureState stowState, 
+            double ejectVelocity, double scoreToStowDelay, SuperstructureState stowedState, 
             Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
         return Commands.sequence(
             Commands.runOnce(() -> {
@@ -290,13 +282,11 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Commands.waitUntil(() -> (isAtGoalTargetState() && isAtTargetPose.get()) || overrideLineUp.get()),
             Commands.runOnce(() -> {
                 setState(scoringState);
-                setIntakeVelocity(ejectVelocity);
             }),
             Commands.waitSeconds(scoreToStowDelay)
         )
         .finallyDo(() -> {
-            setState(stowState);
-            setIntakeVelocity(IntakeConstants.REST_VELOCITY);
+            setState(stowedState);
         });
     }
 
