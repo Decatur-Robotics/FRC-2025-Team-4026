@@ -166,7 +166,7 @@ public class RobotContainer {
 
         bumperRight.whileTrue(climber.climbCommand());
 
-        bumperLeft.onTrue(null); // TODO: make this zero superstructure motors
+        bumperLeft.onTrue(superstructure.zeroSuperstructureCommand());
     }
 
     public static ShuffleboardTab getShuffleboardTab() {
