@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
 import frc.robot.constants.ElevatorConstants;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -33,6 +34,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private LinearFilter currentFilter;
     private double filteredCurrent;
+
+    private CurrentLimitsConfigs normalCurrentLimitsConfigs;
+    private CurrentLimitsConfigs zeroingCurrentLimitsConfigs;
     
     public ElevatorSubsystem() {
         motorFollower = new TalonFX(Ports.ELEVATOR_MOTOR_RIGHT);
@@ -72,6 +76,12 @@ public class ElevatorSubsystem extends SubsystemBase {
         voltageControlRequest = new VoltageOut(voltage).withEnableFOC(true);
 
         currentFilter = LinearFilter.movingAverage(10);
+
+        normalCurrentLimitsConfigs.StatorCurrentLimitEnable = true;
+        normalCurrentLimitsConfigs.StatorCurrentLimit = ElevatorConstants.STATOR_CURRENT_LIMIT;
+
+        zeroingCurrentLimitsConfigs.StatorCurrentLimitEnable = true;
+        zeroingCurrentLimitsConfigs.StatorCurrentLimit = ElevatorConstants.ZEROING_STATOR_CURRENT_LIMIT;
     }
 
     @Override
@@ -112,11 +122,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         Debouncer debouncer = new Debouncer(ElevatorConstants.STALL_DEBOUNCE_TIME, DebounceType.kRising);
 
         return Commands.sequence(
+            Commands.runOnce(() -> motorMain.getConfigurator().apply(zeroingCurrentLimitsConfigs)),
             Commands.runOnce(() -> setVoltage(ElevatorConstants.ZEROING_VOLTAGE)),
             Commands.waitUntil(() -> debouncer.calculate(filteredCurrent > ElevatorConstants.STALL_CURRENT))
         ).finallyDo(() -> {
             motorMain.setPosition(0);
             setPosition(ElevatorConstants.INITIAL_POSITION);
+            motorMain.getConfigurator().apply(normalCurrentLimitsConfigs);
         });
     }
 

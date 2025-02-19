@@ -13,6 +13,7 @@ public final class ElevatorConstants {
     public static final double ACCELERATION = 0;
 
     public static final double STATOR_CURRENT_LIMIT = 0;
+    public static final double ZEROING_STATOR_CURRENT_LIMIT = 0;
 
     public static final double INITIAL_POSITION = SuperstructureConstants.CORAL_STOWED_STATE.elevatorPosition;
 
