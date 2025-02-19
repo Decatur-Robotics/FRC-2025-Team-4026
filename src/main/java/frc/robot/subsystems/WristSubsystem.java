@@ -46,6 +46,13 @@ public class WristSubsystem extends SubsystemBase {
         }
 
         filteredVelocity = velocityFilter.calculate(motor.getVelocity().getValueAsDouble());
+
+        if (isSlammed() && (current == WristConstants.PARALLEL_CURRENT)) {
+            motor.setControl(controlRequest.withOutput(WristConstants.REDUCED_PARALLEL_CURRENT));
+        }
+        else if (isSlammed() && (current == WristConstants.PERPENDICULAR_CURRENT)) {
+            motor.setControl(controlRequest.withOutput(WristConstants.REDUCED_PERPENDICULAR_CURRENT));
+        }
     }
 
     public void setCurrent(double current) {

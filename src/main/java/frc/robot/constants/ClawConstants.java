@@ -9,6 +9,8 @@ public class ClawConstants {
 
     public static final double CORAL_CURRENT = 0;
     public static final double ALGAE_CURRENT = 0;
+    public static final double REDUCED_CORAL_CURRENT = 0;
+    public static final double REDUCED_ALGAE_CURRENT = 0;
 
     public static final double MAX_SLAMMED_VELOCITY = 0;
 

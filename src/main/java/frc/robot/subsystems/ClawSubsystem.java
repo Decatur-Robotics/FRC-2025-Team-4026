@@ -29,10 +29,10 @@ public class ClawSubsystem extends SubsystemBase {
 
         motor.optimizeBusUtilization();
 
-        current = ClawConstants.CORAL_CURRENT;
+        current = ClawConstants.REDUCED_CORAL_CURRENT;
 
         controlRequest = new TorqueCurrentFOC(current);
-        motor.setControl(controlRequest);
+        motor.setControl(controlRequest.withOutput(current));
 
         velocityFilter = LinearFilter.movingAverage(10);
 
@@ -46,6 +46,13 @@ public class ClawSubsystem extends SubsystemBase {
 		}
 
         filteredVelocity = velocityFilter.calculate(motor.getVelocity().getValueAsDouble());
+
+        if (isSlammed() && (current == ClawConstants.CORAL_CURRENT)) {
+            motor.setControl(controlRequest.withOutput(ClawConstants.REDUCED_CORAL_CURRENT));
+        }
+        else if (isSlammed() && (current == ClawConstants.ALGAE_CURRENT)) {
+            motor.setControl(controlRequest.withOutput(ClawConstants.REDUCED_ALGAE_CURRENT));
+        }
     }
 
     public void setCurrent(double current) {

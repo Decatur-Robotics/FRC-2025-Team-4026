@@ -8,7 +8,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 public class WristConstants {
 
     public static final double PARALLEL_CURRENT = 0;
-    public static final double PERPENDICULAR_CURRENT = -0;
+    public static final double PERPENDICULAR_CURRENT = 0;
+    public static final double REDUCED_PARALLEL_CURRENT = 0;
+    public static final double REDUCED_PERPENDICULAR_CURRENT = 0;
 
     public static final double MAX_SLAMMED_VELOCITY = 0;
 
