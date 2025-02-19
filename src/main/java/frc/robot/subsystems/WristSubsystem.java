@@ -1,9 +1,7 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.LinearFilter;
@@ -27,14 +25,7 @@ public class WristSubsystem extends SubsystemBase {
     public WristSubsystem() {
         motor = new TalonFX(Ports.WRIST_MOTOR);
 
-        TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
-
-        motorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-        motorConfigs.CurrentLimits.StatorCurrentLimit = WristConstants.STATOR_CURRENT_LIMIT;
-
-        motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-
-        motor.getConfigurator().apply(motorConfigs);
+        motor.getConfigurator().apply(WristConstants.MOTOR_CONFIG);
 
         motor.optimizeBusUtilization();
 

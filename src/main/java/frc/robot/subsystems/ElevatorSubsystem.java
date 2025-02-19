@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
 import frc.robot.constants.ElevatorConstants;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -34,34 +32,13 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private LinearFilter currentFilter;
     private double filteredCurrent;
-
-    private CurrentLimitsConfigs normalCurrentLimitsConfigs;
-    private CurrentLimitsConfigs zeroingCurrentLimitsConfigs;
     
     public ElevatorSubsystem() {
         motorFollower = new TalonFX(Ports.ELEVATOR_MOTOR_RIGHT);
         motorMain = new TalonFX(Ports.ELEVATOR_MOTOR_LEFT);
 
-        motorFollower.setControl(new Follower(Ports.ELEVATOR_MOTOR_LEFT, true));
-
-        TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
-
-        talonFXConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonFXConfigs.CurrentLimits.StatorCurrentLimit = ElevatorConstants.STATOR_CURRENT_LIMIT;
-
-        talonFXConfigs.Slot0.kP = ElevatorConstants.KP; 
-        talonFXConfigs.Slot0.kI = ElevatorConstants.KI; 
-        talonFXConfigs.Slot0.kD = ElevatorConstants.KD;
-        talonFXConfigs.Slot0.kS = ElevatorConstants.KS; 
-        talonFXConfigs.Slot0.kV = ElevatorConstants.KV;
-        talonFXConfigs.Slot0.kA = ElevatorConstants.KA; 
-        talonFXConfigs.Slot0.kG = ElevatorConstants.KG;
-
-        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = ElevatorConstants.CRUISE_VELOCITY;
-        talonFXConfigs.MotionMagic.MotionMagicAcceleration = ElevatorConstants.ACCELERATION;
-
-        motorMain.getConfigurator().apply(talonFXConfigs);
-        motorFollower.getConfigurator().apply(talonFXConfigs);
+        motorMain.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
+        motorFollower.getConfigurator().apply(ElevatorConstants.MOTOR_CONFIG);
 
         motorMain.optimizeBusUtilization();
         motorFollower.optimizeBusUtilization();
@@ -70,18 +47,14 @@ public class ElevatorSubsystem extends SubsystemBase {
         position = ElevatorConstants.INITIAL_POSITION;
         voltage = 0;
 
+        motorFollower.setControl(new Follower(motorMain.getDeviceID(), true));
+
         positionControlRequest = new MotionMagicVoltage(position).withEnableFOC(true);
         motorMain.setControl(positionControlRequest);
 
         voltageControlRequest = new VoltageOut(voltage).withEnableFOC(true);
 
         currentFilter = LinearFilter.movingAverage(10);
-
-        normalCurrentLimitsConfigs.StatorCurrentLimitEnable = true;
-        normalCurrentLimitsConfigs.StatorCurrentLimit = ElevatorConstants.STATOR_CURRENT_LIMIT;
-
-        zeroingCurrentLimitsConfigs.StatorCurrentLimitEnable = true;
-        zeroingCurrentLimitsConfigs.StatorCurrentLimit = ElevatorConstants.ZEROING_STATOR_CURRENT_LIMIT;
     }
 
     @Override
@@ -122,13 +95,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         Debouncer debouncer = new Debouncer(ElevatorConstants.STALL_DEBOUNCE_TIME, DebounceType.kRising);
 
         return Commands.sequence(
-            Commands.runOnce(() -> motorMain.getConfigurator().apply(zeroingCurrentLimitsConfigs)),
+            Commands.runOnce(() -> motorMain.getConfigurator().apply(ElevatorConstants.ZEROING_CURRENT_LIMITS_CONFIGS)),
             Commands.runOnce(() -> setVoltage(ElevatorConstants.ZEROING_VOLTAGE)),
             Commands.waitUntil(() -> debouncer.calculate(filteredCurrent > ElevatorConstants.STALL_CURRENT))
         ).finallyDo(() -> {
             motorMain.setPosition(0);
             setPosition(ElevatorConstants.INITIAL_POSITION);
-            motorMain.getConfigurator().apply(normalCurrentLimitsConfigs);
+            motorMain.getConfigurator().apply(ElevatorConstants.CURRENT_LIMITS_CONFIGS);
         });
     }
 

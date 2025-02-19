@@ -1,9 +1,7 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.LinearFilter;
@@ -27,14 +25,7 @@ public class ClawSubsystem extends SubsystemBase {
     public ClawSubsystem() {
         motor = new TalonFX(Ports.CLAW_MOTOR); 
 
-        TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
-
-        motorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-        motorConfigs.CurrentLimits.StatorCurrentLimit = ClawConstants.STATOR_CURRENT_LIMIT;
-
-        motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-
-        motor.getConfigurator().apply(motorConfigs);
+        motor.getConfigurator().apply(ClawConstants.MOTOR_CONFIG);
 
         motor.optimizeBusUtilization();
 

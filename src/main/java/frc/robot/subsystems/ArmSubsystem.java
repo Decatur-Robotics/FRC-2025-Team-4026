@@ -1,13 +1,9 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.constants.ArmConstants;
@@ -15,7 +11,7 @@ import frc.robot.constants.Ports;
 
 public class ArmSubsystem extends SubsystemBase {
 	
-	private TalonFX motorFollower, motorMain;
+	private TalonFX motorMain;
 	
 	private double position;
 
@@ -24,32 +20,10 @@ public class ArmSubsystem extends SubsystemBase {
 	private Encoder throughBoreEncoder;
 
 	public ArmSubsystem() {
-		motorFollower = new TalonFX(Ports.ARM_MOTOR_RIGHT);
-		motorMain = new TalonFX(Ports.ARM_MOTOR_LEFT);
+		motorMain = new TalonFX(Ports.ARM_MOTOR);
 
-		motorFollower.setControl(new Follower(motorMain.getDeviceID(), true));
+		motorMain.getConfigurator().apply(ArmConstants.MOTOR_CONFIG);
 
-		TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
-
-		motorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-		motorConfigs.CurrentLimits.StatorCurrentLimit = ArmConstants.CURRENT_LIMIT;
-
-		motorConfigs.Slot0.kP = ArmConstants.KP;
-		motorConfigs.Slot0.kI = ArmConstants.KI;
-		motorConfigs.Slot0.kD = ArmConstants.KD;
-		motorConfigs.Slot0.kS = ArmConstants.KS;
-		motorConfigs.Slot0.kV = ArmConstants.KV;
-		motorConfigs.Slot0.kA = ArmConstants.KA;
-
-        motorConfigs.MotionMagic.MotionMagicAcceleration = ArmConstants.ACCELERATION;
-        motorConfigs.MotionMagic.MotionMagicCruiseVelocity = ArmConstants.CRUISE_VELOCITY;
-
-        motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        
-		motorFollower.getConfigurator().apply(motorConfigs);
-		motorMain.getConfigurator().apply(motorConfigs);
-
-        motorFollower.optimizeBusUtilization();
 		motorMain.optimizeBusUtilization();
 		motorMain.getRotorPosition().setUpdateFrequency(20);
 
@@ -66,9 +40,7 @@ public class ArmSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 		
-        if(motorFollower.hasResetOccurred()||motorMain.hasResetOccurred()){
-
-			motorFollower.optimizeBusUtilization();
+        if(motorMain.hasResetOccurred()) {
 			motorMain.optimizeBusUtilization();
 			motorMain.getRotorPosition().setUpdateFrequency(20);
 		}
@@ -80,7 +52,7 @@ public class ArmSubsystem extends SubsystemBase {
 		resetTalonEncoder();
 
 		// Arm angle in radians (0 is parallel to the floor)
-		double angle = (position - ArmConstants.LEVEL_POSITION) * ArmConstants.ENCODER_TO_RADIANS_FACTOR;
+		double angle = (position - ArmConstants.LEVEL_POSITION) * ArmConstants.TALON_ENCODER_TO_RADIANS_RATIO;
 
 		double gravityFeedForward = Math.cos(angle) * ArmConstants.KG;
 
@@ -89,7 +61,7 @@ public class ArmSubsystem extends SubsystemBase {
 	}
 
     public double getTalonPosition() {
-        return motorFollower.getRotorPosition().getValueAsDouble();
+        return motorMain.getRotorPosition().getValueAsDouble();
     }
 
 
@@ -102,12 +74,6 @@ public class ArmSubsystem extends SubsystemBase {
 			/ ArmConstants.THROUGH_BORE_ENCODER_TO_TALON_ENCODER_RATIO;
 		motorMain.setPosition(rotations);
     }
-
-	// Commands
-
-	public Command resetArmTalonEncoder() {
-		return runOnce(() -> resetTalonEncoder());
-	}
 
 }
 

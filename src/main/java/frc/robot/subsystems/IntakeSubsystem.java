@@ -1,10 +1,7 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFXS;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,28 +21,10 @@ public class IntakeSubsystem extends SubsystemBase {
     public IntakeSubsystem() {
         motorLeft = new TalonFXS(Ports.INTAKE_MOTOR_LEFT);
         motorRight = new TalonFXS(Ports.INTAKE_MOTOR_RIGHT);
-
-        TalonFXSConfiguration motorConfigs = new TalonFXSConfiguration();
-
-        motorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-        motorConfigs.CurrentLimits.StatorCurrentLimit = IntakeConstants.CURRENT_LIMIT;
-
-        motorConfigs.Slot0.kP = IntakeConstants.KP;
-        motorConfigs.Slot0.kI = IntakeConstants.KI;
-        motorConfigs.Slot0.kD = IntakeConstants.KD;
-        motorConfigs.Slot0.kS = IntakeConstants.KS;
-        motorConfigs.Slot0.kV = IntakeConstants.KV;
-        motorConfigs.Slot0.kA = IntakeConstants.KA;
-
-        motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         
-        motorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-        
-        motorLeft.getConfigurator().apply(motorConfigs);
+        motorLeft.getConfigurator().apply(IntakeConstants.MOTOR_LEFT_CONFIG);
 
-        motorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-
-        motorRight.getConfigurator().apply(motorConfigs);
+        motorRight.getConfigurator().apply(IntakeConstants.MOTOR_RIGHT_CONFIG);
 
         motorLeft.optimizeBusUtilization();
         motorRight.optimizeBusUtilization();
