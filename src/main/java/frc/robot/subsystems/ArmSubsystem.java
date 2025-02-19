@@ -29,7 +29,7 @@ public class ArmSubsystem extends SubsystemBase {
 
 		position = ArmConstants.INITIAL_POSITION;
 
-		controlRequest = new MotionMagicVoltage(position);
+		controlRequest = new MotionMagicVoltage(position).withEnableFOC(true);
 
 		// k4X is quadrature encoding
 		throughBoreEncoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
