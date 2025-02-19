@@ -8,118 +8,118 @@ public class SuperstructureConstants {
     public static final SuperstructureState CORAL_GROUND_INTAKING_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PERPENDICULAR_CURRENT, 
+            ClawConstants.CLOSED_CURRENT);
 
     public static final SuperstructureState CORAL_HUMAN_PLAYER_INTAKING_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PERPENDICULAR_CURRENT, 
+            ClawConstants.CLOSED_CURRENT);
 
     public static final SuperstructureState ALGAE_GROUND_INTAKING_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PARALLEL_CURRENT, 
+            ClawConstants.OPEN_CURRENT);
 
     public static final SuperstructureState ALGAE_LOW_REEF_INTAKING_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PERPENDICULAR_CURRENT, 
+            ClawConstants.OPEN_CURRENT);
 
     public static final SuperstructureState ALGAE_HIGH_REEF_INTAKING_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PERPENDICULAR_CURRENT, 
+            ClawConstants.OPEN_CURRENT);
 
     // Stowed states
     public static final SuperstructureState CORAL_STOWED_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PARALLEL_CURRENT, 
+            ClawConstants.CLOSED_CURRENT);
 
     public static final SuperstructureState ALGAE_STOWED_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PARALLEL_CURRENT, 
+            ClawConstants.CLOSED_CURRENT);
 
     // Scoring states
     public static final SuperstructureState MOVE_TO_L1_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PERPENDICULAR_CURRENT, 
+            ClawConstants.CLOSED_CURRENT);
 
     public static final SuperstructureState MOVE_TO_L2_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PARALLEL_CURRENT, 
+            ClawConstants.CLOSED_CURRENT);
 
     public static final SuperstructureState MOVE_TO_L3_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PARALLEL_CURRENT, 
+            ClawConstants.CLOSED_CURRENT);
 
     public static final SuperstructureState MOVE_TO_L4_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PARALLEL_CURRENT, 
+            ClawConstants.CLOSED_CURRENT);
 
     public static final SuperstructureState MOVE_TO_PROCESSOR_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PARALLEL_CURRENT, 
+            ClawConstants.OPEN_CURRENT);
 
     public static final SuperstructureState MOVE_TO_NET_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PARALLEL_CURRENT, 
+            ClawConstants.OPEN_CURRENT);
 
     public static final SuperstructureState SCORE_L1_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PERPENDICULAR_CURRENT, 
+            ClawConstants.CLOSED_CURRENT);
 
     public static final SuperstructureState SCORE_L2_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PARALLEL_CURRENT, 
+            ClawConstants.OPEN_CURRENT);
 
     public static final SuperstructureState SCORE_L3_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PARALLEL_CURRENT, 
+            ClawConstants.OPEN_CURRENT);
 
     public static final SuperstructureState SCORE_L4_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PARALLEL_CURRENT, 
+            ClawConstants.OPEN_CURRENT);
 
     public static final SuperstructureState SCORE_PROCESSOR_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PARALLEL_CURRENT, 
+            ClawConstants.OPEN_CURRENT);
 
     public static final SuperstructureState SCORE_NET_STATE = new SuperstructureState(
             0, 
             0, 
-            0, 
-            0);
+            WristConstants.PARALLEL_CURRENT, 
+            ClawConstants.OPEN_CURRENT);
 
     // Error margins
     public static final double ELEVATOR_ERROR_MARGIN = 0;
