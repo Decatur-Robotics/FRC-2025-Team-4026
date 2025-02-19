@@ -184,12 +184,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
         claw.setCurrent(velocity);
     }
 
-    // Get other subsystem information
-
-    public double getFilteredIntakeCurrent() {
-        return intake.getFilteredCurrent();
-    }
-
     // Reset offsets commands
 
     public Command zeroSuperstructureCommand() {
@@ -238,7 +232,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 setState(intakingState.get());
                 setIntakeVelocity(IntakeConstants.INTAKE_VELOCITY);
             }),
-            Commands.waitUntil(() -> debouncer.calculate(getFilteredIntakeCurrent() > IntakeConstants.STALL_CURRENT))
+            Commands.waitUntil(() -> debouncer.calculate(intake.getFilteredCurrent() > IntakeConstants.STALL_CURRENT))
         )
         .finallyDo(
             () -> {

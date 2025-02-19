@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.filter.LinearFilter;
@@ -16,7 +16,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private TalonFXS motorLeft, motorRight;
 
     private double velocity;
-    private MotionMagicVelocityVoltage motorControlRequest;
+    private VelocityVoltage controlRequest;
 
     private LinearFilter currentFilter;
     private double filteredCurrent;
@@ -24,8 +24,6 @@ public class IntakeSubsystem extends SubsystemBase {
     public IntakeSubsystem() {
         motorLeft = new TalonFXS(Ports.INTAKE_MOTOR_LEFT);
         motorRight = new TalonFXS(Ports.INTAKE_MOTOR_RIGHT);
-
-        motorRight.setControl(new Follower(motorLeft.getDeviceID(), true));
 
         TalonFXSConfiguration motorConfigs = new TalonFXSConfiguration();
 
@@ -39,20 +37,27 @@ public class IntakeSubsystem extends SubsystemBase {
         motorConfigs.Slot0.kV = IntakeConstants.KV;
         motorConfigs.Slot0.kA = IntakeConstants.KA;
 
-        motorConfigs.MotionMagic.MotionMagicAcceleration = IntakeConstants.ACCELERATION;
-        motorConfigs.MotionMagic.MotionMagicCruiseVelocity = IntakeConstants.CRUISE_VELOCITY;
         motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         
+        motorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        
         motorLeft.getConfigurator().apply(motorConfigs);
+
+        motorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
         motorRight.getConfigurator().apply(motorConfigs);
 
         motorLeft.optimizeBusUtilization();
         motorRight.optimizeBusUtilization();
         motorLeft.getVelocity().setUpdateFrequency(20);
+        motorRight.getVelocity().setUpdateFrequency(20);
         
         velocity = IntakeConstants.REST_VELOCITY;
         
-        motorControlRequest = new MotionMagicVelocityVoltage(velocity);
+        controlRequest = new VelocityVoltage(velocity);
+
+        motorLeft.setControl(controlRequest.withVelocity(velocity));
+        motorRight.setControl(controlRequest.withVelocity(velocity));
 
         currentFilter = LinearFilter.movingAverage(10);
     }
@@ -64,7 +69,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void setVelocity(double velocity) {
         this.velocity = velocity;
-        motorLeft.setControl(motorControlRequest.withVelocity(velocity));
+        motorLeft.setControl(controlRequest.withVelocity(velocity));
+        motorRight.setControl(controlRequest.withVelocity(velocity));
     }
 
     public double getVelocity() {
