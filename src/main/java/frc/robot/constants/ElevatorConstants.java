@@ -16,6 +16,9 @@ public final class ElevatorConstants {
 
     public static final double INITIAL_POSITION = SuperstructureConstants.CORAL_STOWED_STATE.elevatorPosition;
 
-   
-    
+    public static final double ZEROING_VOLTAGE = 0;
+
+    public static final double STALL_DEBOUNCE_TIME = 0;
+    public static final double STALL_CURRENT = 0;
+
 }

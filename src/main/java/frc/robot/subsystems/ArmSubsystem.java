@@ -104,7 +104,7 @@ public class ArmSubsystem extends SubsystemBase {
 
 	public void resetEncoderOffset() {
         double rotations = (getThroughBoreEncoderValue() - ArmConstants.ENCODER_ZERO_OFFSET) / ArmConstants.ENCODER_COUNTS_PER_REVOLUTION;
-        offset = rotations - motorMain.getRotorPosition().getValueAsDouble();
+		motorMain.setPosition(rotations);
     }
 
 	// Commands

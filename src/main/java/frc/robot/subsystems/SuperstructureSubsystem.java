@@ -200,10 +200,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     // Reset offsets commands
 
-    public Command resetElevatorOffsetCommand() {
+    public Command zeroSuperstructureCommand() {
         return Commands.sequence(Commands.runOnce(() -> setArmPosition(SuperstructureConstants.CORAL_STOWED_STATE.armPosition)),
-            Commands.waitUntil(() -> isArmAtGoalTargetPosition()),
-            Commands.runOnce(() -> elevator.resetOffsetCommand()));
+            Commands.waitUntil(() -> isArmAtGoalTargetPosition()))
+            .finallyDo(() -> elevator.zeroCommand());
     }
 
     // Intaking commands
