@@ -4,18 +4,18 @@ public class SuperstructureState {
     
     public double elevatorPosition;
     public double armPosition;
-    public double wristPosition;
-    public double clawPosition;
+    public double wristCurrent;
+    public double clawCurrent;
 
-    public SuperstructureState(double elevatorPosition, double armPosition, double wristPosition, double clawPosition) {
+    public SuperstructureState(double elevatorPosition, double armPosition, double wristCurrent, double clawCurrent) {
         this.elevatorPosition = elevatorPosition;
         this.armPosition = armPosition;
-        this.wristPosition = wristPosition;
-        this.clawPosition = clawPosition;
+        this.wristCurrent = wristCurrent;
+        this.clawCurrent = clawCurrent;
     }
 
     public SuperstructureState copyInstance() {
-        return new SuperstructureState(elevatorPosition, armPosition, wristPosition, clawPosition);
+        return new SuperstructureState(elevatorPosition, armPosition, wristCurrent, clawCurrent);
     }
     
 }

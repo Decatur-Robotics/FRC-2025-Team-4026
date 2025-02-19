@@ -50,8 +50,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
             if (!targetState.equals(oldTargetState)) {
                 elevator.setPosition(targetState.elevatorPosition);
                 arm.setPosition(targetState.armPosition);
-                wrist.setPosition(targetState.wristPosition);
-                claw.setPosition(targetState.clawPosition);
+                wrist.setCurrent(targetState.wristCurrent);
+                claw.setCurrent(targetState.clawCurrent);
             }
         }
     }
@@ -60,12 +60,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
         if (getActualElevatorPosition() < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION) {
             targetState = new SuperstructureState(goalTargetState.elevatorPosition, 
                     Math.max(SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION, goalTargetState.armPosition), 
-                    goalTargetState.wristPosition, goalTargetState.clawPosition);
+                    goalTargetState.wristCurrent, goalTargetState.clawCurrent);
         }
         else if (getActualArmPosition() < SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION) {
             targetState = new SuperstructureState(
                     Math.max(SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION, goalTargetState.elevatorPosition), 
-                    goalTargetState.armPosition, goalTargetState.wristPosition, goalTargetState.clawPosition);
+                    goalTargetState.armPosition, goalTargetState.wristCurrent, goalTargetState.clawCurrent);
         }
         else {
             targetState = goalTargetState.copyInstance();
@@ -79,8 +79,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
         elevator.setPosition(targetState.elevatorPosition);
         arm.setPosition(targetState.armPosition);
-        wrist.setPosition(targetState.wristPosition);
-        claw.setPosition(targetState.clawPosition);
+        wrist.setCurrent(targetState.wristCurrent);
+        claw.setCurrent(targetState.clawCurrent);
     }
 
     // Is at targets
@@ -109,19 +109,11 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
 
     public boolean isWristAtGoalTargetPosition() {
-        if (Math.abs(getActualWristPosition() - targetState.wristPosition) > SuperstructureConstants.WRIST_ERROR_MARGIN) {
-            return false;
-        }
-
-        return true;
+        return claw.isSlammed();
     }
 
     public boolean isClawAtGoalTargetPosition() {
-        if (Math.abs(getActualClawPosition() - targetState.clawPosition) > SuperstructureConstants.CLAW_ERROR_MARGIN) {
-            return false;
-        }
-
-        return true;
+        return claw.isSlammed();
     }
 
     // Get goal states
@@ -137,7 +129,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     // Get actual states
 
     public SuperstructureState getActualState() {
-        return new SuperstructureState(getActualElevatorPosition(), getActualArmPosition(), getActualWristPosition(), getActualClawPosition());
+        return new SuperstructureState(getActualElevatorPosition(), getActualArmPosition(), getActualWristCurrent(), getActualClawCurrent());
     }
 
     public double getActualElevatorPosition() {
@@ -148,12 +140,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return arm.getOffsetTalonPosition();
     }
 
-    public double getActualWristPosition() {
-        return wrist.getOffsetTalonPosition();
+    public double getActualWristCurrent() {
+        return wrist.getCurrent();
     }
 
-    public double getActualClawPosition() {
-        return claw.getOffsetTalonPosition();
+    public double getActualClawCurrent() {
+        return claw.getCurrent();
     }
 
     public double getActualIntakeVelocity() {
@@ -174,22 +166,22 @@ public class SuperstructureSubsystem extends SubsystemBase {
         arm.setPosition(position);
     }
 
-    public void setWristPosition(double position) {
-        targetState.wristPosition = position;
+    public void setWristCurrent(double current) {
+        targetState.wristCurrent = current;
         
-        wrist.setPosition(position);
+        wrist.setCurrent(current);
     }
 
-    public void setClawPosition(double position) {
-        targetState.clawPosition = position;
+    public void setClawCurrent(double current) {
+        targetState.clawCurrent = current;
         
-        claw.setPosition(position);
+        claw.setCurrent(current);
     }
 
     public void setIntakeVelocity(double velocity) {
         targetIntakeVelocity = velocity;
         
-        claw.setPosition(velocity);
+        claw.setCurrent(velocity);
     }
 
     // Get other subsystem information
