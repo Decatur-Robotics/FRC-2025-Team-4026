@@ -183,9 +183,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 // ),
                 new PPHolonomicDriveController(
                     // PID constants for translation
-                    new PIDConstants(10, 0, 0),
+                    SwerveConstants.TRANSLATIONAL_CONSTANTS,
                     // PID constants for rotation
-                    new PIDConstants(7, 0, 0)
+                    SwerveConstants.ROTATIONAL_CONSTANTS
                 ),
                 config,
                 // Assume the path needs to be flipped for Red vs Blue, this is normally the case
@@ -202,7 +202,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         SwerveSetpointGenerator setpointGenerator = new SwerveSetpointGenerator(
             config, // The robot configuration. This is the same config used for generating trajectories and running path following commands.
-            Units.rotationsToRadians(SwerveConstants.MAX_ANGULAR_VELOCITY) 
+            Units.rotationsToRadians(SwerveConstants.MAX_ROTATIONAL_VELOCITY) 
         );
         ChassisSpeeds currentSpeeds = getState().Speeds;
         SwerveModuleState[] currentStates = getState().ModuleStates; // Method to get the current swerve module states
@@ -399,7 +399,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
 
             if (speeds.get().omegaRadiansPerSecond == 0) {
-                speeds.get().omegaRadiansPerSecond = SwerveConstants.ANGULAR_CONTROLLER.calculate(
+                speeds.get().omegaRadiansPerSecond = SwerveConstants.ROTATIONAL_CONTROLLER.calculate(
                     getState().Pose.getRotation().getRadians(), targetPose.getRotation().getRadians());
             }
 
@@ -433,7 +433,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         
         boolean isAtTargetX = getState().Pose.getX() - targetPose.getX() < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
         boolean isAtTargetY = getState().Pose.getY() - targetPose.getY() < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
-        boolean isAtTargetRotation = getState().Pose.getRotation().getRadians() - targetPose.getRotation().getRadians() < SwerveConstants.ANGULAR_ERROR_MARGIN;
+        boolean isAtTargetRotation = getState().Pose.getRotation().getRadians() - targetPose.getRotation().getRadians() < SwerveConstants.ROTATIONAL_ERROR_MARGIN;
 
         return isAtTargetX && isAtTargetY && isAtTargetRotation;
     }

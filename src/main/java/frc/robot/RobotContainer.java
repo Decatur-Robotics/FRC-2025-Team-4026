@@ -111,13 +111,13 @@ public class RobotContainer {
         JoystickButton bumperRight = new JoystickButton(joystick, LogitechControllerButtons.bumperRight);
 
         Supplier<ChassisSpeeds> desiredChassisSpeeds = () -> { 
-            double velocityX = joystick.getY() * SwerveConstants.MAX_TRANSLATION_VELOCITY;
-            double velocityY = joystick.getX() * SwerveConstants.MAX_TRANSLATION_VELOCITY;
-            double velocityAngular = joystick.getTwist() * SwerveConstants.MAX_ANGULAR_VELOCITY;
+            double velocityX = joystick.getY() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
+            double velocityY = joystick.getX() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
+            double velocityAngular = joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
 
             if (Math.abs(velocityX) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityX = 0;
             if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityY = 0;
-            if (Math.abs(velocityAngular) < SwerveConstants.ANGULAR_DEADBAND) velocityAngular = 0;
+            if (Math.abs(velocityAngular) < SwerveConstants.ROTATIONAL_DEADBAND) velocityAngular = 0;
 
             return new ChassisSpeeds(velocityX, velocityY, velocityAngular);
         };
