@@ -27,6 +27,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SuperstructureSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
 /**
@@ -47,6 +48,7 @@ public class RobotContainer {
     private final IntakeSubsystem intake;
     private final SuperstructureSubsystem superstructure;
     private final CommandSwerveDrivetrain swerve;
+    private final VisionSubsystem vision;
 
     private final ShuffleboardTab shuffleboardTab;
 
@@ -74,6 +76,7 @@ public class RobotContainer {
         intake = new IntakeSubsystem();
         superstructure = new SuperstructureSubsystem(elevator, arm, wrist, claw, intake);
         swerve = TunerConstants.createDrivetrain();
+        vision = new VisionSubsystem(swerve);
 
         PathPlannerLogging.setLogCurrentPoseCallback((Pose2d pose) -> {
             field.setRobotPose(pose);
