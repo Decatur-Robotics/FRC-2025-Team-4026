@@ -71,7 +71,6 @@ public class VisionSubsystem extends SubsystemBase {
         if (estimatedPose.isEmpty()) {
             // No pose input. Default to single-tag std devs
             return VisionConstants.SINGLE_TAG_STANDARD_DEVIATIONS;
-
         } 
         else {
             // Pose present. Start running Heuristic
@@ -85,10 +84,8 @@ public class VisionSubsystem extends SubsystemBase {
                 if (tagPose.isEmpty()) continue;
 
                 numberTags++;
-                averageDistance +=
-                        tagPose
-                                .get().toPose2d().getTranslation()
-                                .getDistance(estimatedPose.get().estimatedPose.toPose2d().getTranslation());
+                averageDistance += tagPose.get().toPose2d().getTranslation()
+                    .getDistance(estimatedPose.get().estimatedPose.toPose2d().getTranslation());
             }
 
             if (numberTags == 0) {
