@@ -17,7 +17,7 @@ public class ClimberSubsystem extends SubsystemBase{
     private MotionMagicDutyCycle controlRequest;
     
     public ClimberSubsystem() {
-        climberMotor = new TalonFX(Ports.CLIMBER_MOTOR);
+        climberMotor = new TalonFX(Ports.CLIMBER_MOTOR, "canivore");
 
         climberMotor.getConfigurator().apply(ClimberConstants.MOTOR_CONFIG);
 
