@@ -5,6 +5,8 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public class SwerveConstants {
@@ -14,17 +16,18 @@ public class SwerveConstants {
     public static final PathConstraints CONSTRAINTS = new PathConstraints(0, 0, 
         Units.degreesToRadians(0), Units.degreesToRadians(0));
 
-    public static final PIDConstants TRANSLATIONAL_CONSTANTS = new PIDConstants(0, 0, 0);
-    public static final PIDConstants ROTATIONAL_CONSTANTS = new PIDConstants(0, 0, 0);
+    public static final PIDConstants AUTO_TRANSLATIONAL_CONSTANTS = new PIDConstants(10, 0, 0);
+    public static final PIDConstants AUTO_ROTATIONAL_CONSTANTS = new PIDConstants(7, 0, 0);
 
     public static final PIDController TRANSLATIONAL_CONTROLLER = new PIDController(
-        TRANSLATIONAL_CONSTANTS.kP,
-        TRANSLATIONAL_CONSTANTS.kI,
-        TRANSLATIONAL_CONSTANTS.kD);
-    public static final PIDController ROTATIONAL_CONTROLLER = new PIDController(
-        ROTATIONAL_CONSTANTS.kP,
-        ROTATIONAL_CONSTANTS.kI,
-        ROTATIONAL_CONSTANTS.kD);
+        0,
+        0,
+        0);
+    public static final ProfiledPIDController ROTATIONAL_CONTROLLER = new ProfiledPIDController(
+        0,
+        0,
+        0,
+        new TrapezoidProfile.Constraints(0, 0)); // Radians
 
     /* Translation velocity from SDS, not tuned to robot */
     public static final double MAX_TRANSLATIONAL_VELOCITY = 15.5;
