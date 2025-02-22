@@ -22,9 +22,4 @@ public class Ports {
     public static final int ARM_ENCODER_A = 0;
     public static final int ARM_ENCODER_B = 0;
 
-    public static final int WRIST_ENCODER_A = 0;
-    public static final int WRIST_ENCODER_B = 0;
-
-    public static final int CLAW_ENCODER_A = 0;
-    public static final int CLAW_ENCODER_B = 0;
 }
