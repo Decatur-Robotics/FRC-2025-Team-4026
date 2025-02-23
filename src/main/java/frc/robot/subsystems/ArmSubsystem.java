@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,7 +24,7 @@ public class ArmSubsystem extends SubsystemBase {
 
 	private VoltageOut voltageRequest;
 
-	private Encoder throughBoreEncoder;
+	private DutyCycleEncoder throughBoreEncoder;
 
 	public ArmSubsystem() {
 		motor = new TalonFX(Ports.ARM_MOTOR);
@@ -42,7 +43,7 @@ public class ArmSubsystem extends SubsystemBase {
 		voltageRequest = new VoltageOut(0).withEnableFOC(true);
 
 		// k4X is quadrature encoding
-		throughBoreEncoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
+		throughBoreEncoder = new DutyCycleEncoder(Ports.ARM_ENCODER);
 
 		resetTalonEncoder();
 
