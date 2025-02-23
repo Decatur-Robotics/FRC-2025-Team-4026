@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.ClawConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.SwerveConstants;
+import frc.robot.constants.WristConstants;
 import frc.robot.core.LogitechControllerButtons;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
@@ -177,14 +178,17 @@ public class RobotContainer {
          * Testing buttons
          */
 
+        // triggerLeft.whileTrue(wrist.setCurrentCommand(WristConstants.PARALLEL_CURRENT));
+        // triggerRight.whileTrue(wrist.setCurrentCommand(WristConstants.PERPENDICULAR_CURRENT));
+
+        // triggerLeft.whileTrue(claw.setCurrentCommand(ClawConstants.CLOSED_CURRENT));
+        // triggerRight.whileTrue(claw.setCurrentCommand(ClawConstants.OPEN_CURRENT));
+
         // triggerLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.INTAKE_VELOCITY));
         // triggerRight.whileTrue(intake.setVelocityCommand(IntakeConstants.L1_EJECT_VELOCITY));
         // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
         // a.whileTrue(intake.setVoltageCommand(0));
-
-        // triggerLeft.whileTrue(claw.setCurrentCommand(ClawConstants.CLOSED_CURRENT));
-        // triggerRight.whileTrue(claw.setCurrentCommand(ClawConstants.OPEN_CURRENT));
     }
 
     public static ShuffleboardTab getShuffleboardTab() {
