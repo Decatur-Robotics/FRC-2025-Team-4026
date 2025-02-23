@@ -1,10 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.constants.ArmConstants;
@@ -12,25 +15,31 @@ import frc.robot.constants.Ports;
 
 public class ArmSubsystem extends SubsystemBase {
 	
-	private TalonFX motorMain;
+	private TalonFX motor;
 	
 	private double position;
 
-	private MotionMagicVoltage controlRequest;
+	private MotionMagicVoltage positionRequest;
+
+	private VoltageOut voltageRequest;
 
 	private Encoder throughBoreEncoder;
 
 	public ArmSubsystem() {
-		motorMain = new TalonFX(Ports.ARM_MOTOR);
+		motor = new TalonFX(Ports.ARM_MOTOR);
 
-		motorMain.getConfigurator().apply(ArmConstants.MOTOR_CONFIG);
+		motor.getConfigurator().apply(ArmConstants.MOTOR_CONFIG);
 
-		motorMain.optimizeBusUtilization();
-		motorMain.getRotorPosition().setUpdateFrequency(20);
+		motor.optimizeBusUtilization();
+		motor.getRotorPosition().setUpdateFrequency(20);
 
 		position = ArmConstants.STOWED_POSITION;
 
-		controlRequest = new MotionMagicVoltage(position).withEnableFOC(true);
+		positionRequest = new MotionMagicVoltage(position).withEnableFOC(true);
+
+		motor.setControl(positionRequest.withPosition(position));
+
+		voltageRequest = new VoltageOut(0).withEnableFOC(true);
 
 		// k4X is quadrature encoding
 		throughBoreEncoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
@@ -50,10 +59,9 @@ public class ArmSubsystem extends SubsystemBase {
 	
 	@Override
 	public void periodic() {
-		
-        if(motorMain.hasResetOccurred()) {
-			motorMain.optimizeBusUtilization();
-			motorMain.getRotorPosition().setUpdateFrequency(20);
+        if(motor.hasResetOccurred()) {
+			motor.optimizeBusUtilization();
+			motor.getRotorPosition().setUpdateFrequency(20);
 		}
 	}
 
@@ -67,14 +75,17 @@ public class ArmSubsystem extends SubsystemBase {
 
 		double gravityFeedForward = Math.cos(angle) * ArmConstants.KG;
 
-		motorMain.setControl(controlRequest.withPosition(position)
+		motor.setControl(positionRequest.withPosition(position)
 				.withFeedForward(gravityFeedForward));
 	}
 
-    public double getTalonPosition() {
-        return motorMain.getRotorPosition().getValueAsDouble();
-    }
+	public void setVoltage(double voltage) {
+		motor.setControl(voltageRequest.withOutput(voltage));
+	}
 
+    public double getTalonPosition() {
+        return motor.getRotorPosition().getValueAsDouble();
+    }
 
 	public double getThroughBoreEncoderPosition() {
 		return throughBoreEncoder.get();
@@ -83,8 +94,17 @@ public class ArmSubsystem extends SubsystemBase {
 	public void resetTalonEncoder() {
         double rotations = (getThroughBoreEncoderPosition() - ArmConstants.THROUGH_BORE_ENCODER_ZERO_OFFSET) 
 			/ ArmConstants.THROUGH_BORE_ENCODER_TO_TALON_ENCODER_RATIO;
-		motorMain.setPosition(rotations);
+		motor.setPosition(rotations);
     }
+
+	public Command setPositionCommand(double position) {
+		return Commands.runOnce(() -> setPosition(position));
+	}
+
+	public Command setVoltageCommand(double voltage) {
+		return Commands.startEnd(() -> setVoltage(voltage), 
+			() -> setVoltage(0));
+	}
 
 }
 

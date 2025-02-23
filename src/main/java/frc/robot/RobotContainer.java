@@ -181,6 +181,9 @@ public class RobotContainer {
         // triggerLeft.whileTrue(elevator.setVoltageCommand(0));
         // triggerRight.onTrue(elevator.setPositionCommand(0));
 
+        // triggerLeft.whileTrue(arm.setVoltageCommand(0));
+        // triggerRight.onTrue(arm.setPositionCommand(0));
+
         // triggerLeft.whileTrue(wrist.setCurrentCommand(WristConstants.PARALLEL_CURRENT));
         // triggerRight.whileTrue(wrist.setCurrentCommand(WristConstants.PERPENDICULAR_CURRENT));
 

@@ -24,11 +24,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     
     private double position;
     
-    private MotionMagicVoltage positionControlRequest;
+    private MotionMagicVoltage positionRequest;
 
     private double voltage;
 
-    private VoltageOut voltageControlRequest;
+    private VoltageOut voltageRequest;
 
     private DigitalInput limitSwitch;
 
@@ -51,10 +51,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         motorFollower.setControl(new Follower(motorMain.getDeviceID(), true));
 
-        positionControlRequest = new MotionMagicVoltage(position).withEnableFOC(true);
-        motorMain.setControl(positionControlRequest);
+        positionRequest = new MotionMagicVoltage(position).withEnableFOC(true);
+        motorMain.setControl(positionRequest);
 
-        voltageControlRequest = new VoltageOut(voltage).withEnableFOC(true);
+        voltageRequest = new VoltageOut(voltage).withEnableFOC(true);
 
         currentFilter = LinearFilter.movingAverage(10);
 
@@ -85,7 +85,7 @@ public class ElevatorSubsystem extends SubsystemBase {
  
     public void setPosition(double position) {
         this.position = position;
-        motorMain.setControl(positionControlRequest.withPosition(position));
+        motorMain.setControl(positionRequest.withPosition(position));
     }
 
     public double getPosition() {
@@ -102,7 +102,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void setVoltage(double voltage) {
         this.voltage = voltage;
-        motorMain.setControl(voltageControlRequest.withOutput(voltage));
+        motorMain.setControl(voltageRequest.withOutput(voltage));
     }
 
     public Command zeroCommand() {
