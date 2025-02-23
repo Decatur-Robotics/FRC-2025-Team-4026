@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.constants.ClawConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.core.LogitechControllerButtons;
@@ -181,6 +182,9 @@ public class RobotContainer {
         // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
         // a.whileTrue(intake.setVoltageCommand(0));
+
+        // triggerLeft.whileTrue(claw.setCurrentCommand(ClawConstants.CLOSED_CURRENT));
+        // triggerRight.whileTrue(claw.setCurrentCommand(ClawConstants.OPEN_CURRENT));
     }
 
     public static ShuffleboardTab getShuffleboardTab() {
