@@ -119,4 +119,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         });
     }
 
+    public Command setPositionCommand(double position) {
+        return Commands.runOnce(() -> setPosition(position));
+    }
+
+    public Command setVoltageCommand(double voltage) {
+        return Commands.startEnd(() -> setVoltage(voltage), 
+            () -> setVoltage(0));
+    }
+
 }
