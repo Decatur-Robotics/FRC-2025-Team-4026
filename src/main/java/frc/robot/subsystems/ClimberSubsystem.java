@@ -2,9 +2,11 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
+import frc.robot.RobotContainer;
 import frc.robot.constants.ClimberConstants;
 
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
@@ -29,6 +31,15 @@ public class ClimberSubsystem extends SubsystemBase{
 
         controlRequest = new MotionMagicDutyCycle(position);
         climberMotor.setControl(controlRequest);
+
+        configureShuffleboard();
+    }
+
+    private void configureShuffleboard() {
+        ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
+
+        tab.addDouble("Target Climber Position", () -> position);
+        tab.addDouble("Target Climber Position", () -> getPosition());
     }
 
     

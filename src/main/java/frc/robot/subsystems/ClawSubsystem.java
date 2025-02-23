@@ -43,7 +43,7 @@ public class ClawSubsystem extends SubsystemBase {
         configureShuffleboard();
     }
 
-    public void configureShuffleboard() {
+    private void configureShuffleboard() {
         ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
 
         tab.addDouble("Target Claw Current", () -> current);

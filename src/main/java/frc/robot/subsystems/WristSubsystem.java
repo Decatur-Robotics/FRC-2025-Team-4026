@@ -43,7 +43,7 @@ public class WristSubsystem extends SubsystemBase {
         configureShuffleboard();
     }
 
-    public void configureShuffleboard() {
+    private void configureShuffleboard() {
         ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
 
         tab.addDouble("Target Wrist Current", () -> current);

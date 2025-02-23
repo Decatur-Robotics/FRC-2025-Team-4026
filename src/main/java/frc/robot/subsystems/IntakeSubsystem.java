@@ -45,7 +45,7 @@ public class IntakeSubsystem extends SubsystemBase {
         configureShuffleboard();
     }
 
-    public void configureShuffleboard() {
+    private void configureShuffleboard() {
         ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
 
         tab.addDouble("Target Intake Velocity", () -> velocity);
