@@ -5,7 +5,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.constants.Ports;
 import frc.robot.constants.WristConstants;
 
@@ -37,6 +39,17 @@ public class WristSubsystem extends SubsystemBase {
         velocityFilter = LinearFilter.movingAverage(10);
 
         slamDebouncer = new Debouncer(WristConstants.SLAM_DEBOUNCE_TIME);
+
+        configureShuffleboard();
+    }
+
+    public void configureShuffleboard() {
+        ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
+
+        tab.addDouble("Target Wrist Current", () -> current);
+        tab.addDouble("Actual Wrist Current", () -> getCurrent());
+        tab.addDouble("Filtered Wrist Velocity", () -> filteredVelocity);
+        tab.addBoolean("Is Wrist Slammed", () -> isSlammed());
     }
 
     @Override
