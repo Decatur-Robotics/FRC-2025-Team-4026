@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFXS;
 
 import edu.wpi.first.math.filter.LinearFilter;
@@ -17,7 +18,8 @@ public class IntakeSubsystem extends SubsystemBase {
     private TalonFXS motorLeft, motorRight;
 
     private double velocity;
-    private VelocityVoltage controlRequest;
+    private VelocityVoltage velocityRequest;
+    private VoltageOut voltageRequest;
 
     private LinearFilter currentFilter;
     private double filteredCurrent;
@@ -37,10 +39,12 @@ public class IntakeSubsystem extends SubsystemBase {
         
         velocity = IntakeConstants.REST_VELOCITY;
         
-        controlRequest = new VelocityVoltage(velocity);
+        velocityRequest = new VelocityVoltage(velocity);
 
-        motorLeft.setControl(controlRequest.withVelocity(velocity));
-        motorRight.setControl(controlRequest.withVelocity(velocity));
+        motorLeft.setControl(velocityRequest.withVelocity(velocity));
+        motorRight.setControl(velocityRequest.withVelocity(velocity));
+
+        voltageRequest = new VoltageOut(0);
 
         currentFilter = LinearFilter.movingAverage(10);
 
@@ -62,8 +66,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void setVelocity(double velocity) {
         this.velocity = velocity;
-        motorLeft.setControl(controlRequest.withVelocity(velocity));
-        motorRight.setControl(controlRequest.withVelocity(velocity));
+        motorLeft.setControl(velocityRequest.withVelocity(velocity));
+        motorRight.setControl(velocityRequest.withVelocity(velocity));
     }
 
     public double getVelocity() {
@@ -78,9 +82,19 @@ public class IntakeSubsystem extends SubsystemBase {
         return filteredCurrent;
     }
 
+    public void setVoltage(double voltage) {
+        motorLeft.setControl(voltageRequest.withOutput(voltage));
+        motorRight.setControl(voltageRequest.withOutput(voltage));
+    }
+
     public Command setVelocityCommand(double velocity) {
         return Commands.startEnd(() -> setVelocity(velocity), 
             () -> setVelocity(IntakeConstants.REST_VELOCITY));
+    }
+
+    public Command setVoltageCommand(double voltage) {
+        return Commands.startEnd(() -> setVoltage(voltage), 
+            () -> setVoltage(0));
     }
 
 }
