@@ -5,6 +5,8 @@ import com.ctre.phoenix6.hardware.TalonFXS;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.constants.IntakeConstants;
@@ -74,6 +76,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public double getFilteredCurrent() {
         return filteredCurrent;
+    }
+
+    public Command setVelocityCommand(double velocity) {
+        return Commands.startEnd(() -> setVelocity(velocity), 
+            () -> setVelocity(IntakeConstants.REST_VELOCITY));
     }
 
 }

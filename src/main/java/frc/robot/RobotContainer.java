@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.core.LogitechControllerButtons;
 import frc.robot.generated.TunerConstants;
@@ -149,27 +150,36 @@ public class RobotContainer {
         JoystickButton y = new JoystickButton(joystick, LogitechControllerButtons.y);
         JoystickButton bumperLeft = new JoystickButton(joystick, LogitechControllerButtons.bumperLeft);
         JoystickButton bumperRight = new JoystickButton(joystick, LogitechControllerButtons.bumperRight);
-        JoystickButton triggerrLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
+        JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
 
-        Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
-        Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
+        // Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
+        // Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
 
-        up.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
-        left.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
-        right.whileTrue(superstructure.scoreCoralL3Command(isAtTargetPose, overrideLineUp));
-        down.whileTrue(superstructure.scoreCoralL4Command(isAtTargetPose, overrideLineUp));
-        triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isAtTargetPose, overrideLineUp));
-        triggerrLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAtTargetPose, overrideLineUp));
+        // up.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
+        // left.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
+        // right.whileTrue(superstructure.scoreCoralL3Command(isAtTargetPose, overrideLineUp));
+        // down.whileTrue(superstructure.scoreCoralL4Command(isAtTargetPose, overrideLineUp));
+        // triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isAtTargetPose, overrideLineUp));
+        // triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAtTargetPose, overrideLineUp));
 
-        b.whileTrue(superstructure.intakeCoralGroundCommand());
-        y.whileTrue(superstructure.intakeCoralHumanPlayerCommand());
-        a.whileTrue(superstructure.intakeAlgaeGroundCommand());
-        x.whileTrue(superstructure.intakeAlgaeReefCommand(() -> swerve.getTargetPose()));
+        // b.whileTrue(superstructure.intakeCoralGroundCommand());
+        // y.whileTrue(superstructure.intakeCoralHumanPlayerCommand());
+        // a.whileTrue(superstructure.intakeAlgaeGroundCommand());
+        // x.whileTrue(superstructure.intakeAlgaeReefCommand(() -> swerve.getTargetPose()));
 
-        bumperRight.whileTrue(climber.climbCommand());
+        // bumperRight.whileTrue(climber.climbCommand());
 
-        bumperLeft.onTrue(superstructure.zeroSuperstructureCommand());
+        // bumperLeft.onTrue(superstructure.zeroSuperstructureCommand());
+
+        /*
+         * Testing buttons
+         */
+
+        // triggerLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.INTAKE_VELOCITY));
+        // triggerRight.whileTrue(intake.setVelocityCommand(IntakeConstants.L1_EJECT_VELOCITY));
+        // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
+        // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
     }
 
     public static ShuffleboardTab getShuffleboardTab() {
