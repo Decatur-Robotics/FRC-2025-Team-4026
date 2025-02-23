@@ -157,6 +157,7 @@ public class RobotContainer {
 
         // Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
         // Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
+        // Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
         // up.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
         // left.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
@@ -168,7 +169,7 @@ public class RobotContainer {
         // b.whileTrue(superstructure.intakeCoralGroundCommand());
         // y.whileTrue(superstructure.intakeCoralHumanPlayerCommand());
         // a.whileTrue(superstructure.intakeAlgaeGroundCommand());
-        // x.whileTrue(superstructure.intakeAlgaeReefCommand(() -> swerve.getTargetPose()));
+        // x.whileTrue(superstructure.intakeAlgaeReefCommand(getTargetPose));
 
         // bumperRight.whileTrue(climber.climbCommand());
 
