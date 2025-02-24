@@ -1,17 +1,22 @@
 package frc.robot.constants;
 
+import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public class SwerveConstants {
 
-    public static final RobotConfig CONFIG = new RobotConfig(0, 0, null, 0);
+    // public static final RobotConfig CONFIG = new RobotConfig(0, 
+    //     0, 
+    //     new ModuleConfig(0.0508, 0, 0, null, 0, 0), 
+    //     0.6217666);
 
     public static final PathConstraints CONSTRAINTS = new PathConstraints(0, 0, 
         Units.degreesToRadians(0), Units.degreesToRadians(0));

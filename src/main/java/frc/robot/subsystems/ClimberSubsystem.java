@@ -41,7 +41,6 @@ public class ClimberSubsystem extends SubsystemBase{
         tab.addDouble("Target Climber Position", () -> position);
         tab.addDouble("Actual Climber Position", () -> getPosition());
     }
-
     
     @Override
     public void periodic() {
