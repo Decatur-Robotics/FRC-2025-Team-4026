@@ -45,6 +45,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         motorMain.optimizeBusUtilization();
         motorFollower.optimizeBusUtilization();
         motorMain.getRotorPosition().setUpdateFrequency(20);
+        motorMain.getRotorVelocity().setUpdateFrequency(20);
+        motorMain.getMotorVoltage().setUpdateFrequency(20);
+        motorMain.getStatorCurrent().setUpdateFrequency(20);
 
         position = ElevatorConstants.STOWED_POSITION;
         voltage = 0;

@@ -10,6 +10,8 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -62,6 +64,8 @@ public class RobotContainer {
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         instance = this;
+
+        new PowerDistribution(1, ModuleType.kRev).setSwitchableChannel(true);
 
         field = new Field2d();
         SmartDashboard.putData("Field", field);
@@ -179,7 +183,8 @@ public class RobotContainer {
          * Testing buttons
          */
 
-        // triggerLeft.whileTrue(elevator.setVoltageCommand(0));
+        triggerLeft.whileTrue(elevator.setVoltageCommand(1));
+        triggerRight.whileTrue(elevator.setVoltageCommand(-1));
         // triggerRight.onTrue(elevator.setPositionCommand(0));
 
         // triggerLeft.whileTrue(arm.setVoltageCommand(0));

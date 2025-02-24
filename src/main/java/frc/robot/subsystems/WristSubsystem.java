@@ -32,6 +32,8 @@ public class WristSubsystem extends SubsystemBase {
         motor.getConfigurator().apply(WristConstants.MOTOR_CONFIG);
 
         motor.optimizeBusUtilization();
+        motor.getRotorVelocity().setUpdateFrequency(20);
+        motor.getStatorCurrent().setUpdateFrequency(20);
 
         current = WristConstants.PARALLEL_CURRENT; 
 

@@ -36,6 +36,10 @@ public class IntakeSubsystem extends SubsystemBase {
         motorRight.optimizeBusUtilization();
         motorLeft.getVelocity().setUpdateFrequency(20);
         motorRight.getVelocity().setUpdateFrequency(20);
+        motorLeft.getStatorCurrent().setUpdateFrequency(20);
+        motorRight.getStatorCurrent().setUpdateFrequency(20);
+        motorLeft.getMotorVoltage().setUpdateFrequency(20);
+        motorRight.getMotorVoltage().setUpdateFrequency(20);
         
         velocity = IntakeConstants.REST_VELOCITY;
         
