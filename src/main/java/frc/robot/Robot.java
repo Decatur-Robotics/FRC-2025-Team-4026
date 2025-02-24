@@ -18,6 +18,7 @@ public class Robot extends TimedRobot implements ILogSource, IModeChangeListener
 {
 
 	private static Robot instance;
+	private RobotContainer robotContainer;
 
 	private Optional<Command> autonomousCommand;
 
@@ -30,10 +31,11 @@ public class Robot extends TimedRobot implements ILogSource, IModeChangeListener
 	@Override
 	public void robotInit()
 	{
-		
 		if (instance != null)
 			System.err.println("WARNING: Robot instance already exists!");
 		instance = this;
+
+		robotContainer = new RobotContainer();
 
 		PathfindingCommand.warmupCommand().schedule();
 	}
