@@ -39,7 +39,7 @@ public class ClimberSubsystem extends SubsystemBase{
         ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
 
         tab.addDouble("Target Climber Position", () -> position);
-        tab.addDouble("Target Climber Position", () -> getPosition());
+        tab.addDouble("Actual Climber Position", () -> getPosition());
     }
 
     
