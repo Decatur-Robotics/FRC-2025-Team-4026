@@ -97,7 +97,7 @@ public class ArmSubsystem extends SubsystemBase {
 
 	public void resetTalonEncoder() {
         double rotations = (getThroughBoreEncoderPosition()) * ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO;
-		motor.setPosition(rotations);
+		// motor.setPosition(rotations);
     }
 
 	public Command setPositionCommand(double position) {
