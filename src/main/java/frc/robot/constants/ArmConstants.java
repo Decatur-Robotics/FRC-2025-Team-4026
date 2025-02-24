@@ -35,9 +35,8 @@ public class ArmConstants {
 
     /** The encoder value when the arm is parallel to the floor */
     public static final int THROUGH_BORE_ENCODER_ZERO_OFFSET = 0;
-    public static final int THROUGH_BORE_ENCODER_TO_TALON_ENCODER_RATIO = 8192; // how many encoder ticks it takes to complete one rotation of the mechanism for this specific encoder
-    
-    public static final double TALON_ENCODER_TO_RADIANS_RATIO = 0;
+
+    public static final int TALON_ENCODER_TO_ROTATIONS_RATIO = 0; // how many motor encoder rotations it takes to complete one rotation of the mechanism
 
     public static final double KG = 0;
 

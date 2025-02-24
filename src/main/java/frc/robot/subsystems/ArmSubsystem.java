@@ -71,7 +71,8 @@ public class ArmSubsystem extends SubsystemBase {
 		resetTalonEncoder();
 
 		// Arm angle in radians (0 is parallel to the floor)
-		double angle = (position - ArmConstants.LEVEL_POSITION) * ArmConstants.TALON_ENCODER_TO_RADIANS_RATIO;
+		double angle = ((position - ArmConstants.LEVEL_POSITION) / ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO)
+			* 2 * Math.PI;
 
 		double gravityFeedForward = Math.cos(angle) * ArmConstants.KG;
 
@@ -91,12 +92,11 @@ public class ArmSubsystem extends SubsystemBase {
 	 * @return through bore encoder position in rotations
 	 */
 	public double getThroughBoreEncoderPosition() {
-		return (throughBoreEncoder.get() - 1) / 1023;
+		return ((throughBoreEncoder.get() - 1) / 1023) - ArmConstants.THROUGH_BORE_ENCODER_ZERO_OFFSET;
 	}
 
 	public void resetTalonEncoder() {
-        double rotations = (getThroughBoreEncoderPosition() - ArmConstants.THROUGH_BORE_ENCODER_ZERO_OFFSET) 
-			/ ArmConstants.THROUGH_BORE_ENCODER_TO_TALON_ENCODER_RATIO;
+        double rotations = (getThroughBoreEncoderPosition()) * ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO;
 		motor.setPosition(rotations);
     }
 
