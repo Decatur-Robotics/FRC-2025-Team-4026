@@ -87,8 +87,11 @@ public class ArmSubsystem extends SubsystemBase {
         return motor.getRotorPosition().getValueAsDouble();
     }
 
+	/**
+	 * @return through bore encoder position in rotations
+	 */
 	public double getThroughBoreEncoderPosition() {
-		return throughBoreEncoder.get();
+		return (throughBoreEncoder.get() - 1) / 1023;
 	}
 
 	public void resetTalonEncoder() {
