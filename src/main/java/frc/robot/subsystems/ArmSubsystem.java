@@ -106,8 +106,8 @@ public class ArmSubsystem extends SubsystemBase {
 
 	public Command setVoltageCommand(double voltage) {
 		System.out.println("arm set voltage to " + voltage);
-		return Commands.runOnce(() -> setVoltage(voltage));
-			// .finallyDo(() -> setVoltage(0));
+		return Commands.runEnd(() -> setVoltage(voltage), 
+			() -> setVoltage(0));
 	}
 
 }
