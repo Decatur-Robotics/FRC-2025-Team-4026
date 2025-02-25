@@ -18,7 +18,7 @@ public class WristConstants {
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)
-        .withStatorCurrentLimit(0);
+        .withStatorCurrentLimit(60);
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()
         .withNeutralMode(NeutralModeValue.Brake);
 

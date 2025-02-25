@@ -70,6 +70,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         tab.addDouble("Filtered Elevator Current", () -> filteredCurrent);
         tab.addDouble("Target Elevator Position", () -> position);
         tab.addDouble("Actual Elevator Position", () -> getPosition());
+        tab.addDouble("Target Elevator Voltage", () -> voltage);
         tab.addDouble("Actual Elevator Voltage", () -> motorMain.getMotorVoltage().getValueAsDouble());
         tab.addDouble("Actual Elevator Velocity", () -> motorMain.getRotorVelocity().getValueAsDouble());
     }
@@ -127,7 +128,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public Command setVoltageCommand(double voltage) {
-        return Commands.run(() -> setVoltage(voltage))
+        return Commands.run(() -> setVoltage(voltage), this)
             .finallyDo(() -> setVoltage(0));
     }
 

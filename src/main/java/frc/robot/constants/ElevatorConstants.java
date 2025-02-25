@@ -38,7 +38,7 @@ public final class ElevatorConstants {
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)
-        .withStatorCurrentLimit(0);
+        .withStatorCurrentLimit(60);
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
         .withKP(0)
         .withKI(0)
