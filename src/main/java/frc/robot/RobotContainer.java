@@ -183,11 +183,12 @@ public class RobotContainer {
          * Testing buttons
          */
 
-        triggerLeft.whileTrue(elevator.setVoltageCommand(1));
-        triggerRight.whileTrue(elevator.setVoltageCommand(-1));
+        // triggerLeft.whileTrue(elevator.setVoltageCommand(1));
+        // triggerRight.whileTrue(elevator.setVoltageCommand(-1));
         // triggerRight.onTrue(elevator.setPositionCommand(0));
 
-        // triggerLeft.whileTrue(arm.setVoltageCommand(0));
+        triggerLeft.whileTrue(arm.setVoltageCommand(-1));
+        triggerRight.whileTrue(arm.setVoltageCommand(1));
         // triggerRight.onTrue(arm.setPositionCommand(0));
 
         // triggerLeft.whileTrue(wrist.setCurrentCommand(WristConstants.PARALLEL_CURRENT));
