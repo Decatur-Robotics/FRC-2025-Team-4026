@@ -66,13 +66,13 @@ public class SuperstructureSubsystem extends SubsystemBase {
         
         calculateCollisionAvoidanceState();
 
-        if (!targetState.equals(oldTargetState)) {
-            elevator.setPosition(targetState.elevatorPosition);
-            arm.setPosition(targetState.armPosition);
-            wrist.setCurrent(targetState.wristCurrent);
-            claw.setCurrent(targetState.clawCurrent);
-            intake.setVelocity(targetState.intakeVelocity);
-        }
+        // if (!targetState.equals(oldTargetState)) {
+        //     elevator.setPosition(targetState.elevatorPosition);
+        //     arm.setPosition(targetState.armPosition);
+        //     wrist.setCurrent(targetState.wristCurrent);
+        //     claw.setCurrent(targetState.clawCurrent);
+        //     intake.setVelocity(targetState.intakeVelocity);
+        // }
     }
 
     // Is at targets

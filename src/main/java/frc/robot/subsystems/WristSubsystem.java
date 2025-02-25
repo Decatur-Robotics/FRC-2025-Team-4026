@@ -36,10 +36,10 @@ public class WristSubsystem extends SubsystemBase {
         motor.getRotorVelocity().setUpdateFrequency(20);
         motor.getStatorCurrent().setUpdateFrequency(20);
 
-        current = WristConstants.PARALLEL_CURRENT; 
+        current = 0; 
 
         controlRequest = new TorqueCurrentFOC(current);
-        motor.setControl(controlRequest.withOutput(current));
+        // motor.setControl(controlRequest.withOutput(current));
 
         velocityFilter = LinearFilter.movingAverage(10);
 
@@ -65,12 +65,12 @@ public class WristSubsystem extends SubsystemBase {
 
         filteredVelocity = velocityFilter.calculate(motor.getVelocity().getValueAsDouble());
 
-        if (isSlammed() && (current == WristConstants.PARALLEL_CURRENT)) {
-            motor.setControl(controlRequest.withOutput(WristConstants.REDUCED_PARALLEL_CURRENT));
-        }
-        else if (isSlammed() && (current == WristConstants.PERPENDICULAR_CURRENT)) {
-            motor.setControl(controlRequest.withOutput(WristConstants.REDUCED_PERPENDICULAR_CURRENT));
-        }
+        // if (isSlammed() && (current == WristConstants.PARALLEL_CURRENT)) {
+        //     setCurrent(WristConstants.REDUCED_PARALLEL_CURRENT);
+        // }
+        // else if (isSlammed() && (current == WristConstants.PERPENDICULAR_CURRENT)) {
+        //     setCurrent(WristConstants.REDUCED_PERPENDICULAR_CURRENT);
+        // }
     }
 
     public void setCurrent(double current) {
@@ -87,8 +87,9 @@ public class WristSubsystem extends SubsystemBase {
     }
 
     public Command setCurrentCommand(double current) {
-        return Commands.startEnd(() -> setCurrent(current), 
-            () -> setCurrent(0));
+        return Commands.runEnd(() -> setCurrent(current), 
+            () -> setCurrent(0),
+            this);
     }
 
 }

@@ -187,8 +187,8 @@ public class RobotContainer {
         // triggerRight.whileTrue(elevator.setVoltageCommand(-2));
         // triggerRight.onTrue(elevator.setPositionCommand(0));
 
-        triggerLeft.whileTrue(arm.setVoltageCommand(-1));
-        triggerRight.whileTrue(arm.setVoltageCommand(1));
+        // triggerLeft.whileTrue(arm.setVoltageCommand(-2));
+        // triggerRight.whileTrue(arm.setVoltageCommand(2));
         // triggerRight.onTrue(arm.setPositionCommand(0));
 
         // triggerLeft.whileTrue(wrist.setCurrentCommand(WristConstants.PARALLEL_CURRENT));
@@ -197,8 +197,8 @@ public class RobotContainer {
         // triggerLeft.whileTrue(claw.setCurrentCommand(ClawConstants.CLOSED_CURRENT));
         // triggerRight.whileTrue(claw.setCurrentCommand(ClawConstants.OPEN_CURRENT));
 
-        // triggerLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.INTAKE_VELOCITY));
-        // triggerRight.whileTrue(intake.setVelocityCommand(IntakeConstants.L1_EJECT_VELOCITY));
+        triggerLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.INTAKE_VELOCITY));
+        triggerRight.whileTrue(intake.setVelocityCommand(IntakeConstants.L1_EJECT_VELOCITY));
         // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
         // a.whileTrue(intake.setVoltageCommand(0));
