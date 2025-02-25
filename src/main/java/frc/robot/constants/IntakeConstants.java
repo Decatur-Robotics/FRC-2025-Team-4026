@@ -10,8 +10,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 public class IntakeConstants {
 
     public static final double REST_VELOCITY = 0;
-    public static final double INTAKE_VELOCITY = -10;
-    public static final double L1_EJECT_VELOCITY = 10;
+    public static final double INTAKE_VELOCITY = 0;
+    public static final double L1_EJECT_VELOCITY = 0;
     public static final double PROCESSOR_EJECT_VELOCITY = 0;
     public static final double NET_EJECT_VELOCITY = 0;
 

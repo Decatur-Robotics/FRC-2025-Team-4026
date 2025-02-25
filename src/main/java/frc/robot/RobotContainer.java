@@ -197,11 +197,11 @@ public class RobotContainer {
         // triggerLeft.whileTrue(claw.setCurrentCommand(ClawConstants.CLOSED_CURRENT));
         // triggerRight.whileTrue(claw.setCurrentCommand(ClawConstants.OPEN_CURRENT));
 
-        triggerLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.INTAKE_VELOCITY));
-        triggerRight.whileTrue(intake.setVelocityCommand(IntakeConstants.L1_EJECT_VELOCITY));
+        // triggerLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.INTAKE_VELOCITY));
+        // triggerRight.whileTrue(intake.setVelocityCommand(IntakeConstants.L1_EJECT_VELOCITY));
         // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
-        // a.whileTrue(intake.setVoltageCommand(0));
+        triggerLeft.whileTrue(intake.setVoltageCommand(3));
     }
 
     public static ShuffleboardTab getShuffleboardTab() {
