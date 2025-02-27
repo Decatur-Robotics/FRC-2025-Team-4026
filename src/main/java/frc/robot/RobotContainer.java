@@ -202,7 +202,7 @@ public class RobotContainer {
         // triggerRight.whileTrue(intake.setVelocityCommand(IntakeConstants.L1_EJECT_VELOCITY));
         // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
-        triggerLeft.whileTrue(intake.setVoltageCommand(3));
+        triggerLeft.whileTrue(intake.setVoltageCommand(-12));
 
         /*
          * SysId
