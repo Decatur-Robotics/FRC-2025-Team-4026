@@ -1,5 +1,10 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -9,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Ports;
@@ -97,7 +103,7 @@ public class ArmSubsystem extends SubsystemBase {
 
 	public void resetTalonEncoder() {
         double rotations = (getThroughBoreEncoderPosition()) * ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO;
-		// motor.setPosition(rotations);
+		motor.setPosition(rotations);
     }
 
 	public Command setPositionCommand(double position) {
@@ -109,6 +115,33 @@ public class ArmSubsystem extends SubsystemBase {
 		return Commands.runEnd(() -> setVoltage(voltage), 
 			() -> setVoltage(0),
 			this);
+	}
+
+	/*
+	 * SysId
+	 */
+
+	private final SysIdRoutine sysIdRoutine =
+		new SysIdRoutine(
+			new SysIdRoutine.Config(
+				Volts.of(1).per(Second),
+				Volts.of(4),
+				Seconds.of(10),
+				(state) -> SignalLogger.writeString("state", state.toString())
+			),
+			new SysIdRoutine.Mechanism(
+				(volts) -> motor.setControl(voltageRequest.withOutput(volts.in(Volts))),
+				null,
+				this
+			)
+		);
+
+	public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+		return sysIdRoutine.quasistatic(direction);
+	}
+	 
+	public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+		return sysIdRoutine.dynamic(direction);
 	}
 
 }

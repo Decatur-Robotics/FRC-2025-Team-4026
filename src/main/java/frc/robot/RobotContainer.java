@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.ClawConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.SwerveConstants;
@@ -202,6 +203,20 @@ public class RobotContainer {
         // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
         triggerLeft.whileTrue(intake.setVoltageCommand(3));
+
+        /*
+         * SysId
+         */
+
+        // triggerLeft.whileTrue(arm.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        // triggerRight.whileTrue(arm.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        // bumperLeft.whileTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        // bumperRight.whileTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kForward));
+
+        triggerLeft.whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        triggerRight.whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        bumperLeft.whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        bumperRight.whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kForward));
     }
 
     public static ShuffleboardTab getShuffleboardTab() {

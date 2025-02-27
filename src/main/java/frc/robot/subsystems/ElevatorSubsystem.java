@@ -10,10 +10,16 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.Ports;
 import frc.robot.RobotContainer;
 import frc.robot.constants.ElevatorConstants;
 
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -131,5 +137,32 @@ public class ElevatorSubsystem extends SubsystemBase {
         return Commands.run(() -> setVoltage(voltage), this)
             .finallyDo(() -> setVoltage(0));
     }
+
+    /*
+	 * SysId
+	 */
+
+	private final SysIdRoutine sysIdRoutine =
+		new SysIdRoutine(
+			new SysIdRoutine.Config(
+				Volts.of(1).per(Second),
+				Volts.of(4),
+				Seconds.of(10),
+				(state) -> SignalLogger.writeString("state", state.toString())
+			),
+			new SysIdRoutine.Mechanism(
+				(volts) -> motorMain.setControl(voltageRequest.withOutput(volts.in(Volts))),
+				null,
+				this
+			)
+		);
+
+	public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+		return sysIdRoutine.quasistatic(direction);
+	}
+	 
+	public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+		return sysIdRoutine.dynamic(direction);
+	}
 
 }
