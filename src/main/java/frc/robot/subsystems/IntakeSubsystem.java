@@ -50,7 +50,9 @@ public class IntakeSubsystem extends SubsystemBase {
         motorLeft.setControl(velocityRequest.withVelocity(velocity));
         motorRight.setControl(velocityRequest.withVelocity(velocity));
 
-        voltageRequest = new VoltageOut(0);
+        voltage = 0;
+
+        voltageRequest = new VoltageOut(voltage);
 
         currentFilter = LinearFilter.movingAverage(10);
 

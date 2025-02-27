@@ -213,10 +213,10 @@ public class RobotContainer {
         // bumperLeft.whileTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kReverse));
         // bumperRight.whileTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kForward));
 
-        triggerLeft.whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        triggerRight.whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        bumperLeft.whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-        bumperRight.whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        // triggerLeft.whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        // triggerRight.whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        // bumperLeft.whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        // bumperRight.whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kForward));
     }
 
     public static ShuffleboardTab getShuffleboardTab() {
