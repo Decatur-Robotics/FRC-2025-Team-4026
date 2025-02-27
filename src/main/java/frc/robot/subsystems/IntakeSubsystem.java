@@ -23,6 +23,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private LinearFilter currentFilter;
     private double filteredCurrent;
+
+    private double voltage;
     
     public IntakeSubsystem() {
         motorLeft = new TalonFXS(Ports.INTAKE_MOTOR_LEFT);
@@ -61,6 +63,8 @@ public class IntakeSubsystem extends SubsystemBase {
         tab.addDouble("Target Intake Velocity", () -> velocity);
         tab.addDouble("Actual Intake Velocity", () -> getVelocity());
         tab.addDouble("Filtered Intake Current", () -> filteredCurrent);
+        tab.addDouble("Target Intake Voltage", () -> voltage);
+        tab.addDouble("Actual Intake Voltage", () -> motorLeft.getMotorVoltage().getValueAsDouble());
     }
 
     @Override
@@ -87,6 +91,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void setVoltage(double voltage) {
+        this.voltage = voltage;
         motorLeft.setControl(voltageRequest.withOutput(voltage));
         motorRight.setControl(voltageRequest.withOutput(voltage));
     }
