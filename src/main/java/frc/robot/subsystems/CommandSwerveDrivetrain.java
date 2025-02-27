@@ -70,6 +70,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         .withDriveRequest(DriveRequestType.Velocity)
         .withSteerRequest(SteerRequestType.MotionMagicExpo);
 
+    private final SwerveRequest.ApplyRobotSpeeds driveRequest = new SwerveRequest.ApplyRobotSpeeds();
+
     /** Swerve request to apply during robot-centric path following */
     // private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
 
@@ -168,7 +170,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 // Consumer of ChassisSpeeds and feedforwards to drive the robot
                 (speeds, feedforwards) -> driveAuto(() -> speeds, () -> feedforwards),
                 // setControl(
-                //     m_pathApplyRobotSpeeds.withSpeeds(speeds)
+                //     driveRequest.withSpeeds(speeds)
                 //         .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
                 //         .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
                 // ),
@@ -234,9 +236,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 0.02 // The loop time of the robot code, in seconds
             );
 
-            for (int i = 0; i <= 3; i++) {
-                this.getModules()[i].apply(moduleRequest.withState(previousSetpoint.moduleStates()[i]));
-            }
+            setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
         });
     }
 
@@ -257,11 +257,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 0.02 // The loop time of the robot code, in seconds
             );
 
-            for (int i = 0; i <= 3; i++) {
-                this.getModules()[i].apply(moduleRequest.withState(previousSetpoint.moduleStates()[i])
-                    .withWheelForceFeedforwardX(feedforwards.get().robotRelativeForcesXNewtons()[i])
-                    .withWheelForceFeedforwardY(feedforwards.get().robotRelativeForcesYNewtons()[i]));
-            }
+            setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds())
+                .withWheelForceFeedforwardsX(feedforwards.get().robotRelativeForcesXNewtons())
+                .withWheelForceFeedforwardsY(feedforwards.get().robotRelativeForcesYNewtons()));
         });
     }
 
