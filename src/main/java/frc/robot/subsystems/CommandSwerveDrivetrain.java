@@ -68,8 +68,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private final ModuleRequest moduleRequest = new ModuleRequest()
         .withDriveRequest(DriveRequestType.Velocity)
-        .withSteerRequest(SteerRequestType.MotionMagicExpo)
-        .withEnableFOC(true);
+        .withSteerRequest(SteerRequestType.MotionMagicExpo);
 
     /** Swerve request to apply during robot-centric path following */
     // private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
