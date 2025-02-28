@@ -19,6 +19,8 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -133,8 +135,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         return Commands.runOnce(() -> setPosition(position));
     }
 
-    public Command setVoltageCommand(double voltage) {
-        return Commands.run(() -> setVoltage(voltage), this)
+    public Command setVoltageCommand(Supplier<Double> voltage) {
+        return Commands.run(() -> setVoltage(voltage.get()), this)
             .finallyDo(() -> setVoltage(0));
     }
 

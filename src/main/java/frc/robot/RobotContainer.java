@@ -3,15 +3,18 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -184,8 +187,13 @@ public class RobotContainer {
          * Testing buttons
          */
 
-        // triggerLeft.whileTrue(elevator.setVoltageCommand(12));
-        // triggerRight.whileTrue(elevator.setVoltageCommand(-2));
+        GenericEntry elevatorVoltage = shuffleboardTab.add("Elevator Voltage", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("min", -1, "max", 1))
+            .getEntry();
+
+        triggerLeft.whileTrue(elevator.setVoltageCommand(() -> elevatorVoltage.getDouble(0)));
+        // triggerRight.whileTrue(elevator.setVoltageCommand(-1.5));
         // triggerRight.onTrue(elevator.setPositionCommand(0));
 
         // triggerLeft.whileTrue(arm.setVoltageCommand(-2));
@@ -202,7 +210,7 @@ public class RobotContainer {
         // triggerRight.whileTrue(intake.setVelocityCommand(IntakeConstants.L1_EJECT_VELOCITY));
         // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
-        triggerLeft.whileTrue(intake.setVoltageCommand(-12));
+        // triggerLeft.whileTrue(intake.setVoltageCommand(-12));
 
         /*
          * SysId
