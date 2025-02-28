@@ -181,9 +181,10 @@ public class SuperstructureSubsystem extends SubsystemBase {
     // Reset offsets commands
 
     public Command zeroSuperstructureCommand() {
-        return Commands.sequence(Commands.runOnce(() -> setArmPosition(SuperstructureConstants.CORAL_STOWED_STATE.armPosition)),
-            Commands.waitUntil(() -> isArmAtGoalTargetPosition()))
-            .finallyDo(() -> elevator.zeroCommand());
+        return Commands.sequence(Commands.runOnce(() -> setArmPosition(SuperstructureConstants.CORAL_STOWED_STATE.armPosition), arm),
+            Commands.waitUntil(() -> isArmAtGoalTargetPosition()),
+            Commands.runOnce(() -> elevator.zeroCommand(), elevator))
+            .finallyDo(() -> setState(SuperstructureConstants.ALGAE_STOWED_STATE));
     }
 
     // Intaking commands
@@ -224,13 +225,11 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Commands.runOnce(() -> {
                 debouncer.calculate(false);
                 setState(intakingState.get());
-            }),
+            }, elevator, arm, wrist, claw, intake),
             Commands.waitUntil(() -> debouncer.calculate(intake.getFilteredCurrent() > IntakeConstants.STALL_CURRENT))
         )
         .finallyDo(
-            () -> {
-                setState(stowedState);
-            }
+            () -> setState(stowedState)
         );
     }
 
@@ -276,18 +275,16 @@ public class SuperstructureSubsystem extends SubsystemBase {
             double ejectVelocity, double scoreToStowDelay, SuperstructureState stowedState, 
             Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
         return Commands.sequence(
-            Commands.runOnce(() -> {
-                setState(stagingState);
-            }),
+            Commands.runOnce(() -> setState(stagingState),
+                elevator, arm, wrist, claw, intake),
             Commands.waitUntil(() -> (isAtGoalTargetState() && isAtTargetPose.get()) || overrideLineUp.get()),
-            Commands.runOnce(() -> {
-                setState(scoringState);
-            }),
-            Commands.waitSeconds(scoreToStowDelay)
+            Commands.runOnce(() -> setState(scoringState),
+                elevator, arm, wrist, claw, intake),
+            Commands.waitSeconds(scoreToStowDelay),
+            Commands.runOnce(() -> setState(stowedState),
+                elevator, arm, wrist, claw, intake)
         )
-        .finallyDo(() -> {
-            setState(stowedState);
-        });
+        .finallyDo(() -> setState(stowedState));
     }
 
 }
