@@ -147,9 +147,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 	private final SysIdRoutine sysIdRoutine =
 		new SysIdRoutine(
 			new SysIdRoutine.Config(
-				Volts.of(1).per(Second),
-				Volts.of(4),
-				Seconds.of(10),
+				Volts.of(1).per(Second), // Quasistatic
+				Volts.of(4), // Dynamic
+				Seconds.of(10), // Timeout
 				(state) -> SignalLogger.writeString("state", state.toString())
 			),
 			new SysIdRoutine.Mechanism(
