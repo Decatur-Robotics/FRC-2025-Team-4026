@@ -2,10 +2,8 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.io.IOException;
+import java.util.Optional;
 import java.util.function.Supplier;
-
-import org.json.simple.parser.ParseException;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
@@ -327,6 +325,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
 
+    public Pose2d getClosestPoseFromArrayAllianceRelative(Pose2d[] poses) {
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+
+        if (alliance.isPresent() && alliance.get().equals(Alliance.Red)) {
+            for (Pose2d pose : poses) {
+                pose = pose.rotateAround(PathSetpoints.FIELD_CENTER, PathSetpoints.FLIP_ROTATION);
+            }
+        }
+
+        return getClosestPoseFromArray(poses);
+    }
+
     public Pose2d getClosestPoseFromArray(Pose2d[] poses) {
         double distanceToClosestPose;
         Pose2d closestPose;
@@ -367,23 +377,37 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public Command driveToClosestBranch(Supplier<ChassisSpeeds> speeds) {
-        Pose2d pose = getClosestPoseFromArray(PathSetpoints.CORAL_SCORING_POSES);
+        Pose2d pose = getClosestPoseFromArrayAllianceRelative(PathSetpoints.CORAL_SCORING_POSES);
 
         return driveToPose(speeds, pose);
     }
 
     public Command driveToClosestReefAlgae(Supplier<ChassisSpeeds> speeds) {
-        Pose2d pose = getClosestPoseFromArray(PathSetpoints.REEF_ALGAE_POSES);
+        Pose2d pose = getClosestPoseFromArrayAllianceRelative(PathSetpoints.REEF_ALGAE_POSES);
         
         return driveToPose(speeds, pose);
     }
 
     public Command driveToProcessor(Supplier<ChassisSpeeds> speeds) {
-        return driveToPose(speeds, PathSetpoints.PROCESSOR);
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+
+        Pose2d pose = PathSetpoints.PROCESSOR;
+
+        if (alliance.isPresent() && alliance.get().equals(Alliance.Red)) 
+            pose = pose.rotateAround(PathSetpoints.FIELD_CENTER, PathSetpoints.FLIP_ROTATION);
+
+        return driveToPose(speeds, pose);
     }
 
     public Command driveToNet(Supplier<ChassisSpeeds> speeds) {
-        return driveToPose(speeds, PathSetpoints.NET);
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+
+        Pose2d pose = PathSetpoints.NET;
+
+        if (alliance.isPresent() && alliance.get().equals(Alliance.Red)) 
+            pose = pose.rotateAround(PathSetpoints.FIELD_CENTER, PathSetpoints.FLIP_ROTATION);
+        
+        return driveToPose(speeds, pose);
     }
 
     public boolean isAtTargetPose() {
