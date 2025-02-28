@@ -65,12 +65,12 @@ public class WristSubsystem extends SubsystemBase {
 
         filteredVelocity = velocityFilter.calculate(motor.getVelocity().getValueAsDouble());
 
-        // if (isSlammed() && (current == WristConstants.PARALLEL_CURRENT)) {
-        //     setCurrent(WristConstants.REDUCED_PARALLEL_CURRENT);
-        // }
-        // else if (isSlammed() && (current == WristConstants.PERPENDICULAR_CURRENT)) {
-        //     setCurrent(WristConstants.REDUCED_PERPENDICULAR_CURRENT);
-        // }
+        if (isSlammed() && (current == WristConstants.PARALLEL_CURRENT)) {
+            setCurrent(WristConstants.REDUCED_PARALLEL_CURRENT);
+        }
+        else if (isSlammed() && (current == WristConstants.PERPENDICULAR_CURRENT)) {
+            setCurrent(WristConstants.REDUCED_PERPENDICULAR_CURRENT);
+        }
     }
 
     public void setCurrent(double current) {
