@@ -1,9 +1,17 @@
 package frc.robot.constants;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class PathSetpoints {
+
+    // Field center
+    public static final Translation2d FIELD_CENTER = new Translation2d(8.774176, 4.026281);
+
+    public static final Rotation2d FLIP_ROTATION = new Rotation2d(Degrees.of(180));
 
     // Coral scoring locations
     public final static Pose2d REEF_A = new Pose2d(1, 5, Rotation2d.fromDegrees(0));
