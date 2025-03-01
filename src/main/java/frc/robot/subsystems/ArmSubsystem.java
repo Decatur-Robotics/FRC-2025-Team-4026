@@ -4,11 +4,14 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,6 +34,10 @@ public class ArmSubsystem extends SubsystemBase {
 
 	private DutyCycleEncoder throughBoreEncoder;
 
+	private double voltage;
+
+	private double gravityFeedForward;
+
 	public ArmSubsystem() {
 		motor = new TalonFX(Ports.ARM_MOTOR);
 
@@ -46,16 +53,18 @@ public class ArmSubsystem extends SubsystemBase {
 
 		positionRequest = new MotionMagicVoltage(position).withEnableFOC(true);
 
-		motor.setControl(positionRequest.withPosition(position));
+		setPosition(position);
 
 		voltageRequest = new VoltageOut(0).withEnableFOC(true);
 
 		// k4X is quadrature encoding
 		throughBoreEncoder = new DutyCycleEncoder(Ports.ARM_ENCODER);
 
-		resetTalonEncoder();
+		// resetTalonEncoder();
 
 		configureShuffleboard();
+
+		voltage = 0;
 	}
 
 	private void configureShuffleboard() {
@@ -66,50 +75,52 @@ public class ArmSubsystem extends SubsystemBase {
 		tab.addDouble("Actual Arm Velocity", () -> motor.getVelocity().getValueAsDouble());
 		tab.addDouble("Actual Arm Acceleration", () -> motor.getAcceleration().getValueAsDouble());
 		tab.addDouble("Arm Through Bore Encoder Position", () -> getThroughBoreEncoderPosition());
+		tab.addDouble("Arm Position Calc", () -> (getThroughBoreEncoderPosition() / ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO));
+		tab.addDouble("Target Arm Voltage", () -> voltage);
+		tab.addDouble("Actual Arm Voltage", () -> motor.getMotorVoltage().getValueAsDouble());
+		tab.addDouble("Gravity Feed Forward", () -> gravityFeedForward);
 	}
 	
 	@Override
 	public void periodic() {
         if(motor.hasResetOccurred()) {
 			motor.optimizeBusUtilization();
-			motor.getRotorPosition().setUpdateFrequency(20);
+			motor.getPosition().setUpdateFrequency(20);
 		}
+
+		Rotation2d angle = Rotation2d.fromRotations(getThroughBoreEncoderPosition());
+
+		gravityFeedForward = Math.cos(angle.getRadians()) * ArmConstants.KG;
+
+		// motor.setControl(positionRequest.withFeedForward(gravityFeedForward));
 	}
 
 	public void setPosition(double position) {
 		this.position = position;
 
-		resetTalonEncoder();
-
-		// Arm angle in radians (0 is parallel to the floor)
-		double angle = ((position - ArmConstants.LEVEL_POSITION) / ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO)
-			* 2 * Math.PI;
-
-		double gravityFeedForward = Math.cos(angle) * ArmConstants.KG;
-
-		motor.setControl(positionRequest.withPosition(position)
-				.withFeedForward(gravityFeedForward));
+		motor.setControl(positionRequest.withPosition(position));
 	}
 
 	public void setVoltage(double voltage) {
+		this.voltage = voltage;
 		motor.setControl(voltageRequest.withOutput(voltage));
 	}
 
     public double getTalonPosition() {
-        return motor.getRotorPosition().getValueAsDouble();
+        return motor.getPosition().getValueAsDouble();
     }
 
 	/**
 	 * @return through bore encoder position in rotations
 	 */
 	public double getThroughBoreEncoderPosition() {
-		return ((throughBoreEncoder.get() - 1) / 1023) - ArmConstants.THROUGH_BORE_ENCODER_ZERO_OFFSET;
+		return (throughBoreEncoder.get()) - ArmConstants.THROUGH_BORE_ENCODER_ZERO_OFFSET;
 	}
 
-	public void resetTalonEncoder() {
-        double rotations = (getThroughBoreEncoderPosition()) * ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO;
-		motor.setPosition(rotations);
-    }
+	// public void resetTalonEncoder() {
+    //     double rotations = getThroughBoreEncoderPosition() / ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO;
+	// 	motor.setPosition(rotations);
+    // }
 
 	public Command setPositionCommand(double position) {
 		return Commands.runOnce(() -> setPosition(position));
@@ -121,6 +132,15 @@ public class ArmSubsystem extends SubsystemBase {
 			() -> setVoltage(0),
 			this);
 	}
+
+	public Command tuneVoltageCommand(Supplier<Double> voltage) {
+        return Commands.run(() -> setVoltage(voltage.get()), this)
+            .finallyDo(() -> setVoltage(0));
+    }
+
+	// public Command resetTalonEncoderCommand() {
+	// 	return Commands.runOnce(() -> resetTalonEncoder());
+	// }
 
 	/*
 	 * SysId

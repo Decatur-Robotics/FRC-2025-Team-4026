@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.ClawConstants;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.PathSetpoints;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.constants.WristConstants;
 import frc.robot.core.LogitechControllerButtons;
@@ -121,6 +122,7 @@ public class RobotContainer {
         Joystick joystick = new Joystick(0);
 
         JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a);
+        JoystickButton b = new JoystickButton(joystick, LogitechControllerButtons.b);
         JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
         JoystickButton bumperLeft = new JoystickButton(joystick, LogitechControllerButtons.bumperLeft);
@@ -129,7 +131,7 @@ public class RobotContainer {
         Supplier<ChassisSpeeds> desiredChassisSpeeds = () -> { 
             double velocityX = joystick.getY() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
             double velocityY = joystick.getX() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
-            double velocityAngular = joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
+            double velocityAngular = -joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
 
             if (Math.abs(velocityX) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityX = 0;
             if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityY = 0;
@@ -146,7 +148,10 @@ public class RobotContainer {
         bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
 
         // Reset heading
-        a.onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));
+        a.onTrue(swerve.runOnce(() -> swerve.setOperatorPerspectiveForward(swerve.getOperatorForwardDirection())));
+
+        b.onTrue(swerve.runOnce(() -> swerve.resetPose(PathSetpoints.REEF_A)));
+
     }
 
     private void configureSecondaryBindings() {
@@ -165,9 +170,9 @@ public class RobotContainer {
         JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
 
-        // Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
-        // Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
-        // Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
+        Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
+        Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
+        Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
         // up.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
         // left.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
@@ -189,29 +194,45 @@ public class RobotContainer {
          * Testing buttons
          */
 
-        // triggerLeft.whileTrue(elevator.setVoltageCommand(1));
-        // triggerRight.whileTrue(elevator.setVoltageCommand(-1));
-        // triggerLeft.onTrue(elevator.setPositionCommand(0));
-        // triggerRight.onTrue(elevator.setPositionCommand(10));
+        GenericEntry elevatorVoltage = shuffleboardTab.add("Elevator Voltage", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("min", -1, "max", 1))
+            .getEntry();
+            
+        // triggerLeft.whileTrue(elevator.tuneVoltageCommand(() -> elevatorVoltage.getDouble(0)));
 
-        // triggerLeft.whileTrue(arm.setVoltageCommand(-2));
-        // triggerRight.whileTrue(arm.setVoltageCommand(2));
-        // triggerRight.onTrue(arm.setPositionCommand(0));
+        GenericEntry armVoltage = shuffleboardTab.add("Arm Voltage", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("min", 0, "max", 1.5))
+            .getEntry();
+
+        // triggerLeft.whileTrue(arm.tuneVoltageCommand(() -> armVoltage.getDouble(0)));
+        // triggerRight.whileTrue(arm.tuneVoltageCommand(() -> -armVoltage.getDouble(0)));
+
+        // triggerLeft.whileTrue(elevator.setVoltageCommand(2));
+        // triggerRight.whileTrue(elevator.setVoltageCommand(-1));
+        // bumperLeft.onTrue(elevator.setPositionCommand(10));
+        // bumperRight.onTrue(elevator.setPositionCommand(40));
+
+        // bumperLeft.whileTrue(arm.setVoltageCommand(2));
+        bumperRight.whileTrue(arm.setVoltageCommand(-1));
+        // triggerLeft.onTrue(arm.setPositionCommand(4.5));
+        // triggerRight.onTrue(arm.setPositionCommand(20));
 
         // triggerLeft.whileTrue(wrist.setCurrentCommand(WristConstants.PARALLEL_CURRENT));
         // triggerRight.whileTrue(wrist.setCurrentCommand(WristConstants.PERPENDICULAR_CURRENT));
 
-        // triggerLeft.whileTrue(claw.setCurrentCommand(ClawConstants.CLOSED_CURRENT));
+        a.whileTrue(claw.setCurrentCommand(ClawConstants.CLOSED_CURRENT));
         // triggerRight.whileTrue(claw.setCurrentCommand(ClawConstants.OPEN_CURRENT));
 
         // triggerLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.INTAKE_VELOCITY));
         // triggerRight.whileTrue(intake.setVelocityCommand(IntakeConstants.L1_EJECT_VELOCITY));
         // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
-        // triggerLeft.whileTrue(intake.setVoltageCommand(-12));
+        triggerLeft.whileTrue(intake.setVoltageCommand(-12));
 
-        triggerLeft.whileTrue(climber.setVoltageCommand(6));
-        triggerRight.whileTrue(climber.setVoltageCommand(-6));
+        // triggerLeft.whileTrue(climber.setVoltageCommand(6));
+        // triggerRight.whileTrue(climber.setVoltageCommand(-6));
 
         /*
          * SysId
@@ -222,10 +243,10 @@ public class RobotContainer {
         // bumperLeft.whileTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kReverse));
         // bumperRight.whileTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kForward));
 
-        // triggerLeft.whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        // triggerRight.whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        // bumperLeft.whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-        // bumperRight.whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        // triggerLeft.whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        // triggerRight.whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        // bumperLeft.whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        // bumperRight.whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
         // a.onTrue(Commands.runOnce(() -> SignalLogger.start()));
         // b.onTrue(Commands.runOnce(() -> SignalLogger.stop()));

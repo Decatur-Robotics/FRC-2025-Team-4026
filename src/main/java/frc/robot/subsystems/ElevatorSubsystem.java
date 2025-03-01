@@ -19,9 +19,12 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -31,6 +34,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double position;
     
     private MotionMagicVoltage positionRequest;
+    private VelocityVoltage velocityRequest;
 
     private double voltage;
 
@@ -56,7 +60,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         motorMain.getMotorVoltage().setUpdateFrequency(20);
         motorMain.getStatorCurrent().setUpdateFrequency(20);
 
-        position = ElevatorConstants.STOWED_POSITION;
+        position = 10;
         voltage = 0;
 
         motorFollower.setControl(new Follower(motorMain.getDeviceID(), true));
@@ -65,6 +69,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         motorMain.setControl(positionRequest);
 
         voltageRequest = new VoltageOut(voltage).withEnableFOC(true);
+        velocityRequest = new VelocityVoltage(0).withEnableFOC(true);
 
         currentFilter = LinearFilter.movingAverage(10);
 
@@ -140,6 +145,15 @@ public class ElevatorSubsystem extends SubsystemBase {
             .finallyDo(() -> setVoltage(0));
     }
 
+    public Command tuneVoltageCommand(Supplier<Double> voltage) {
+        return Commands.run(() -> setVoltage(voltage.get()), this)
+            .finallyDo(() -> setVoltage(0));
+    }
+
+    // public Command setVelocityCommand(double velocity) {
+    //     return Commands.run(() -> motorMain.setControl(velocityRequest.withVelocity(velocity)));
+    // }
+
     /*
 	 * SysId
 	 */
@@ -148,7 +162,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 		new SysIdRoutine(
 			new SysIdRoutine.Config(
 				Volts.of(0.4).per(Second), // Quasistatic
-				Volts.of(1), // Dynamic
+				Volts.of(1.5), // Dynamic
 				Seconds.of(10), // Timeout
 				(state) -> SignalLogger.writeString("state", state.toString())
 			),

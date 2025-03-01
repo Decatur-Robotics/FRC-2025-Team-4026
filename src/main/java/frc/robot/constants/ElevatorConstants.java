@@ -40,17 +40,17 @@ public final class ElevatorConstants {
         .withStatorCurrentLimitEnable(true)
         .withStatorCurrentLimit(60);
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-        .withKP(0.17958)
+        .withKP(0.0) // 0.5
         .withKI(0)
         .withKD(0)
-        .withKS(0.11377)
-        .withKV(0.13038)
-        .withKA(0.027485)
-        .withKG(0.40835)
+        .withKS(0.0) // 0.19
+        .withKV(0.0) // 0.13
+        .withKA(0.00) // 0.007
+        .withKG(0.0) // 0.39
         .withGravityType(GravityTypeValue.Elevator_Static);
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
-        .withMotionMagicCruiseVelocity(50) 
-        .withMotionMagicAcceleration(100); 
+        .withMotionMagicCruiseVelocity(90) 
+        .withMotionMagicAcceleration(200); 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()
         .withNeutralMode(NeutralModeValue.Brake);
 

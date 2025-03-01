@@ -87,8 +87,9 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public Command setCurrentCommand(double current) {
-        return Commands.startEnd(() -> setCurrent(current), 
-            () -> setCurrent(0), this);
+        return Commands.runEnd(() -> setCurrent(current), 
+            () -> setCurrent(0), this)
+            .finallyDo(() -> setCurrent(0));
     }
 
 }
