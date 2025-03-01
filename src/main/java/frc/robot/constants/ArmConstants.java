@@ -52,8 +52,7 @@ public class ArmConstants {
         .withKA(0);
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(0)
-        .withMotionMagicExpo_kV(0)
-        .withMotionMagicExpo_kA(0);
+        .withMotionMagicAcceleration(0);
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()
         .withNeutralMode(NeutralModeValue.Brake);
 
