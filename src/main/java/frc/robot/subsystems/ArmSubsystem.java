@@ -37,7 +37,10 @@ public class ArmSubsystem extends SubsystemBase {
 		motor.getConfigurator().apply(ArmConstants.MOTOR_CONFIG);
 
 		motor.optimizeBusUtilization();
-		motor.getRotorPosition().setUpdateFrequency(20);
+		motor.getPosition().setUpdateFrequency(20);
+		motor.getVelocity().setUpdateFrequency(20);
+        motor.getAcceleration().setUpdateFrequency(20);
+		motor.getMotorVoltage().setUpdateFrequency(20);
 
 		position = ArmConstants.STOWED_POSITION;
 
@@ -60,6 +63,8 @@ public class ArmSubsystem extends SubsystemBase {
 
 		tab.addDouble("Target Arm Position", () -> position);
 		tab.addDouble("Actual Arm Position", () -> getTalonPosition());
+		tab.addDouble("Actual Arm Velocity", () -> motor.getVelocity().getValueAsDouble());
+		tab.addDouble("Actual Arm Acceleration", () -> motor.getAcceleration().getValueAsDouble());
 		tab.addDouble("Arm Through Bore Encoder Position", () -> getThroughBoreEncoderPosition());
 	}
 	

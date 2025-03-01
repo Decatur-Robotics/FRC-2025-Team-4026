@@ -49,8 +49,8 @@ public final class ElevatorConstants {
         .withKG(0.40835)
         .withGravityType(GravityTypeValue.Elevator_Static);
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
-        .withMotionMagicCruiseVelocity(50)
-        .withMotionMagicAcceleration(20);
+        .withMotionMagicCruiseVelocity(50) 
+        .withMotionMagicAcceleration(100); 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()
         .withNeutralMode(NeutralModeValue.Brake);
 

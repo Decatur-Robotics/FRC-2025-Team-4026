@@ -50,8 +50,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         motorMain.optimizeBusUtilization();
         motorFollower.optimizeBusUtilization();
-        motorMain.getRotorPosition().setUpdateFrequency(20);
-        motorMain.getRotorVelocity().setUpdateFrequency(20);
+        motorMain.getPosition().setUpdateFrequency(20);
+        motorMain.getVelocity().setUpdateFrequency(20);
+        motorMain.getAcceleration().setUpdateFrequency(20);
         motorMain.getMotorVoltage().setUpdateFrequency(20);
         motorMain.getStatorCurrent().setUpdateFrequency(20);
 
@@ -76,9 +77,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         tab.addDouble("Filtered Elevator Current", () -> filteredCurrent);
         tab.addDouble("Target Elevator Position", () -> position);
         tab.addDouble("Actual Elevator Position", () -> getPosition());
+		tab.addDouble("Actual Elevator Velocity", () -> motorMain.getVelocity().getValueAsDouble());
+		tab.addDouble("Actual Elevator Acceleration", () -> motorMain.getAcceleration().getValueAsDouble());
         tab.addDouble("Target Elevator Voltage", () -> voltage);
         tab.addDouble("Actual Elevator Voltage", () -> motorMain.getMotorVoltage().getValueAsDouble());
-        tab.addDouble("Actual Elevator Velocity", () -> motorMain.getRotorVelocity().getValueAsDouble());
     }
 
     @Override
@@ -87,7 +89,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 		{
 			motorMain.optimizeBusUtilization();
 			motorFollower.optimizeBusUtilization();
-			motorMain.getRotorPosition().setUpdateFrequency(20);
+			motorMain.getPosition().setUpdateFrequency(20);
 		}
 
         filteredCurrent = currentFilter.calculate(getCurrent());
@@ -99,7 +101,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public double getPosition() {
-        return motorMain.getRotorPosition().getValueAsDouble();
+        return motorMain.getPosition().getValueAsDouble();
     }
 
     public boolean getLimitSwitch() {
