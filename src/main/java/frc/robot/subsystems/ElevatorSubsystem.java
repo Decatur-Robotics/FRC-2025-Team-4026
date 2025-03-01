@@ -19,8 +19,6 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
-import java.util.function.Supplier;
-
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -135,8 +133,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         return Commands.runOnce(() -> setPosition(position));
     }
 
-    public Command setVoltageCommand(Supplier<Double> voltage) {
-        return Commands.run(() -> setVoltage(voltage.get()), this)
+    public Command setVoltageCommand(double voltage) {
+        return Commands.run(() -> setVoltage(voltage), this)
             .finallyDo(() -> setVoltage(0));
     }
 
@@ -147,8 +145,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 	private final SysIdRoutine sysIdRoutine =
 		new SysIdRoutine(
 			new SysIdRoutine.Config(
-				Volts.of(1).per(Second), // Quasistatic
-				Volts.of(4), // Dynamic
+				Volts.of(0.4).per(Second), // Quasistatic
+				Volts.of(1), // Dynamic
 				Seconds.of(10), // Timeout
 				(state) -> SignalLogger.writeString("state", state.toString())
 			),

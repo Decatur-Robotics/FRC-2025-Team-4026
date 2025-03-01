@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -187,14 +189,10 @@ public class RobotContainer {
          * Testing buttons
          */
 
-        GenericEntry elevatorVoltage = shuffleboardTab.add("Elevator Voltage", 0)
-            .withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", -1, "max", 1))
-            .getEntry();
-
-        triggerLeft.whileTrue(elevator.setVoltageCommand(() -> elevatorVoltage.getDouble(0)));
-        // triggerRight.whileTrue(elevator.setVoltageCommand(-1.5));
-        // triggerRight.onTrue(elevator.setPositionCommand(0));
+        // triggerLeft.whileTrue(elevator.setVoltageCommand(1));
+        // triggerRight.whileTrue(elevator.setVoltageCommand(-1));
+        // triggerLeft.onTrue(elevator.setPositionCommand(0));
+        // triggerRight.onTrue(elevator.setPositionCommand(10));
 
         // triggerLeft.whileTrue(arm.setVoltageCommand(-2));
         // triggerRight.whileTrue(arm.setVoltageCommand(2));
@@ -212,6 +210,9 @@ public class RobotContainer {
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
         // triggerLeft.whileTrue(intake.setVoltageCommand(-12));
 
+        triggerLeft.whileTrue(climber.setVoltageCommand(6));
+        triggerRight.whileTrue(climber.setVoltageCommand(-6));
+
         /*
          * SysId
          */
@@ -225,6 +226,9 @@ public class RobotContainer {
         // triggerRight.whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
         // bumperLeft.whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kReverse));
         // bumperRight.whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kForward));
+
+        // a.onTrue(Commands.runOnce(() -> SignalLogger.start()));
+        // b.onTrue(Commands.runOnce(() -> SignalLogger.stop()));
     }
 
     public static ShuffleboardTab getShuffleboardTab() {

@@ -2,14 +2,17 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
 import frc.robot.RobotContainer;
 import frc.robot.constants.ClimberConstants;
 
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
+import com.ctre.phoenix6.controls.VoltageOut;
 
 public class ClimberSubsystem extends SubsystemBase{
 
@@ -17,6 +20,8 @@ public class ClimberSubsystem extends SubsystemBase{
     
     private double position;
     private MotionMagicDutyCycle controlRequest;
+
+    private VoltageOut voltageRequest;
     
     public ClimberSubsystem() {
         climberMotor = new TalonFX(Ports.CLIMBER_MOTOR, "CANivore 0");
@@ -31,6 +36,8 @@ public class ClimberSubsystem extends SubsystemBase{
 
         controlRequest = new MotionMagicDutyCycle(position);
         climberMotor.setControl(controlRequest);
+
+        voltageRequest = new VoltageOut(0);
 
         configureShuffleboard();
     }
@@ -59,6 +66,10 @@ public class ClimberSubsystem extends SubsystemBase{
         climberMotor.setControl(controlRequest.withPosition(this.position));
     }
 
+    public void setVoltage(double voltage) {
+        climberMotor.setControl(voltageRequest.withOutput(voltage));
+    }
+
     /**
      * @return Position of the motor in mechanism rotations
      */
@@ -73,6 +84,11 @@ public class ClimberSubsystem extends SubsystemBase{
         return startEnd(
             () -> this.setPosition(ClimberConstants.CLIMBED_POSITION),
             () -> this.setPosition(ClimberConstants.INITIAL_POSITION));
+    }
+
+    public Command setVoltageCommand(double voltage) {
+        return Commands.run(() -> setVoltage(voltage), this)
+            .finallyDo(() -> setVoltage(0));
     }
 
 }
