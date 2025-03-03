@@ -10,15 +10,15 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public final class ElevatorConstants {
 
+    // Stowed position
+    public static final double STOWED_POSITION = 0;
+
     // Intaking positions
     public static final double CORAL_GROUND_INTAKING_POSITION = 0;
-    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 0;
+    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 10;
     public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
     public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 0;
     public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = 0;
-
-    // Stowed polsition
-    public static final double STOWED_POSITION = 0;
 
     // Scoring positions
     public static final double L1_POSITION = 0;

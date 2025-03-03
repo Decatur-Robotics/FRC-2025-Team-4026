@@ -184,7 +184,7 @@ public class RobotContainer {
         // triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAtTargetPose, overrideLineUp));
 
         // b.whileTrue(superstructure.intakeCoralGroundCommand());
-        // y.whileTrue(superstructure.intakeCoralHumanPlayerCommand());
+        y.whileTrue(superstructure.intakeCoralHumanPlayerCommand());
         // a.whileTrue(superstructure.intakeAlgaeGroundCommand());
         // x.whileTrue(superstructure.intakeAlgaeReefCommand(getTargetPose));
 
@@ -217,21 +217,21 @@ public class RobotContainer {
         // bumperRight.onTrue(elevator.setPositionCommand(40));
 
         // bumperLeft.whileTrue(arm.setVoltageCommand(2));
-        bumperRight.whileTrue(arm.setVoltageCommand(-1));
+        // bumperRight.whileTrue(arm.setVoltageCommand(-1));
         // triggerLeft.onTrue(arm.setPositionCommand(4.5));
         // triggerRight.onTrue(arm.setPositionCommand(20));
 
         // triggerLeft.whileTrue(wrist.setCurrentCommand(WristConstants.PARALLEL_CURRENT));
         // triggerRight.whileTrue(wrist.setCurrentCommand(WristConstants.PERPENDICULAR_CURRENT));
 
-        a.whileTrue(claw.setCurrentCommand(ClawConstants.CLOSED_CURRENT));
+        // a.whileTrue(claw.setCurrentCommand(ClawConstants.CLOSED_CURRENT));
         // triggerRight.whileTrue(claw.setCurrentCommand(ClawConstants.OPEN_CURRENT));
 
         // triggerLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.INTAKE_VELOCITY));
         // triggerRight.whileTrue(intake.setVelocityCommand(IntakeConstants.L1_EJECT_VELOCITY));
         // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
-        triggerLeft.whileTrue(intake.setVoltageCommand(-12));
+        // triggerLeft.whileTrue(intake.setVoltageCommand(-12));
 
         // triggerLeft.whileTrue(climber.setVoltageCommand(6));
         // triggerRight.whileTrue(climber.setVoltageCommand(-6));
