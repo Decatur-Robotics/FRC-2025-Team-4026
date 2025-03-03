@@ -99,8 +99,8 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command setVelocityCommand(double velocity) {
-        return Commands.startEnd(() -> setVelocity(velocity), 
-            () -> setVelocity(IntakeConstants.REST_VELOCITY));
+        return Commands.run(() -> setVelocity(velocity)) 
+            .finallyDo(() -> setVelocity(IntakeConstants.REST_VELOCITY));
     }
 
     public Command setVoltageCommand(double voltage) {
