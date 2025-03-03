@@ -30,9 +30,12 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.RobotContainer;
 import frc.robot.constants.PathSetpoints;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
@@ -198,6 +201,23 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
+    public void configureShuffleboard(Supplier<ChassisSpeeds> speeds){
+        ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
+
+        tab.addDouble("Target Swerve Speed X", () -> speeds.get().vxMetersPerSecond);
+        tab.addDouble("Target Swerve Speed Y", () -> speeds.get().vyMetersPerSecond);
+
+        tab.addDouble("Real Swerve Speed X", () -> getState().Speeds.vxMetersPerSecond);
+        tab.addDouble("Real Swerve Speed Y", () -> getState().Speeds.vyMetersPerSecond);
+
+        tab.addDouble("Real Swerve Pose X", () -> getState().Pose.getX());
+        tab.addDouble("Real Swerve Pose Y", () -> getState().Pose.getY());
+        tab.addDouble("Real Swerve Rotation", () -> getState().Pose.getRotation().getDegrees());
+
+        tab.addDouble("Target Swerve Pose X", () -> targetPose.getX());
+        tab.addDouble("Target Swerve Pose Y", () -> targetPose.getY());
+        tab.addDouble("Target Swerve Rotation", () -> targetPose.getRotation().getDegrees());
+    }
     /**
      * Returns a command that applies the specified control request to this swerve drivetrain.
      *

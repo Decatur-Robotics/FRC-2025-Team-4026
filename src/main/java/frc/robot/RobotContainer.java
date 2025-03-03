@@ -152,6 +152,8 @@ public class RobotContainer {
 
         b.onTrue(swerve.runOnce(() -> swerve.resetPose(PathSetpoints.REEF_A)));
 
+        swerve.configureShuffleboard(desiredChassisSpeeds);
+
     }
 
     private void configureSecondaryBindings() {

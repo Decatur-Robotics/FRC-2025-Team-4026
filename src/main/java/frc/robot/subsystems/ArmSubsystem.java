@@ -75,6 +75,7 @@ public class ArmSubsystem extends SubsystemBase {
 		tab.addDouble("Actual Arm Velocity", () -> motor.getVelocity().getValueAsDouble());
 		tab.addDouble("Actual Arm Acceleration", () -> motor.getAcceleration().getValueAsDouble());
 		tab.addDouble("Arm Through Bore Encoder Position", () -> getThroughBoreEncoderPosition());
+		tab.addDouble("Arm Test Ratio", () -> (getTalonPosition()/getThroughBoreEncoderPosition()));
 		tab.addDouble("Arm Position Calc", () -> (getThroughBoreEncoderPosition() / ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO));
 		tab.addDouble("Target Arm Voltage", () -> voltage);
 		tab.addDouble("Actual Arm Voltage", () -> motor.getMotorVoltage().getValueAsDouble());
