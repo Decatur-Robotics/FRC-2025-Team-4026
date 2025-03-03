@@ -202,21 +202,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public void configureShuffleboard(Supplier<ChassisSpeeds> speeds){
-        ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
+        ShuffleboardTab tab = Shuffleboard.getTab("Swerve");
 
-        tab.addDouble("Target Swerve Speed X", () -> speeds.get().vxMetersPerSecond);
-        tab.addDouble("Target Swerve Speed Y", () -> speeds.get().vyMetersPerSecond);
+        tab.addDouble("Target Swerve Speed X", () -> ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), this.getState().Pose.getRotation().plus(getOperatorForwardDirection())).vxMetersPerSecond);
+        tab.addDouble("Target Swerve Speed Y", () -> ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), this.getState().Pose.getRotation().plus(getOperatorForwardDirection())).vyMetersPerSecond);
 
-        tab.addDouble("Real Swerve Speed X", () -> getState().Speeds.vxMetersPerSecond);
-        tab.addDouble("Real Swerve Speed Y", () -> getState().Speeds.vyMetersPerSecond);
+        tab.addDouble("Actual Swerve Speed X", () -> getState().Speeds.vxMetersPerSecond);
+        tab.addDouble("Actual Swerve Speed Y", () -> getState().Speeds.vyMetersPerSecond);
 
-        tab.addDouble("Real Swerve Pose X", () -> getState().Pose.getX());
-        tab.addDouble("Real Swerve Pose Y", () -> getState().Pose.getY());
-        tab.addDouble("Real Swerve Rotation", () -> getState().Pose.getRotation().getDegrees());
+        tab.addDouble("Actual Swerve Pose X", () -> getState().Pose.getX());
+        tab.addDouble("Actual Swerve Pose Y", () -> getState().Pose.getY());
+        tab.addDouble("Actual Swerve Rotation", () -> getState().Pose.getRotation().getDegrees());
 
         tab.addDouble("Target Swerve Pose X", () -> targetPose.getX());
         tab.addDouble("Target Swerve Pose Y", () -> targetPose.getY());
         tab.addDouble("Target Swerve Rotation", () -> targetPose.getRotation().getDegrees());
+
+        tab.addDouble("Target Module 0 Velocity", () -> getState().ModuleTargets[0].speedMetersPerSecond);
+        tab.addDouble("Actual Module 0 Velocity", () -> getState().ModuleStates[0].speedMetersPerSecond);
     }
     /**
      * Returns a command that applies the specified control request to this swerve drivetrain.
