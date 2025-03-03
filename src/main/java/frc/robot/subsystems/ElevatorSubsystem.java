@@ -6,10 +6,12 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
+import frc.robot.RobotContainer;
 import frc.robot.constants.ElevatorConstants;
 
 import com.ctre.phoenix6.controls.Follower;
@@ -55,6 +57,18 @@ public class ElevatorSubsystem extends SubsystemBase {
         voltageControlRequest = new VoltageOut(voltage).withEnableFOC(true);
 
         currentFilter = LinearFilter.movingAverage(10);
+
+        configureShuffleboard();
+    }
+
+    private void configureShuffleboard() {
+        ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
+
+        tab.addDouble("Filtered Elevator Current", () -> filteredCurrent);
+        tab.addDouble("Target Elevator Position", () -> position);
+        tab.addDouble("Actual Elevator Position", () -> getPosition());
+        tab.addDouble("Actual Elevator Voltage", () -> motorMain.getMotorVoltage().getValueAsDouble());
+        tab.addDouble("Actual Elevator Velocity", () -> motorMain.getRotorVelocity().getValueAsDouble());
     }
 
     @Override

@@ -4,8 +4,9 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.RobotContainer;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Ports;
 
@@ -35,6 +36,16 @@ public class ArmSubsystem extends SubsystemBase {
 		throughBoreEncoder = new Encoder(Ports.ARM_ENCODER_A, Ports.ARM_ENCODER_B, false, Encoder.EncodingType.k4X);
 
 		resetTalonEncoder();
+
+		configureShuffleboard();
+	}
+
+	private void configureShuffleboard() {
+        ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
+
+		tab.addDouble("Target Arm Position", () -> position);
+		tab.addDouble("Actual Arm Position", () -> getTalonPosition());
+		tab.addDouble("Arm Through Bore Encoder Position", () -> getThroughBoreEncoderPosition());
 	}
 	
 	@Override
