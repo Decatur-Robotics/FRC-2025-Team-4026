@@ -21,7 +21,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private ClawSubsystem claw;
     private IntakeSubsystem intake;
 
-    private SuperstructureState goalTargetState;
     private SuperstructureState targetState;
 
     public SuperstructureSubsystem(ElevatorSubsystem elevator, ArmSubsystem arm, WristSubsystem wrist,
@@ -32,59 +31,34 @@ public class SuperstructureSubsystem extends SubsystemBase {
         this.claw = claw;
         this.intake = intake;
 
-        goalTargetState = SuperstructureConstants.CORAL_STOWED_STATE.copyInstance();
         targetState = SuperstructureConstants.CORAL_STOWED_STATE.copyInstance();
     }
 
     @Override
     public void periodic() {
-        // if (!targetState.equals(goalTargetState)) {
-        //     setState(goalTargetState);
-        // }
-    }
-
-    private void calculateCollisionAvoidanceState() {
-        if (getActualElevatorPosition() < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION) {
-            targetState = new SuperstructureState(goalTargetState.elevatorPosition, 
-                    Math.max(SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION, goalTargetState.armPosition), 
-                    goalTargetState.wristCurrent, goalTargetState.clawCurrent, goalTargetState.intakeVelocity);
-        }
-        else if (getActualArmPosition() < SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION) {
-            targetState = new SuperstructureState(
-                    Math.max(SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION, goalTargetState.elevatorPosition), 
-                    goalTargetState.armPosition, goalTargetState.wristCurrent, goalTargetState.clawCurrent, goalTargetState.intakeVelocity);
-        }
-        else {
-            targetState = goalTargetState.copyInstance();
-        }
-    }
-
-    public void setState(SuperstructureState goalTargetState) {
-        this.goalTargetState = goalTargetState.copyInstance();
-
-        SuperstructureState oldTargetState = targetState.copyInstance();
         
-        calculateCollisionAvoidanceState();
+    }
 
-        if (!targetState.equals(oldTargetState)) {
-            elevator.setPosition(targetState.elevatorPosition);
-            arm.setPosition(targetState.armPosition);
-            wrist.setCurrent(targetState.wristCurrent);
-            claw.setCurrent(targetState.clawCurrent);
-            intake.setVelocity(targetState.intakeVelocity);
-        }
+    public void setState(SuperstructureState targetState) {
+        this.targetState = targetState.copyInstance();
+
+        elevator.setPosition(targetState.elevatorPosition);
+        arm.setPosition(targetState.armPosition);
+        wrist.setCurrent(targetState.wristCurrent);
+        claw.setCurrent(targetState.clawCurrent);
+        intake.setVelocity(targetState.intakeVelocity);
     }
 
     // Is at targets
 
-    public boolean isAtGoalTargetState() {
-        return isElevatorAtGoalTargetPosition() &&
-                isArmAtGoalTargetPosition() &&
-                isWristAtGoalTargetPosition() &&
-                isClawAtGoalTargetPosition();
+    public boolean isAtTargetState() {
+        return isElevatorAtTargetPosition() &&
+                isArmAtTargetPosition() &&
+                isWristAtTargetPosition() &&
+                isClawAtTargetPosition();
     }
 
-    public boolean isElevatorAtGoalTargetPosition() {
+    public boolean isElevatorAtTargetPosition() {
         if (Math.abs(getActualElevatorPosition() - targetState.elevatorPosition) > SuperstructureConstants.ELEVATOR_ERROR_MARGIN) {
             return false;
         }
@@ -92,7 +66,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return true;
     }
 
-    public boolean isArmAtGoalTargetPosition() {
+    public boolean isArmAtTargetPosition() {
         if (Math.abs(getActualArmPosition() - targetState.armPosition) > SuperstructureConstants.ARM_ERROR_MARGIN) {
             return false;
         }
@@ -100,18 +74,18 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return true;
     }
 
-    public boolean isWristAtGoalTargetPosition() {
+    public boolean isWristAtTargetPosition() {
         return claw.isSlammed();
     }
 
-    public boolean isClawAtGoalTargetPosition() {
+    public boolean isClawAtTargetPosition() {
         return claw.isSlammed();
     }
 
     // Get goal states
 
     public SuperstructureState getGoalState() {
-        return goalTargetState;
+        return targetState;
     }
 
     // Get actual states
@@ -144,35 +118,35 @@ public class SuperstructureSubsystem extends SubsystemBase {
     // Directly set subsystem targets
 
     public void setElevatorPosition(double position) {
-        goalTargetState.elevatorPosition = position;
+        targetState.elevatorPosition = position;
         targetState.elevatorPosition = position;
         
         elevator.setPosition(position);
     }
 
     public void setArmPosition(double position) {
-        goalTargetState.armPosition = position;
+        targetState.armPosition = position;
         targetState.armPosition = position;
         
         arm.setPosition(position);
     }
 
     public void setWristCurrent(double current) {
-        goalTargetState.wristCurrent = current;
+        targetState.wristCurrent = current;
         targetState.wristCurrent = current;
         
         wrist.setCurrent(current);
     }
 
     public void setClawCurrent(double current) {
-        goalTargetState.clawCurrent = current;
+        targetState.clawCurrent = current;
         targetState.clawCurrent = current;
         
         claw.setCurrent(current);
     }
 
     public void setIntakeVelocity(double velocity) {
-        goalTargetState.intakeVelocity = velocity;
+        targetState.intakeVelocity = velocity;
         targetState.intakeVelocity = velocity;
         
         intake.setVelocity(velocity);
@@ -182,7 +156,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public Command zeroSuperstructureCommand() {
         return Commands.sequence(Commands.runOnce(() -> setArmPosition(SuperstructureConstants.CORAL_STOWED_STATE.armPosition), arm),
-            Commands.waitUntil(() -> isArmAtGoalTargetPosition()),
+            Commands.waitUntil(() -> isArmAtTargetPosition()),
             Commands.runOnce(() -> elevator.zeroCommand(), elevator))
             .finallyDo(() -> setState(SuperstructureConstants.ALGAE_STOWED_STATE));
     }
@@ -277,7 +251,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return Commands.sequence(
             Commands.runOnce(() -> setState(stagingState),
                 elevator, arm, wrist, claw, intake),
-            Commands.waitUntil(() -> (isAtGoalTargetState() && isAtTargetPose.get()) || overrideLineUp.get()),
+            Commands.waitUntil(() -> (isAtTargetState() && isAtTargetPose.get()) || overrideLineUp.get()),
             Commands.runOnce(() -> setState(scoringState),
                 elevator, arm, wrist, claw, intake),
             Commands.waitSeconds(scoreToStowDelay),
