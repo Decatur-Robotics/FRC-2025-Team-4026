@@ -220,6 +220,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         tab.addDouble("Target Module 0 Velocity", () -> getState().ModuleTargets[0].speedMetersPerSecond);
         tab.addDouble("Actual Module 0 Velocity", () -> getState().ModuleStates[0].speedMetersPerSecond);
+        tab.addDouble("Target Module 1 Velocity", () -> getState().ModuleTargets[1].speedMetersPerSecond);
+        tab.addDouble("Actual Module 1 Velocity", () -> getState().ModuleStates[1].speedMetersPerSecond);
+        tab.addDouble("Target Module 2 Velocity", () -> getState().ModuleTargets[2].speedMetersPerSecond);
+        tab.addDouble("Actual Module 2 Velocity", () -> getState().ModuleStates[2].speedMetersPerSecond);
+        tab.addDouble("Target Module 3 Velocity", () -> getState().ModuleTargets[3].speedMetersPerSecond);
+        tab.addDouble("Actual Module 3 Velocity", () -> getState().ModuleStates[3].speedMetersPerSecond);
     }
     /**
      * Returns a command that applies the specified control request to this swerve drivetrain.
