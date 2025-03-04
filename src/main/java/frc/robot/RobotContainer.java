@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.ClawConstants;
@@ -159,10 +160,10 @@ public class RobotContainer {
     private void configureSecondaryBindings() {
         Joystick joystick = new Joystick(1);
 
-        JoystickButton down = new JoystickButton(joystick, LogitechControllerButtons.down);
-        JoystickButton up = new JoystickButton(joystick, LogitechControllerButtons.up);
-        JoystickButton left = new JoystickButton(joystick, LogitechControllerButtons.left);
-        JoystickButton right = new JoystickButton(joystick, LogitechControllerButtons.right);
+        POVButton down = new POVButton(joystick, LogitechControllerButtons.down);
+        POVButton up = new POVButton(joystick, LogitechControllerButtons.up);
+        POVButton left = new POVButton(joystick, LogitechControllerButtons.left);
+        POVButton right = new POVButton(joystick, LogitechControllerButtons.right);
         JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a);
         JoystickButton b = new JoystickButton(joystick, LogitechControllerButtons.b);
         JoystickButton x = new JoystickButton(joystick, LogitechControllerButtons.x);
@@ -179,7 +180,7 @@ public class RobotContainer {
         // up.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
         // left.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
         // right.whileTrue(superstructure.scoreCoralL3Command(isAtTargetPose, overrideLineUp));
-        b.whileTrue(superstructure.scoreCoralL4Command(isAtTargetPose, overrideLineUp));
+        down.whileTrue(superstructure.scoreCoralL4Command(isAtTargetPose, overrideLineUp));
         // triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isAtTargetPose, overrideLineUp));
         // triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAtTargetPose, overrideLineUp));
 
