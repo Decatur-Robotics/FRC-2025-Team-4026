@@ -211,51 +211,48 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public Command scoreCoralL1Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
         return scoreCommand(SuperstructureConstants.MOVE_TO_L1_STATE, SuperstructureConstants.SCORE_L1_STATE,
-            IntakeConstants.L1_EJECT_VELOCITY, SuperstructureConstants.CORAL_SCORE_TO_STOW_DELAY, SuperstructureConstants.CORAL_STOWED_STATE,
+            IntakeConstants.L1_EJECT_VELOCITY, SuperstructureConstants.CORAL_STOWED_STATE,
             isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreCoralL2Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
         return scoreCommand(SuperstructureConstants.MOVE_TO_L2_STATE, SuperstructureConstants.SCORE_L2_STATE,
-            IntakeConstants.REST_VELOCITY, SuperstructureConstants.CORAL_SCORE_TO_STOW_DELAY, SuperstructureConstants.CORAL_STOWED_STATE,
+            IntakeConstants.REST_VELOCITY, SuperstructureConstants.CORAL_STOWED_STATE,
             isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreCoralL3Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
         return scoreCommand(SuperstructureConstants.MOVE_TO_L3_STATE, SuperstructureConstants.SCORE_L3_STATE,
-            IntakeConstants.REST_VELOCITY, SuperstructureConstants.CORAL_SCORE_TO_STOW_DELAY, SuperstructureConstants.CORAL_STOWED_STATE,
+            IntakeConstants.REST_VELOCITY, SuperstructureConstants.CORAL_STOWED_STATE,
             isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreCoralL4Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
         return scoreCommand(SuperstructureConstants.MOVE_TO_L4_STATE, SuperstructureConstants.SCORE_L4_STATE,
-            IntakeConstants.REST_VELOCITY, SuperstructureConstants.CORAL_SCORE_TO_STOW_DELAY, SuperstructureConstants.CORAL_STOWED_STATE,
+            IntakeConstants.REST_VELOCITY, SuperstructureConstants.CORAL_STOWED_STATE,
             isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreAlgaeProcessorCommand(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
         return scoreCommand(SuperstructureConstants.MOVE_TO_PROCESSOR_STATE, SuperstructureConstants.SCORE_PROCESSOR_STATE,
-            IntakeConstants.PROCESSOR_EJECT_VELOCITY, SuperstructureConstants.ALGAE_SCORE_TO_STOW_DELAY, SuperstructureConstants.ALGAE_STOWED_STATE,
+            IntakeConstants.PROCESSOR_EJECT_VELOCITY, SuperstructureConstants.ALGAE_STOWED_STATE,
             isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreAlgaeNetCommand(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
         return scoreCommand(SuperstructureConstants.MOVE_TO_NET_STATE, SuperstructureConstants.SCORE_NET_STATE,
-            IntakeConstants.NET_EJECT_VELOCITY, SuperstructureConstants.ALGAE_SCORE_TO_STOW_DELAY, SuperstructureConstants.ALGAE_STOWED_STATE,
+            IntakeConstants.NET_EJECT_VELOCITY, SuperstructureConstants.ALGAE_STOWED_STATE,
             isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreCommand(SuperstructureState stagingState, SuperstructureState scoringState, 
-            double ejectVelocity, double scoreToStowDelay, SuperstructureState stowedState, 
+            double ejectVelocity, SuperstructureState stowedState, 
             Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
         return Commands.sequence(
             Commands.runOnce(() -> setState(stagingState),
                 elevator, arm, wrist, claw, intake),
             Commands.waitUntil(() -> (isAtTargetState() && isAtTargetPose.get()) || overrideLineUp.get()),
             Commands.runOnce(() -> setState(scoringState),
-                elevator, arm, wrist, claw, intake),
-            Commands.waitSeconds(scoreToStowDelay),
-            Commands.runOnce(() -> setState(stowedState),
                 elevator, arm, wrist, claw, intake)
         )
         .finallyDo(() -> setState(stowedState));
