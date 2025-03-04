@@ -172,7 +172,7 @@ public class RobotContainer {
         JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
 
-        Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
+        Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.a).getAsBoolean();
         Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
