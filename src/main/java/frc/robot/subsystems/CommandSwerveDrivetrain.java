@@ -400,7 +400,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     getState().Pose.getRotation().getRadians(), targetPose.getRotation().getRadians());
             }
 
-            driveFieldRelative(speeds);
+            this.driveFieldRelative(speeds);
         })
         .finallyDo(() -> this.targetPose = null);
     }
