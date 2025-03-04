@@ -40,6 +40,8 @@ public class Robot extends TimedRobot implements ILogSource, IModeChangeListener
 
 		robotContainer = new RobotContainer();
 
+		RobotContainer.getShuffleboardTab().add(CommandScheduler.getInstance());
+
 		PathfindingCommand.warmupCommand().schedule();
 	}
 

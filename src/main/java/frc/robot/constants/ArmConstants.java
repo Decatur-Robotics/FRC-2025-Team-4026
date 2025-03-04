@@ -11,11 +11,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 public class ArmConstants {
 
     // Stowed position
-    public static final double STOWED_POSITION = 20;
+    public static final double STOWED_POSITION = -0.5;
 
     // Intaking positions
     public static final double CORAL_GROUND_INTAKING_POSITION = 0;
-    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 5;
+    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = -5.5;
     public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
     public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 0;
     public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = 0;
@@ -26,8 +26,8 @@ public class ArmConstants {
     public static final double SCORE_L2_POSITION = 0;
     public static final double MOVE_TO_L3_POSITION = 0;
     public static final double SCORE_L3_POSITION = 0;
-    public static final double MOVE_TO_L4_POSITION = 0;
-    public static final double SCORE_L4_POSITION = 0;
+    public static final double MOVE_TO_L4_POSITION = -0.5;
+    public static final double SCORE_L4_POSITION = -5.5;
     public static final double PROCESSOR_POSITION = 0;
     public static final double NET_POSITION = 0;
 
@@ -35,7 +35,7 @@ public class ArmConstants {
 	public static final double LEVEL_POSITION = 0;
 
     /** The encoder value when the arm is parallel to the floor */
-    public static final double THROUGH_BORE_ENCODER_ZERO_OFFSET = 0.583;
+    public static final double THROUGH_BORE_ENCODER_ZERO_OFFSET = 0.41;
 
     public static final double TALON_ENCODER_TO_ROTATIONS_RATIO = 0.015625; // how many motor encoder rotations it takes to complete one rotation of the mechanism
 

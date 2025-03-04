@@ -179,7 +179,7 @@ public class RobotContainer {
         // up.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
         // left.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
         // right.whileTrue(superstructure.scoreCoralL3Command(isAtTargetPose, overrideLineUp));
-        // down.whileTrue(superstructure.scoreCoralL4Command(isAtTargetPose, overrideLineUp));
+        b.whileTrue(superstructure.scoreCoralL4Command(isAtTargetPose, overrideLineUp));
         // triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isAtTargetPose, overrideLineUp));
         // triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAtTargetPose, overrideLineUp));
 
@@ -211,13 +211,13 @@ public class RobotContainer {
         // triggerLeft.whileTrue(arm.tuneVoltageCommand(() -> armVoltage.getDouble(0)));
         // triggerRight.whileTrue(arm.tuneVoltageCommand(() -> -armVoltage.getDouble(0)));
 
-        // triggerLeft.whileTrue(elevator.setVoltageCommand(2));
-        // triggerRight.whileTrue(elevator.setVoltageCommand(-1));
+        triggerLeft.whileTrue(elevator.setVoltageCommand(2));
+        triggerRight.whileTrue(elevator.setVoltageCommand(-1));
         // bumperLeft.onTrue(elevator.setPositionCommand(10));
         // bumperRight.onTrue(elevator.setPositionCommand(40));
 
-        // bumperLeft.whileTrue(arm.setVoltageCommand(2));
-        // bumperRight.whileTrue(arm.setVoltageCommand(-1));
+        bumperLeft.whileTrue(arm.setVoltageCommand(2));
+        bumperRight.whileTrue(arm.setVoltageCommand(-1));
         // triggerLeft.onTrue(arm.setPositionCommand(4.5));
         // triggerRight.onTrue(arm.setPositionCommand(20));
 
@@ -231,7 +231,7 @@ public class RobotContainer {
         // triggerRight.whileTrue(intake.setVelocityCommand(IntakeConstants.L1_EJECT_VELOCITY));
         // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
-        // triggerLeft.whileTrue(intake.setVoltageCommand(-12));
+        // triggerLeft.whileTrue(intake.setVoltageCommand(0.23));
 
         // triggerLeft.whileTrue(climber.setVoltageCommand(6));
         // triggerRight.whileTrue(climber.setVoltageCommand(-6));

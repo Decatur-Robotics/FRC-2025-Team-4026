@@ -26,8 +26,8 @@ public final class ElevatorConstants {
     public static final double SCORE_L2_POSITION = 0;
     public static final double MOVE_TO_L3_POSITION = 0;
     public static final double SCORE_L3_POSITION = 0;
-    public static final double MOVE_TO_L4_POSITION = 0;
-    public static final double SCORE_L4_POSITION = 0;
+    public static final double MOVE_TO_L4_POSITION = 54;
+    public static final double SCORE_L4_POSITION = 54;
     public static final double PROCESSOR_POSITION = 0;
     public static final double NET_POSITION = 0;
 
@@ -40,13 +40,13 @@ public final class ElevatorConstants {
         .withStatorCurrentLimitEnable(true)
         .withStatorCurrentLimit(60);
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-        .withKP(0.0) // 0.5
+        .withKP(0.5) // 0.5
         .withKI(0)
         .withKD(0)
-        .withKS(0.0) // 0.19
-        .withKV(0.0) // 0.13
-        .withKA(0.00) // 0.007
-        .withKG(0.0) // 0.39
+        .withKS(0.19) // 0.19
+        .withKV(0.13) // 0.13
+        .withKA(0.007) // 0.007
+        .withKG(0.39) // 0.39
         .withGravityType(GravityTypeValue.Elevator_Static);
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(90) 
