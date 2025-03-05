@@ -14,7 +14,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -32,12 +32,12 @@ public class VisionSubsystem extends SubsystemBase {
 
     private final PhotonPoseEstimator poseEstimatorFrontLeft, poseEstimatorFrontRight, poseEstimatorBack;
 
-    private StructPublisher<Pose2d> publisherFrontLeft = NetworkTableInstance.getDefault()
-        .getStructTopic("CameraFrontLeft", Pose2d.struct).publish();
-    private StructPublisher<Pose2d> publisherFrontRight = NetworkTableInstance.getDefault()
-        .getStructTopic("CameraFrontRight", Pose2d.struct).publish();
-    private StructPublisher<Pose2d> publisherBack = NetworkTableInstance.getDefault()
-        .getStructTopic("CameraBack", Pose2d.struct).publish();
+    private StructPublisher<Pose3d> publisherFrontLeft = NetworkTableInstance.getDefault()
+        .getStructTopic("CameraFrontLeft", Pose3d.struct).publish();
+    private StructPublisher<Pose3d> publisherFrontRight = NetworkTableInstance.getDefault()
+        .getStructTopic("CameraFrontRight", Pose3d.struct).publish();
+    private StructPublisher<Pose3d> publisherBack = NetworkTableInstance.getDefault()
+        .getStructTopic("CameraBack", Pose3d.struct).publish();
     
     public VisionSubsystem(CommandSwerveDrivetrain swerve) {
         this.swerve = swerve;
@@ -64,7 +64,7 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public void updateVisionMeasurements(PhotonCamera camera, PhotonPoseEstimator poseEstimator, 
-            StructPublisher<Pose2d> publisher) {
+            StructPublisher<Pose3d> publisher) {
         Optional<EstimatedRobotPose> poseEstimate = Optional.empty();
         Matrix<N3, N1> standardDeviations = VisionConstants.SINGLE_TAG_STANDARD_DEVIATIONS;
 
@@ -75,7 +75,7 @@ public class VisionSubsystem extends SubsystemBase {
 
         if (poseEstimate.isPresent()) {
             swerve.addVisionMeasurement(poseEstimate.get().estimatedPose.toPose2d(), poseEstimate.get().timestampSeconds, standardDeviations);
-            publisher.set(poseEstimate.get().estimatedPose.toPose2d());
+            publisher.set(poseEstimate.get().estimatedPose);
         }
     }
 
