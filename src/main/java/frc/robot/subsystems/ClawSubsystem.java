@@ -5,13 +5,14 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
-import frc.robot.RobotContainer;
 import frc.robot.constants.ClawConstants;
+import frc.robot.constants.Constants;
 
 public class ClawSubsystem extends SubsystemBase {
     
@@ -49,7 +50,7 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     private void configureShuffleboard() {
-        ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.SHUFFLEBOARD_SUPERSTRUCTURE_TAB);
 
         tab.addDouble("Target Claw Current", () -> current);
         tab.addDouble("Actual Claw Current", () -> getCurrent());

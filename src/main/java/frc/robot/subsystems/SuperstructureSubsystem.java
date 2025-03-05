@@ -5,9 +5,12 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.PathSetpoints;
 import frc.robot.constants.SuperstructureConstants;
@@ -32,6 +35,14 @@ public class SuperstructureSubsystem extends SubsystemBase {
         this.intake = intake;
 
         targetState = SuperstructureConstants.CORAL_STOWED_STATE.copyInstance();
+
+        configureShuffleboard();
+    }
+
+    private void configureShuffleboard() {
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.SHUFFLEBOARD_SUPERSTRUCTURE_TAB);
+
+        tab.addBoolean("Is Superstructure At Target State", () -> isAtTargetState());
     }
 
     @Override

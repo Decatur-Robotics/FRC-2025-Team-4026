@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.ClawConstants;
+import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.PathSetpoints;
 import frc.robot.constants.SwerveConstants;
@@ -78,7 +79,7 @@ public class RobotContainer {
         field = new Field2d();
         SmartDashboard.putData("Field", field);
 
-        shuffleboardTab = Shuffleboard.getTab("Tab 1");
+        shuffleboardTab = Shuffleboard.getTab(Constants.SHUFFLEBOARD_SUPERSTRUCTURE_TAB);
 
         logger = new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
@@ -254,8 +255,5 @@ public class RobotContainer {
         // a.onTrue(Commands.runOnce(() -> SignalLogger.start()));
         // b.onTrue(Commands.runOnce(() -> SignalLogger.stop()));
     }
-
-    public static ShuffleboardTab getShuffleboardTab() {
-		return instance.shuffleboardTab;
-	}
+    
 }

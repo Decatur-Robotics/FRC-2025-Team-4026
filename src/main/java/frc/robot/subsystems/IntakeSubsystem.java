@@ -5,11 +5,12 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFXS;
 
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
+import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.Ports;
 
@@ -60,7 +61,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     private void configureShuffleboard() {
-        ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.SHUFFLEBOARD_SUPERSTRUCTURE_TAB);
 
         tab.addDouble("Target Intake Velocity", () -> velocity);
         tab.addDouble("Actual Intake Velocity", () -> getVelocity());

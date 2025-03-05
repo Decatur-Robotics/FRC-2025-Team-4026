@@ -13,13 +13,14 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.RobotContainer;
 import frc.robot.constants.ArmConstants;
+import frc.robot.constants.Constants;
 import frc.robot.constants.Ports;
 
 public class ArmSubsystem extends SubsystemBase {
@@ -68,7 +69,7 @@ public class ArmSubsystem extends SubsystemBase {
 	}
 
 	private void configureShuffleboard() {
-        ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.SHUFFLEBOARD_SUPERSTRUCTURE_TAB);
 
 		tab.addDouble("Target Arm Position", () -> position);
 		tab.addDouble("Actual Arm Position", () -> getTalonPosition());

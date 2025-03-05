@@ -2,14 +2,14 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Ports;
-import frc.robot.RobotContainer;
 import frc.robot.constants.ClimberConstants;
+import frc.robot.constants.Constants;
 
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -43,7 +43,7 @@ public class ClimberSubsystem extends SubsystemBase{
     }
 
     private void configureShuffleboard() {
-        ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.SHUFFLEBOARD_CLIMBER_TAB);
 
         tab.addDouble("Target Climber Position", () -> position);
         tab.addDouble("Actual Climber Position", () -> getPosition());
