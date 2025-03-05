@@ -173,21 +173,21 @@ public class RobotContainer {
         JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
 
-        Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.a).getAsBoolean();
+        Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.start).getAsBoolean();
         Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
         // up.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
-        // left.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
-        // right.whileTrue(superstructure.scoreCoralL3Command(isAtTargetPose, overrideLineUp));
+        left.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
+        right.whileTrue(superstructure.scoreCoralL3Command(isAtTargetPose, overrideLineUp));
         down.whileTrue(superstructure.scoreCoralL4Command(isAtTargetPose, overrideLineUp));
-        // triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isAtTargetPose, overrideLineUp));
-        // triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAtTargetPose, overrideLineUp));
+        triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isAtTargetPose, overrideLineUp));
+        triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAtTargetPose, overrideLineUp));
 
-        // b.whileTrue(superstructure.intakeCoralGroundCommand());
+        b.whileTrue(superstructure.intakeCoralGroundCommand());
         y.whileTrue(superstructure.intakeCoralHumanPlayerCommand());
-        // a.whileTrue(superstructure.intakeAlgaeGroundCommand());
-        // x.whileTrue(superstructure.intakeAlgaeReefCommand(getTargetPose));
+        a.whileTrue(superstructure.intakeAlgaeGroundCommand());
+        x.whileTrue(superstructure.intakeAlgaeReefCommand(getTargetPose));
 
         // bumperRight.whileTrue(climber.climbCommand());
 
@@ -212,13 +212,13 @@ public class RobotContainer {
         // triggerLeft.whileTrue(arm.tuneVoltageCommand(() -> armVoltage.getDouble(0)));
         // triggerRight.whileTrue(arm.tuneVoltageCommand(() -> -armVoltage.getDouble(0)));
 
-        triggerLeft.whileTrue(elevator.setVoltageCommand(2));
-        triggerRight.whileTrue(elevator.setVoltageCommand(-1));
-        // bumperLeft.onTrue(elevator.setPositionCommand(10));
-        // bumperRight.onTrue(elevator.setPositionCommand(40));
+        // triggerLeft.whileTrue(elevator.setVoltageCommand(2));
+        // triggerRight.whileTrue(elevator.setVoltageCommand(-1));
+        // // bumperLeft.onTrue(elevator.setPositionCommand(10));
+        // // bumperRight.onTrue(elevator.setPositionCommand(40));
 
-        bumperLeft.whileTrue(arm.setVoltageCommand(2));
-        bumperRight.whileTrue(arm.setVoltageCommand(-1));
+        // bumperLeft.whileTrue(arm.setVoltageCommand(2));
+        // bumperRight.whileTrue(arm.setVoltageCommand(-1));
         // triggerLeft.onTrue(arm.setPositionCommand(4.5));
         // triggerRight.onTrue(arm.setPositionCommand(20));
 

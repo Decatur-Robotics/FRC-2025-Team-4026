@@ -17,24 +17,24 @@ public final class ElevatorConstants {
     public static final double CORAL_GROUND_INTAKING_POSITION = 0;
     public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 10;
     public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
-    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 0;
-    public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = 0;
+    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 20.47;
+    public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = 36.63;
 
     // Scoring positions
     public static final double L1_POSITION = 0;
-    public static final double MOVE_TO_L2_POSITION = 0;
-    public static final double SCORE_L2_POSITION = 0;
-    public static final double MOVE_TO_L3_POSITION = 0;
-    public static final double SCORE_L3_POSITION = 0;
+    public static final double MOVE_TO_L2_POSITION = 14.52;
+    public static final double SCORE_L2_POSITION = 14.52;
+    public static final double MOVE_TO_L3_POSITION = 31.18;
+    public static final double SCORE_L3_POSITION = 31.18;
     public static final double MOVE_TO_L4_POSITION = 54;
     public static final double SCORE_L4_POSITION = 54;
     public static final double PROCESSOR_POSITION = 0;
-    public static final double NET_POSITION = 0;
+    public static final double NET_POSITION = 54;
 
-    public static final double ZEROING_VOLTAGE = 0;
+    public static final double ZEROING_VOLTAGE = -2;
 
-    public static final double STALL_DEBOUNCE_TIME = 0;
-    public static final double STALL_CURRENT = 0;
+    public static final double STALL_DEBOUNCE_TIME = 0.3;
+    public static final double STALL_CURRENT = 100;
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)

@@ -21,12 +21,16 @@ import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -39,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
 import frc.robot.constants.PathSetpoints;
 import frc.robot.constants.SwerveConstants;
+import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -60,6 +65,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private SwerveSetpoint previousSetpoint;
 
     private Pose2d targetPose = new Pose2d();
+
+    private PIDController translationalController = new PIDController(
+        10, 0, 0);
+    private ProfiledPIDController rotationalController = new ProfiledPIDController(
+        7, 0, 0, new TrapezoidProfile.Constraints(2 * Math.PI, 4 * Math.PI));
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -215,10 +225,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         tab.addDouble("Actual Swerve Pose Y", () -> getState().Pose.getY());
         tab.addDouble("Actual Swerve Rotation", () -> getState().Pose.getRotation().getDegrees());
 
-        tab.addDouble("Target Swerve Pose X", () -> targetPose.getX());
-        tab.addDouble("Target Swerve Pose Y", () -> targetPose.getY());
-        tab.addDouble("Target Swerve Rotation", () -> targetPose.getRotation().getDegrees());
-
         tab.addDouble("Target Module 0 Velocity", () -> getState().ModuleTargets[0].speedMetersPerSecond);
         tab.addDouble("Actual Module 0 Velocity", () -> getState().ModuleStates[0].speedMetersPerSecond);
         tab.addDouble("Target Module 1 Velocity", () -> getState().ModuleTargets[1].speedMetersPerSecond);
@@ -255,7 +261,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * @return Command to run
      */
     public Command driveRobotRelative(Supplier<ChassisSpeeds> speeds) {
-        return run(() -> {
+        return Commands.run(() -> {
             // Note: it is important to not discretize speeds before or after
             // using the setpoint generator, as it will discretize them for you
             previousSetpoint = setpointGenerator.generateSetpoint(
@@ -264,8 +270,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 0.02 // The loop time of the robot code, in seconds
             );
 
+            System.out.println("running");
+
             setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
-        });
+        }, this);
     }
 
     /**
@@ -389,21 +397,39 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         this.targetPose = targetPose;
         
         return Commands.run(() -> {
+            double targetX = speeds.get().vxMetersPerSecond;
+            double targetY = speeds.get().vyMetersPerSecond;
+            double targetRotation = speeds.get().omegaRadiansPerSecond;
+
             if (speeds.get().vxMetersPerSecond == 0 && speeds.get().vyMetersPerSecond == 0) {
-                speeds.get().vxMetersPerSecond = SwerveConstants.TRANSLATIONAL_CONTROLLER.calculate(
+                targetX = translationalController.calculate(
                     getState().Pose.getX(), targetPose.getX());
-                speeds.get().vyMetersPerSecond = SwerveConstants.TRANSLATIONAL_CONTROLLER.calculate(
+                targetY = translationalController.calculate(
                     getState().Pose.getY(), targetPose.getY());
             }
 
             if (speeds.get().omegaRadiansPerSecond == 0) {
-                speeds.get().omegaRadiansPerSecond = SwerveConstants.ROTATIONAL_CONTROLLER.calculate(
+                targetRotation = rotationalController.calculate(
                     getState().Pose.getRotation().getRadians(), targetPose.getRotation().getRadians());
             }
 
-            this.driveFieldRelative(speeds);
-        })
+            ChassisSpeeds newSpeeds = new ChassisSpeeds(targetX, targetY, targetRotation);
+
+            this.pathingFieldRelative(newSpeeds);
+        }, this)
         .finallyDo(() -> this.targetPose = null);
+    }
+
+    public void pathingFieldRelative(ChassisSpeeds speeds) {
+        previousSetpoint = setpointGenerator.generateSetpoint(
+            previousSetpoint, // The previous setpoint
+            speeds, // The desired target speeds
+            0.02 // The loop time of the robot code, in seconds
+        );
+
+        System.out.println("pathing");
+
+        setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
     }
 
     public Command driveToClosestBranch(Supplier<ChassisSpeeds> speeds) {

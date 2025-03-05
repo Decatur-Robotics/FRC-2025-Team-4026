@@ -53,9 +53,11 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public boolean isAtTargetState() {
         return isElevatorAtTargetPosition() &&
-                isArmAtTargetPosition() &&
-                isWristAtTargetPosition() &&
-                isClawAtTargetPosition();
+                isArmAtTargetPosition();
+                
+                // &&
+                // isWristAtTargetPosition() &&
+                // isClawAtTargetPosition();
     }
 
     public boolean isElevatorAtTargetPosition() {
@@ -155,7 +157,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
     // Reset offsets commands
 
     public Command zeroSuperstructureCommand() {
-        return Commands.sequence(Commands.runOnce(() -> setArmPosition(SuperstructureConstants.CORAL_STOWED_STATE.armPosition), arm),
+        return Commands.sequence(
+            Commands.runOnce(() -> setArmPosition(SuperstructureConstants.CORAL_STOWED_STATE.armPosition), arm),
             Commands.waitUntil(() -> isArmAtTargetPosition()),
             Commands.runOnce(() -> elevator.zeroCommand(), elevator))
             .finallyDo(() -> setState(SuperstructureConstants.ALGAE_STOWED_STATE));
@@ -252,7 +255,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Commands.runOnce(() -> setState(stagingState),
                 elevator, arm, wrist, claw, intake),
             Commands.waitUntil(() -> (isAtTargetState() && isAtTargetPose.get()) || overrideLineUp.get()),
-            Commands.runOnce(() -> setState(scoringState),
+            Commands.run(() -> setState(scoringState),
                 elevator, arm, wrist, claw, intake)
         )
         .finallyDo(() -> setState(stowedState));
