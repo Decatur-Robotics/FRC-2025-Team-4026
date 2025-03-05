@@ -270,8 +270,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 0.02 // The loop time of the robot code, in seconds
             );
 
-            System.out.println("running");
-
             setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
         }, this);
     }
@@ -426,8 +424,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             speeds, // The desired target speeds
             0.02 // The loop time of the robot code, in seconds
         );
-
-        System.out.println("pathing");
 
         setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
     }
