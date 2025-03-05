@@ -32,6 +32,8 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -65,6 +67,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private SwerveSetpoint previousSetpoint;
 
     private Pose2d targetPose = new Pose2d();
+
+    private StructPublisher<Pose2d> targetPosePublisher = NetworkTableInstance.getDefault()
+        .getStructTopic("TargetPose", Pose2d.struct).publish();
 
     private PIDController translationalController = new PIDController(
         10, 0, 0);
@@ -338,6 +343,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
+        if (!targetPose.equals(null)) targetPosePublisher.set(targetPose);
     }
 
     /**
