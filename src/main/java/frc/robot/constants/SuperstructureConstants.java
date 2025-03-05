@@ -63,11 +63,32 @@ public class SuperstructureConstants {
         ClawConstants.CLOSED_CURRENT,
         IntakeConstants.REST_VELOCITY);
 
+    public static final SuperstructureState EJECT_L1_STATE = new SuperstructureState(
+        ElevatorConstants.L1_POSITION, 
+        ArmConstants.L1_POSITION, 
+        WristConstants.PERPENDICULAR_CURRENT, 
+        ClawConstants.CLOSED_CURRENT,
+        IntakeConstants.L1_EJECT_VELOCITY);
+
     public static final SuperstructureState MOVE_TO_L2_STATE = new SuperstructureState(
         ElevatorConstants.MOVE_TO_L2_POSITION, 
         ArmConstants.MOVE_TO_L2_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         ClawConstants.CLOSED_CURRENT,
+        IntakeConstants.REST_VELOCITY);
+
+    public static final SuperstructureState PLACE_L2_STATE = new SuperstructureState(
+        ElevatorConstants.PLACE_L2_POSITION, 
+        ArmConstants.PLACE_L2_POSITION, 
+        WristConstants.PARALLEL_CURRENT, 
+        ClawConstants.CLOSED_CURRENT,
+        IntakeConstants.REST_VELOCITY);
+
+    public static final SuperstructureState DROP_L2_STATE = new SuperstructureState(
+        ElevatorConstants.DROP_L2_POSITION, 
+        ArmConstants.DROP_L2_POSITION, 
+        WristConstants.PARALLEL_CURRENT, 
+        ClawConstants.OPEN_CURRENT,
         IntakeConstants.REST_VELOCITY);
 
     public static final SuperstructureState MOVE_TO_L3_STATE = new SuperstructureState(
@@ -77,11 +98,39 @@ public class SuperstructureConstants {
         ClawConstants.CLOSED_CURRENT,
         IntakeConstants.REST_VELOCITY);
 
+    public static final SuperstructureState PLACE_L3_STATE = new SuperstructureState(
+        ElevatorConstants.PLACE_L3_POSITION, 
+        ArmConstants.PLACE_L3_POSITION, 
+        WristConstants.PARALLEL_CURRENT, 
+        ClawConstants.CLOSED_CURRENT,
+        IntakeConstants.REST_VELOCITY);
+
+    public static final SuperstructureState DROP_L3_STATE = new SuperstructureState(
+        ElevatorConstants.DROP_L3_POSITION, 
+        ArmConstants.DROP_L3_POSITION, 
+        WristConstants.PARALLEL_CURRENT, 
+        ClawConstants.OPEN_CURRENT,
+        IntakeConstants.REST_VELOCITY);
+
     public static final SuperstructureState MOVE_TO_L4_STATE = new SuperstructureState(
         ElevatorConstants.MOVE_TO_L4_POSITION, 
         ArmConstants.MOVE_TO_L4_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         ClawConstants.CLOSED_CURRENT,
+        IntakeConstants.REST_VELOCITY);
+
+    public static final SuperstructureState PLACE_L4_STATE = new SuperstructureState(
+        ElevatorConstants.PLACE_L4_POSITION, 
+        ArmConstants.PLACE_L4_POSITION, 
+        WristConstants.PARALLEL_CURRENT, 
+        ClawConstants.CLOSED_CURRENT,
+        IntakeConstants.REST_VELOCITY);
+
+    public static final SuperstructureState DROP_L4_STATE = new SuperstructureState(
+        ElevatorConstants.DROP_L4_POSITION, 
+        ArmConstants.DROP_L4_POSITION, 
+        WristConstants.PARALLEL_CURRENT, 
+        ClawConstants.OPEN_CURRENT,
         IntakeConstants.REST_VELOCITY);
 
     public static final SuperstructureState MOVE_TO_PROCESSOR_STATE = new SuperstructureState(
@@ -91,6 +140,13 @@ public class SuperstructureConstants {
         ClawConstants.OPEN_CURRENT,
         IntakeConstants.REST_VELOCITY);
 
+    public static final SuperstructureState EJECT_PROCESSOR_STATE = new SuperstructureState(
+        ElevatorConstants.PROCESSOR_POSITION, 
+        ArmConstants.PROCESSOR_POSITION, 
+        WristConstants.PARALLEL_CURRENT, 
+        ClawConstants.OPEN_CURRENT,
+        IntakeConstants.PROCESSOR_EJECT_VELOCITY);
+
     public static final SuperstructureState MOVE_TO_NET_STATE = new SuperstructureState(
         ElevatorConstants.NET_POSITION, 
         ArmConstants.NET_POSITION, 
@@ -98,42 +154,7 @@ public class SuperstructureConstants {
         ClawConstants.OPEN_CURRENT,
         IntakeConstants.REST_VELOCITY);
 
-    public static final SuperstructureState SCORE_L1_STATE = new SuperstructureState(
-        ElevatorConstants.L1_POSITION, 
-        ArmConstants.L1_POSITION, 
-        WristConstants.PERPENDICULAR_CURRENT, 
-        ClawConstants.CLOSED_CURRENT,
-        IntakeConstants.L1_EJECT_VELOCITY);
-
-    public static final SuperstructureState SCORE_L2_STATE = new SuperstructureState(
-        ElevatorConstants.SCORE_L2_POSITION, 
-        ArmConstants.SCORE_L2_POSITION, 
-        WristConstants.PARALLEL_CURRENT, 
-        ClawConstants.OPEN_CURRENT,
-        IntakeConstants.REST_VELOCITY);
-
-    public static final SuperstructureState SCORE_L3_STATE = new SuperstructureState(
-        ElevatorConstants.SCORE_L3_POSITION, 
-        ArmConstants.SCORE_L3_POSITION, 
-        WristConstants.PARALLEL_CURRENT, 
-        ClawConstants.OPEN_CURRENT,
-        IntakeConstants.REST_VELOCITY);
-
-    public static final SuperstructureState SCORE_L4_STATE = new SuperstructureState(
-        ElevatorConstants.SCORE_L4_POSITION, 
-        ArmConstants.SCORE_L4_POSITION, 
-        WristConstants.PARALLEL_CURRENT, 
-        ClawConstants.OPEN_CURRENT,
-        IntakeConstants.REST_VELOCITY);
-
-    public static final SuperstructureState SCORE_PROCESSOR_STATE = new SuperstructureState(
-        ElevatorConstants.PROCESSOR_POSITION, 
-        ArmConstants.PROCESSOR_POSITION, 
-        WristConstants.PARALLEL_CURRENT, 
-        ClawConstants.OPEN_CURRENT,
-        IntakeConstants.PROCESSOR_EJECT_VELOCITY);
-
-    public static final SuperstructureState SCORE_NET_STATE = new SuperstructureState(
+    public static final SuperstructureState EJECT_NET_STATE = new SuperstructureState(
         ElevatorConstants.NET_POSITION, 
         ArmConstants.NET_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
