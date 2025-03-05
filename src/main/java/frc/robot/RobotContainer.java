@@ -76,9 +76,6 @@ public class RobotContainer {
 
         new PowerDistribution(1, ModuleType.kRev).setSwitchableChannel(true);
 
-        field = new Field2d();
-        SmartDashboard.putData("Field", field);
-
         shuffleboardTab = Shuffleboard.getTab(Constants.SHUFFLEBOARD_SUPERSTRUCTURE_TAB);
 
         logger = new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
