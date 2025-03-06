@@ -12,14 +12,13 @@ public class Ports {
 
     public static final int CLAW_MOTOR = 40;
 
-    public static final int INTAKE_MOTOR_LEFT = 30;
-    public static final int INTAKE_MOTOR_RIGHT = 31;
+    public static final int INTAKE_MOTOR_LEFT = 31;
+    public static final int INTAKE_MOTOR_RIGHT = 30;
 
     public static final int WRIST_MOTOR = 39;
 
     public static final int ADDRESSABLE_LED = 0;
 
-    public static final int ARM_ENCODER_A = 0;
-    public static final int ARM_ENCODER_B = 0;
+    public static final int ARM_ENCODER = 9;
 
 }

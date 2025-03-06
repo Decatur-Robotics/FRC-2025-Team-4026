@@ -5,58 +5,61 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class ArmConstants {
 
-    // Intaking positions
-    public static final double CORAL_GROUND_INTAKING_POSITION = 0;
-    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 0;
-    public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
-    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 0;
-    public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = 0;
+    // Stowed position
+    public static final double STOWED_POSITION = -1.62;
 
-    // Stowed polsition
-    public static final double STOWED_POSITION = 0;
+    // Intaking positions
+    public static final double CORAL_GROUND_INTAKING_POSITION = -23.91;
+    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = -5.5;
+    public static final double ALGAE_GROUND_INTAKING_POSITION = -15.7;
+    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = -12.85;
+    public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = -12.85;
 
     // Scoring positions
-    public static final double L1_POSITION = 0;
-    public static final double MOVE_TO_L2_POSITION = 0;
-    public static final double SCORE_L2_POSITION = 0;
-    public static final double MOVE_TO_L3_POSITION = 0;
-    public static final double SCORE_L3_POSITION = 0;
-    public static final double MOVE_TO_L4_POSITION = 0;
-    public static final double SCORE_L4_POSITION = 0;
-    public static final double PROCESSOR_POSITION = 0;
-    public static final double NET_POSITION = 0;
+    public static final double L1_POSITION = -7.55;
+    public static final double MOVE_TO_L2_POSITION = STOWED_POSITION;
+    public static final double PLACE_L2_POSITION = -8;
+    public static final double DROP_L2_POSITION = -8;
+    public static final double MOVE_TO_L3_POSITION = STOWED_POSITION;
+    public static final double PLACE_L3_POSITION = -8;
+    public static final double DROP_L3_POSITION = -8;
+    public static final double MOVE_TO_L4_POSITION = STOWED_POSITION;
+    public static final double PLACE_L4_POSITION = -8;
+    public static final double DROP_L4_POSITION = -8;
+    public static final double PROCESSOR_POSITION = -13;
+    public static final double NET_POSITION = -4;
 
     /** The position when the arm is parallel to the floor */
 	public static final double LEVEL_POSITION = 0;
 
     /** The encoder value when the arm is parallel to the floor */
-    public static final int THROUGH_BORE_ENCODER_ZERO_OFFSET = 0;
-    public static final int THROUGH_BORE_ENCODER_TO_TALON_ENCODER_RATIO = 8192; // how many encoder ticks it takes to complete one rotation of the mechanism for this specific encoder
-    
-    public static final double TALON_ENCODER_TO_RADIANS_RATIO = 0;
+    public static final double THROUGH_BORE_ENCODER_ZERO_OFFSET = 0.41;
 
-    public static final double KG = 0;
+    public static final double TALON_ENCODER_TO_ROTATIONS_RATIO = 0.015625; // how many motor encoder rotations it takes to complete one rotation of the mechanism
+
+    public static final double KG = 0.475; // 0.375
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)
-        .withStatorCurrentLimit(0);
+        .withStatorCurrentLimit(60);
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-        .withKP(0)
+        .withKP(0.2) // 0.2
         .withKI(0)
         .withKD(0)
-        .withKS(0)
-        .withKV(0)
-        .withKA(0);
+        .withKS(0.105) // 0.105
+        .withKV(0.1326) // 0.1376
+        .withKA(0.01); // 0.01
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
-        .withMotionMagicCruiseVelocity(0)
-        .withMotionMagicExpo_kV(0)
-        .withMotionMagicExpo_kA(0);
+        .withMotionMagicCruiseVelocity(50)
+        .withMotionMagicAcceleration(80);
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()
-        .withNeutralMode(NeutralModeValue.Brake);
+        .withNeutralMode(NeutralModeValue.Brake)
+        .withInverted(InvertedValue.Clockwise_Positive);
 
     public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(CURRENT_LIMITS_CONFIGS)

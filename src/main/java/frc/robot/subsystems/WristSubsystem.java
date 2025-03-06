@@ -5,9 +5,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
+import frc.robot.constants.Constants;
 import frc.robot.constants.Ports;
 import frc.robot.constants.WristConstants;
 
@@ -30,11 +33,14 @@ public class WristSubsystem extends SubsystemBase {
         motor.getConfigurator().apply(WristConstants.MOTOR_CONFIG);
 
         motor.optimizeBusUtilization();
+        motor.getVelocity().setUpdateFrequency(20);
+        motor.getRotorVelocity().setUpdateFrequency(20);
+        motor.getStatorCurrent().setUpdateFrequency(20);
 
-        current = WristConstants.PARALLEL_CURRENT; 
+        current = 0; 
 
         controlRequest = new TorqueCurrentFOC(current);
-        motor.setControl(controlRequest.withOutput(current));
+        // motor.setControl(controlRequest.withOutput(current));
 
         velocityFilter = LinearFilter.movingAverage(10);
 
@@ -44,7 +50,7 @@ public class WristSubsystem extends SubsystemBase {
     }
 
     private void configureShuffleboard() {
-        ShuffleboardTab tab = RobotContainer.getShuffleboardTab();
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.SHUFFLEBOARD_SUPERSTRUCTURE_TAB);
 
         tab.addDouble("Target Wrist Current", () -> current);
         tab.addDouble("Actual Wrist Current", () -> getCurrent());
@@ -61,10 +67,10 @@ public class WristSubsystem extends SubsystemBase {
         filteredVelocity = velocityFilter.calculate(motor.getVelocity().getValueAsDouble());
 
         if (isSlammed() && (current == WristConstants.PARALLEL_CURRENT)) {
-            motor.setControl(controlRequest.withOutput(WristConstants.REDUCED_PARALLEL_CURRENT));
+            setCurrent(WristConstants.REDUCED_PARALLEL_CURRENT);
         }
         else if (isSlammed() && (current == WristConstants.PERPENDICULAR_CURRENT)) {
-            motor.setControl(controlRequest.withOutput(WristConstants.REDUCED_PERPENDICULAR_CURRENT));
+            setCurrent(WristConstants.REDUCED_PERPENDICULAR_CURRENT);
         }
     }
 
@@ -79,6 +85,12 @@ public class WristSubsystem extends SubsystemBase {
 
     public boolean isSlammed() {
         return slamDebouncer.calculate(filteredVelocity < WristConstants.MAX_SLAMMED_VELOCITY);
+    }
+
+    public Command setCurrentCommand(double current) {
+        return Commands.runEnd(() -> setCurrent(current), 
+            () -> setCurrent(0),
+            this);
     }
 
 }
