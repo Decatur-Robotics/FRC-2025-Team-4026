@@ -167,10 +167,10 @@ public class RobotContainer {
         Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
-        up.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
-        left.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
-        right.whileTrue(superstructure.scoreCoralL3Command(isAtTargetPose, overrideLineUp));
-        down.whileTrue(superstructure.scoreCoralL4Command(isAtTargetPose, overrideLineUp));
+        down.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
+        right.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
+        left.whileTrue(superstructure.scoreCoralL3Command(isAtTargetPose, overrideLineUp));
+        up.whileTrue(superstructure.scoreCoralL4Command(isAtTargetPose, overrideLineUp));
         triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isAtTargetPose, overrideLineUp));
         triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAtTargetPose, overrideLineUp));
 
