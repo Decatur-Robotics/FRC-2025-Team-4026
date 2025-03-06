@@ -18,8 +18,8 @@ public class IntakeConstants {
     public static final double PROCESSOR_EJECT_VELOCITY = 80;
     public static final double NET_EJECT_VELOCITY = 80;
 
-    public static final double STALL_DEBOUNCE_TIME = 10;
-    public static final int STALL_CURRENT = 0;
+    public static final double STALL_DEBOUNCE_TIME = 0.5;
+    public static final int STALL_CURRENT = 15;
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)
