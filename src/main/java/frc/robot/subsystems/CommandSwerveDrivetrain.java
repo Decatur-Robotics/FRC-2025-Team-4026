@@ -367,18 +367,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
 
-    public Pose2d getClosestPoseFromArrayAllianceRelative(Pose2d[] poses) {
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        if (alliance.isPresent() && alliance.get().equals(Alliance.Red)) {
-            for (Pose2d pose : poses) {
-                pose = pose.rotateAround(PathSetpoints.FIELD_CENTER, PathSetpoints.FLIP_ROTATION);
-            }
-        }
-
-        return getClosestPoseFromArray(poses);
-    }
-
     public Pose2d getClosestPoseFromArray(Pose2d[] poses) {
         double distanceToClosestPose;
         Pose2d closestPose;
@@ -437,13 +425,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public Command driveToClosestBranch(Supplier<ChassisSpeeds> speeds) {
-        Pose2d pose = getClosestPoseFromArrayAllianceRelative(PathSetpoints.CORAL_SCORING_POSES);
+        Pose2d pose = getClosestPoseFromArray(PathSetpoints.CORAL_SCORING_POSES);
 
         return driveToPose(speeds, pose);
     }
 
     public Command driveToClosestReefAlgae(Supplier<ChassisSpeeds> speeds) {
-        Pose2d pose = getClosestPoseFromArrayAllianceRelative(PathSetpoints.REEF_ALGAE_POSES);
+        Pose2d pose = getClosestPoseFromArray(PathSetpoints.REEF_ALGAE_POSES);
         
         return driveToPose(speeds, pose);
     }
@@ -451,10 +439,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Command driveToProcessor(Supplier<ChassisSpeeds> speeds) {
         Optional<Alliance> alliance = DriverStation.getAlliance();
 
-        Pose2d pose = PathSetpoints.PROCESSOR;
+        Pose2d pose = PathSetpoints.BLUE_PROCESSOR;
 
         if (alliance.isPresent() && alliance.get().equals(Alliance.Red)) 
-            pose = pose.rotateAround(PathSetpoints.FIELD_CENTER, PathSetpoints.FLIP_ROTATION);
+            pose = PathSetpoints.RED_PROCESSOR;
 
         return driveToPose(speeds, pose);
     }
@@ -462,10 +450,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Command driveToNet(Supplier<ChassisSpeeds> speeds) {
         Optional<Alliance> alliance = DriverStation.getAlliance();
 
-        Pose2d pose = PathSetpoints.NET;
+        Pose2d pose = PathSetpoints.BLUE_NET;
 
         if (alliance.isPresent() && alliance.get().equals(Alliance.Red)) 
-            pose = pose.rotateAround(PathSetpoints.FIELD_CENTER, PathSetpoints.FLIP_ROTATION);
+            pose = PathSetpoints.RED_NET;
         
         return driveToPose(speeds, pose);
     }

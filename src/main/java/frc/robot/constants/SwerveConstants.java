@@ -13,6 +13,9 @@ import edu.wpi.first.math.util.Units;
 
 public class SwerveConstants {
 
+    // Robot mass = robot + battery + bumpers
+    // Robot mass = 44 kg + 5.85 kg + ???
+
     public static final RobotConfig CONFIG = new RobotConfig(0, 
         0, 
         new ModuleConfig(0.0508, 4.73, 1, DCMotor.getKrakenX60(1), 120, 1), 

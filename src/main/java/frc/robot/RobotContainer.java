@@ -136,8 +136,6 @@ public class RobotContainer {
         // Reset heading
         a.onTrue(swerve.runOnce(() -> swerve.resetRotation(swerve.getOperatorForwardDirection())));
 
-        b.onTrue(swerve.runOnce(() -> swerve.resetPose(PathSetpoints.REEF_A)));
-
         swerve.configureShuffleboard(desiredChassisSpeeds);
 
     }
