@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -132,6 +131,11 @@ public class RobotContainer {
         triggerRight.whileTrue(swerve.driveToClosestBranch(desiredChassisSpeeds));
         bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
         bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
+
+        // triggerLeft.onFalse(swerve.nullTargetPose());
+        // triggerRight.onFalse(swerve.nullTargetPose());
+        // bumperLeft.onFalse(swerve.nullTargetPose());
+        // bumperRight.onFalse(swerve.nullTargetPose());
 
         // Reset heading
         a.onTrue(swerve.runOnce(() -> swerve.resetRotation(swerve.getOperatorForwardDirection())));

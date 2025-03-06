@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.constants.Constants;
 import frc.robot.constants.PathSetpoints;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
@@ -235,6 +236,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         tab.addBoolean("At Target Pose", () -> isAtTargetPose());
 
         tab.addDouble("Operator Rotation", () -> getOperatorForwardDirection().getDegrees());
+
+        tab.addDouble("Target Pose X", () -> {
+            if (!(targetPose == null)) return targetPose.getX();
+            return -1000;
+        });
     }
 
     /**
@@ -385,24 +391,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return closestPose;
     }
 
-    public Command driveToPose(Supplier<ChassisSpeeds> speeds, Pose2d targetPose) {
-        this.targetPose = targetPose;
-        
+    public Command driveToPose(Supplier<ChassisSpeeds> speeds, Supplier<Pose2d> targetPose) {
         return Commands.run(() -> {
+            this.targetPose = targetPose.get();
+
             double targetX = speeds.get().vxMetersPerSecond;
             double targetY = speeds.get().vyMetersPerSecond;
             double targetRotation = speeds.get().omegaRadiansPerSecond;
 
             if (speeds.get().vxMetersPerSecond == 0 && speeds.get().vyMetersPerSecond == 0) {
                 targetX = translationalController.calculate(
-                    getState().Pose.getX(), targetPose.getX());
+                    getState().Pose.getX(), this.targetPose.getX());
                 targetY = translationalController.calculate(
-                    getState().Pose.getY(), targetPose.getY());
+                    getState().Pose.getY(), this.targetPose.getY());
             }
 
             if (speeds.get().omegaRadiansPerSecond == 0) {
                 targetRotation = rotationalController.calculate(
-                    getState().Pose.getRotation().getRadians(), targetPose.getRotation().getRadians());
+                    getState().Pose.getRotation().getRadians(), this.targetPose.getRotation().getRadians());
             }
 
             ChassisSpeeds newSpeeds = new ChassisSpeeds(targetX, targetY, targetRotation);
@@ -425,35 +431,31 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public Command driveToClosestBranch(Supplier<ChassisSpeeds> speeds) {
-        Pose2d pose = getClosestPoseFromArray(PathSetpoints.CORAL_SCORING_POSES);
+        Supplier<Pose2d> pose = () -> getClosestPoseFromArray(PathSetpoints.CORAL_SCORING_POSES);
 
         return driveToPose(speeds, pose);
     }
 
     public Command driveToClosestReefAlgae(Supplier<ChassisSpeeds> speeds) {
-        Pose2d pose = getClosestPoseFromArray(PathSetpoints.REEF_ALGAE_POSES);
+        Supplier<Pose2d> pose = () -> getClosestPoseFromArray(PathSetpoints.REEF_ALGAE_POSES);
         
         return driveToPose(speeds, pose);
     }
 
     public Command driveToProcessor(Supplier<ChassisSpeeds> speeds) {
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        Pose2d pose = PathSetpoints.BLUE_PROCESSOR;
-
-        if (alliance.isPresent() && alliance.get().equals(Alliance.Red)) 
-            pose = PathSetpoints.RED_PROCESSOR;
+        Supplier<Pose2d> pose = () -> {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) return PathSetpoints.BLUE_PROCESSOR;
+            return PathSetpoints.RED_PROCESSOR;
+        };
 
         return driveToPose(speeds, pose);
     }
 
     public Command driveToNet(Supplier<ChassisSpeeds> speeds) {
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        Pose2d pose = PathSetpoints.BLUE_NET;
-
-        if (alliance.isPresent() && alliance.get().equals(Alliance.Red)) 
-            pose = PathSetpoints.RED_NET;
+        Supplier<Pose2d> pose = () -> {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) return PathSetpoints.BLUE_NET;
+            return PathSetpoints.RED_NET;
+        };
         
         return driveToPose(speeds, pose);
     }
@@ -470,6 +472,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public Pose2d getTargetPose() {
         return targetPose;
+    }
+
+    public Command nullTargetPose() {
+        return Commands.runOnce(() -> targetPose = null, this);
     }
 
     // TODO: Some edits will need to be made to these methods in the future
