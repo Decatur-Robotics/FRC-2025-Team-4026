@@ -180,6 +180,8 @@ public class RobotContainer {
         x.whileTrue(superstructure.intakeAlgaeReefCommand(getTargetPose));
 
         // bumperRight.whileTrue(climber.climbCommand());
+        bumperLeft.whileTrue(climber.setVoltageCommand(12));
+        bumperRight.whileTrue(climber.setVoltageCommand(-12));
 
         // bumperLeft.onTrue(superstructure.zeroSuperstructureCommand());
 
