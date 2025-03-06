@@ -40,6 +40,7 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.SuperstructureSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.WristSubsystem;
@@ -60,6 +61,7 @@ public class RobotContainer {
     private final WristSubsystem wrist;
     private final ClawSubsystem claw;
     private final IntakeSubsystem intake;
+    private final LedSubsystem led;
     private final SuperstructureSubsystem superstructure;
     private final CommandSwerveDrivetrain swerve;
     private final VisionSubsystem vision;
@@ -85,7 +87,8 @@ public class RobotContainer {
         wrist = new WristSubsystem();
         claw = new ClawSubsystem();
         intake = new IntakeSubsystem();
-        superstructure = new SuperstructureSubsystem(elevator, arm, wrist, claw, intake);
+        led = new LedSubsystem();
+        superstructure = new SuperstructureSubsystem(elevator, arm, wrist, claw, intake, led);
         swerve = TunerConstants.createDrivetrain();
         vision = new VisionSubsystem(swerve);
 

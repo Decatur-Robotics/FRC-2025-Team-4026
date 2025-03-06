@@ -12,9 +12,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.LedConstants;
 import frc.robot.constants.PathSetpoints;
 import frc.robot.constants.SuperstructureConstants;
 import frc.robot.util.SuperstructureState;
+import frc.robot.util.TeamColor;
 
 public class SuperstructureSubsystem extends SubsystemBase {
     
@@ -23,16 +25,18 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private WristSubsystem wrist;
     private ClawSubsystem claw;
     private IntakeSubsystem intake;
+    private LedSubsystem led;
 
     private SuperstructureState targetState;
 
     public SuperstructureSubsystem(ElevatorSubsystem elevator, ArmSubsystem arm, WristSubsystem wrist,
-            ClawSubsystem claw, IntakeSubsystem intake) {
+            ClawSubsystem claw, IntakeSubsystem intake, LedSubsystem led) {
         this.elevator = elevator;
         this.arm = arm;
         this.wrist = wrist;
         this.claw = claw;
         this.intake = intake;
+        this.led = led;
 
         targetState = SuperstructureConstants.CORAL_STOWED_STATE.copyInstance();
 
@@ -215,7 +219,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 debouncer.calculate(false);
                 setState(intakingState.get());
             }, elevator, arm, wrist, claw, intake),
-            Commands.waitUntil(() -> debouncer.calculate(intake.getFilteredCurrent() > IntakeConstants.STALL_CURRENT))
+            Commands.waitUntil(() -> debouncer.calculate(intake.getFilteredCurrent() > IntakeConstants.STALL_CURRENT)),
+            Commands.runOnce(() -> led.flashAllPixels(LedConstants.BLUE, 5), led)
         )
         .finallyDo(
             () -> setState(stowedState)
@@ -264,8 +269,11 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Commands.runOnce(() -> setState(placingState),
                 elevator, arm, wrist, claw, intake),
             Commands.waitUntil(() -> isAtTargetState()),
-            Commands.run(() -> setState(droppingState),
-                elevator, arm, wrist, claw, intake)
+            Commands.run(() -> {
+                setState(droppingState);
+                led.flashAllPixels(LedConstants.YELLOW, 5);
+            },
+                elevator, arm, wrist, claw, intake, led)
         )
         .finallyDo(() -> {
             if (claw.getCurrent() > 0) setState(SuperstructureConstants.CORAL_STOWED_STATE);
@@ -279,8 +287,11 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Commands.runOnce(() -> setState(stagingState),
                 elevator, arm, wrist, claw, intake),
             Commands.waitUntil(() -> (isAtTargetState() && isAtTargetPose.get()) || overrideLineUp.get()),
-            Commands.run(() -> setState(ejectingState),
-                elevator, arm, wrist, claw, intake)
+            Commands.run(() -> {
+                setState(ejectingState);
+                led.flashAllPixels(LedConstants.YELLOW, 5);
+            },
+                elevator, arm, wrist, claw, intake, led)
         )
         .finallyDo(() -> {
             if (claw.getCurrent() > 0) setState(SuperstructureConstants.CORAL_STOWED_STATE);
