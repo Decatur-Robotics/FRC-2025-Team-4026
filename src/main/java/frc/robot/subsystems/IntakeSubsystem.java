@@ -43,8 +43,10 @@ public class IntakeSubsystem extends SubsystemBase {
         motorRight.getStatorCurrent().setUpdateFrequency(20);
         motorLeft.getMotorVoltage().setUpdateFrequency(20);
         motorRight.getMotorVoltage().setUpdateFrequency(20);
+        motorLeft.getStatorCurrent().setUpdateFrequency(20);
+        motorRight.getStatorCurrent().setUpdateFrequency(20);
         
-        velocity = IntakeConstants.REST_VELOCITY;
+        velocity = IntakeConstants.CORAL_REST_VELOCITY;
         
         velocityRequest = new VelocityVoltage(velocity);
 
@@ -68,6 +70,7 @@ public class IntakeSubsystem extends SubsystemBase {
         tab.addDouble("Filtered Intake Current", () -> filteredCurrent);
         tab.addDouble("Target Intake Voltage", () -> voltage);
         tab.addDouble("Actual Intake Voltage", () -> motorRight.getMotorVoltage().getValueAsDouble());
+        tab.addDouble("Intake Current", () -> motorRight.getStatorCurrent().getValueAsDouble());
     }
 
     @Override
@@ -101,7 +104,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command setVelocityCommand(double velocity) {
         return Commands.run(() -> setVelocity(velocity)) 
-            .finallyDo(() -> setVelocity(IntakeConstants.REST_VELOCITY));
+            .finallyDo(() -> setVelocity(IntakeConstants.CORAL_REST_VELOCITY));
     }
 
     public Command setVoltageCommand(double voltage) {

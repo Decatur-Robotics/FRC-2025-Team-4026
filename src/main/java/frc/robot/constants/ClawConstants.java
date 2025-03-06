@@ -9,7 +9,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 public class ClawConstants {
 
     public static final double CLOSED_CURRENT = 10;
-    public static final double REDUCED_CLOSED_CURRENT = 5;
+    public static final double REDUCED_CLOSED_CURRENT = 10;
     public static final double OPEN_CURRENT = -10;
     public static final double REDUCED_OPEN_CURRENT = -5;
 

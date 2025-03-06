@@ -66,10 +66,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private SwerveSetpointGenerator setpointGenerator;
     private SwerveSetpoint previousSetpoint;
 
-    private Pose2d targetPose = new Pose2d();
+    private Pose2d targetPose = null;
 
     private StructPublisher<Pose2d> targetPosePublisher = NetworkTableInstance.getDefault()
-        .getStructTopic("TargetPose", Pose2d.struct).publish();
+        .getStructTopic("Target Pose", Pose2d.struct).publish();
+
+    private StructPublisher<Pose2d> posePublisher = NetworkTableInstance.getDefault()
+        .getStructTopic("Robot Pose", Pose2d.struct).publish();
 
     private PIDController translationalController = new PIDController(
         10, 0, 0);
@@ -238,7 +241,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         tab.addDouble("Actual Module 2 Velocity", () -> getState().ModuleStates[2].speedMetersPerSecond);
         tab.addDouble("Target Module 3 Velocity", () -> getState().ModuleTargets[3].speedMetersPerSecond);
         tab.addDouble("Actual Module 3 Velocity", () -> getState().ModuleStates[3].speedMetersPerSecond);
+    
+        tab.addBoolean("At Target Pose", () -> isAtTargetPose());
+
+        tab.addDouble("Operator Rotation", () -> getOperatorForwardDirection().getDegrees());
     }
+
     /**
      * Returns a command that applies the specified control request to this swerve drivetrain.
      *
@@ -344,7 +352,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
 
-        if (!targetPose.equals(null)) targetPosePublisher.set(targetPose);
+        if (!(targetPose == null)) targetPosePublisher.set(targetPose);
+        posePublisher.set(getState().Pose);
     }
 
     /**
@@ -432,6 +441,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             0.02 // The loop time of the robot code, in seconds
         );
 
+        if (!(targetPose == null)) System.out.println(targetPose.getX());
+
         setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
     }
 
@@ -470,11 +481,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public boolean isAtTargetPose() {
-        if (targetPose.equals(null)) return false;
+        if (targetPose == null) return false;
         
-        boolean isAtTargetX = getState().Pose.getX() - targetPose.getX() < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
-        boolean isAtTargetY = getState().Pose.getY() - targetPose.getY() < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
-        boolean isAtTargetRotation = getState().Pose.getRotation().getRadians() - targetPose.getRotation().getRadians() < SwerveConstants.ROTATIONAL_ERROR_MARGIN;
+        boolean isAtTargetX = Math.abs(getState().Pose.getX()) - Math.abs(targetPose.getX()) < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
+        boolean isAtTargetY = Math.abs(getState().Pose.getY()) - Math.abs(targetPose.getY()) < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
+        boolean isAtTargetRotation = Math.abs(getState().Pose.getRotation().getRadians()) - Math.abs(targetPose.getRotation().getRadians()) < SwerveConstants.ROTATIONAL_ERROR_MARGIN;
 
         return isAtTargetX && isAtTargetY && isAtTargetRotation;
     }

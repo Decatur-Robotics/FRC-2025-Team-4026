@@ -61,7 +61,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         motorMain.getMotorVoltage().setUpdateFrequency(20);
         motorMain.getStatorCurrent().setUpdateFrequency(20);
 
-        position = 10;
+        position = ElevatorConstants.STOWED_POSITION;
         voltage = 0;
 
         motorFollower.setControl(new Follower(motorMain.getDeviceID(), true));

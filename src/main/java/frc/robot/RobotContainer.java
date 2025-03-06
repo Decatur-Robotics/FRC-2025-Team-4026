@@ -10,6 +10,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Joystick;
@@ -68,8 +69,6 @@ public class RobotContainer {
 
     private final Telemetry logger;
 
-    private Field2d field;
-
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         instance = this;
@@ -90,18 +89,6 @@ public class RobotContainer {
         superstructure = new SuperstructureSubsystem(elevator, arm, wrist, claw, intake);
         swerve = TunerConstants.createDrivetrain();
         vision = new VisionSubsystem(swerve);
-
-        PathPlannerLogging.setLogCurrentPoseCallback((Pose2d pose) -> {
-            field.setRobotPose(pose);
-        });
-
-        PathPlannerLogging.setLogTargetPoseCallback((Pose2d pose)-> {
-            field.getObject("Target Pose").setPose(pose);
-        });
-
-        PathPlannerLogging.setLogActivePathCallback((List<Pose2d> poses) -> {
-            field.getObject("Path").setPoses(poses);
-        });
 
         // Configure button bindings
         configurePrimaryBindings();
@@ -128,9 +115,9 @@ public class RobotContainer {
         JoystickButton bumperRight = new JoystickButton(joystick, LogitechControllerButtons.bumperRight);
 
         Supplier<ChassisSpeeds> desiredChassisSpeeds = () -> { 
-            double velocityX = joystick.getY() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
-            double velocityY = joystick.getX() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
-            double velocityAngular = -joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
+            double velocityX = -joystick.getY() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
+            double velocityY = -joystick.getX() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
+            double velocityAngular = joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
 
             if (Math.abs(velocityX) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityX = 0;
             if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityY = 0;
@@ -147,7 +134,7 @@ public class RobotContainer {
         bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
 
         // Reset heading
-        a.onTrue(swerve.runOnce(() -> swerve.setOperatorPerspectiveForward(swerve.getOperatorForwardDirection())));
+        a.onTrue(swerve.runOnce(() -> swerve.resetRotation(swerve.getOperatorForwardDirection())));
 
         b.onTrue(swerve.runOnce(() -> swerve.resetPose(PathSetpoints.REEF_A)));
 
@@ -175,7 +162,7 @@ public class RobotContainer {
         Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
-        // up.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
+        up.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
         left.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
         right.whileTrue(superstructure.scoreCoralL3Command(isAtTargetPose, overrideLineUp));
         down.whileTrue(superstructure.scoreCoralL4Command(isAtTargetPose, overrideLineUp));

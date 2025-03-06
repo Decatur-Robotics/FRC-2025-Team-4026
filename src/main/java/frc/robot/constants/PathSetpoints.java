@@ -14,18 +14,18 @@ public class PathSetpoints {
     public static final Rotation2d FLIP_ROTATION = new Rotation2d(Degrees.of(180));
 
     // Coral scoring locations
-    public final static Pose2d REEF_A = new Pose2d(3.2, 4.2, Rotation2d.fromDegrees(0));
-    public final static Pose2d REEF_B = new Pose2d(99, 99, Rotation2d.fromDegrees(0));
-    public final static Pose2d REEF_C = new Pose2d(99, 99, Rotation2d.fromDegrees(0));
-    public final static Pose2d REEF_D = new Pose2d(99, 99, Rotation2d.fromDegrees(0));
-    public final static Pose2d REEF_E = new Pose2d(99, 99, Rotation2d.fromDegrees(0));
-    public final static Pose2d REEF_F = new Pose2d(99, 99, Rotation2d.fromDegrees(0));
-    public final static Pose2d REEF_G = new Pose2d(99, 99, Rotation2d.fromDegrees(0));
-    public final static Pose2d REEF_H = new Pose2d(99, 99, Rotation2d.fromDegrees(0));
-    public final static Pose2d REEF_I = new Pose2d(99, 99, Rotation2d.fromDegrees(0));
-    public final static Pose2d REEF_J = new Pose2d(99, 99, Rotation2d.fromDegrees(0));
-    public final static Pose2d REEF_K = new Pose2d(99, 99, Rotation2d.fromDegrees(0));
-    public final static Pose2d REEF_L = new Pose2d(99, 99, Rotation2d.fromDegrees(0));
+    public final static Pose2d REEF_A = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d REEF_B = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d REEF_C = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d REEF_D = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d REEF_E = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d REEF_F = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d REEF_G = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d REEF_H = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d REEF_I = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d REEF_J = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d REEF_K = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d REEF_L = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 
     public final static Pose2d[] CORAL_SCORING_POSES = {REEF_A, REEF_B, REEF_C, REEF_D, REEF_E, REEF_F, REEF_G, REEF_H, REEF_I, REEF_J, REEF_K, REEF_L};
 
