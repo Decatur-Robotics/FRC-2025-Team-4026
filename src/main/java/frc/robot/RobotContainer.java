@@ -14,9 +14,12 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.constants.PathSetpoints;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.core.LogitechControllerButtons;
 import frc.robot.generated.TunerConstants;
@@ -175,4 +178,32 @@ public class RobotContainer {
     public static ShuffleboardTab getShuffleboardTab() {
 		return instance.shuffleboardTab;
 	}
+
+    public SuperstructureSubsystem getSuperstructure() {
+        return superstructure;
+    }
+
+    public CommandSwerveDrivetrain getSwerve() {
+        return swerve;
+    }
+
+    public VisionSubsystem GetVision() {
+        return vision;
+    }
+
+    //For Center leave
+    public Command autoCommandReefG(){
+        return Commands.sequence(swerve.driveToPose(() -> new ChassisSpeeds(), PathSetpoints.REEF_G), superstructure.scoreCoralL4Command(() -> true, () -> true)); 
+    }
+
+    //For Lower Leave
+    public Command autoCommandReefE(){
+        return Commands.sequence(swerve.driveToPose(() -> new ChassisSpeeds(), PathSetpoints.REEF_E), superstructure.scoreCoralL4Command(() -> true, () -> true)); 
+    }
+
+    //For Upper Leave
+    public Command autoCommandReefJ(){
+        return Commands.sequence(swerve.driveToPose(() -> new ChassisSpeeds(), PathSetpoints.REEF_J), superstructure.scoreCoralL4Command(() -> true, () -> true)); 
+    }
+
 }
