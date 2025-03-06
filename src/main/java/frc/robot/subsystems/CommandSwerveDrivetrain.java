@@ -10,9 +10,6 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.SwerveModule.ModuleRequest;
-import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -30,7 +27,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
@@ -42,10 +38,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.RobotContainer;
+import frc.robot.constants.Constants;
 import frc.robot.constants.PathSetpoints;
 import frc.robot.constants.SwerveConstants;
-import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -85,10 +80,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean m_hasAppliedOperatorPerspective = false;
-
-    private final ModuleRequest moduleRequest = new ModuleRequest()
-        .withDriveRequest(DriveRequestType.Velocity)
-        .withSteerRequest(SteerRequestType.MotionMagicExpo);
 
     private final SwerveRequest.ApplyRobotSpeeds driveRequest = new SwerveRequest.ApplyRobotSpeeds();
 
@@ -245,6 +236,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         tab.addBoolean("At Target Pose", () -> isAtTargetPose());
 
         tab.addDouble("Operator Rotation", () -> getOperatorForwardDirection().getDegrees());
+
+        tab.addDouble("Target Pose X", () -> {
+            if (!(targetPose == null)) return targetPose.getX();
+            return -1000;
+        });
     }
 
     /**
@@ -377,18 +373,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
 
-    public Pose2d getClosestPoseFromArrayAllianceRelative(Pose2d[] poses) {
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        if (alliance.isPresent() && alliance.get().equals(Alliance.Red)) {
-            for (Pose2d pose : poses) {
-                pose = pose.rotateAround(PathSetpoints.FIELD_CENTER, PathSetpoints.FLIP_ROTATION);
-            }
-        }
-
-        return getClosestPoseFromArray(poses);
-    }
-
     public Pose2d getClosestPoseFromArray(Pose2d[] poses) {
         double distanceToClosestPose;
         Pose2d closestPose;
@@ -407,24 +391,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return closestPose;
     }
 
-    public Command driveToPose(Supplier<ChassisSpeeds> speeds, Pose2d targetPose) {
-        this.targetPose = targetPose;
-        
+    public Command driveToPose(Supplier<ChassisSpeeds> speeds, Supplier<Pose2d> targetPose) {
         return Commands.run(() -> {
+            this.targetPose = targetPose.get();
+
             double targetX = speeds.get().vxMetersPerSecond;
             double targetY = speeds.get().vyMetersPerSecond;
             double targetRotation = speeds.get().omegaRadiansPerSecond;
 
             if (speeds.get().vxMetersPerSecond == 0 && speeds.get().vyMetersPerSecond == 0) {
                 targetX = translationalController.calculate(
-                    getState().Pose.getX(), targetPose.getX());
+                    getState().Pose.getX(), this.targetPose.getX());
                 targetY = translationalController.calculate(
-                    getState().Pose.getY(), targetPose.getY());
+                    getState().Pose.getY(), this.targetPose.getY());
             }
 
             if (speeds.get().omegaRadiansPerSecond == 0) {
                 targetRotation = rotationalController.calculate(
-                    getState().Pose.getRotation().getRadians(), targetPose.getRotation().getRadians());
+                    getState().Pose.getRotation().getRadians(), this.targetPose.getRotation().getRadians());
             }
 
             ChassisSpeeds newSpeeds = new ChassisSpeeds(targetX, targetY, targetRotation);
@@ -447,35 +431,31 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public Command driveToClosestBranch(Supplier<ChassisSpeeds> speeds) {
-        Pose2d pose = getClosestPoseFromArrayAllianceRelative(PathSetpoints.CORAL_SCORING_POSES);
+        Supplier<Pose2d> pose = () -> getClosestPoseFromArray(PathSetpoints.CORAL_SCORING_POSES);
 
         return driveToPose(speeds, pose);
     }
 
     public Command driveToClosestReefAlgae(Supplier<ChassisSpeeds> speeds) {
-        Pose2d pose = getClosestPoseFromArrayAllianceRelative(PathSetpoints.REEF_ALGAE_POSES);
+        Supplier<Pose2d> pose = () -> getClosestPoseFromArray(PathSetpoints.REEF_ALGAE_POSES);
         
         return driveToPose(speeds, pose);
     }
 
     public Command driveToProcessor(Supplier<ChassisSpeeds> speeds) {
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        Pose2d pose = PathSetpoints.PROCESSOR;
-
-        if (alliance.isPresent() && alliance.get().equals(Alliance.Red)) 
-            pose = pose.rotateAround(PathSetpoints.FIELD_CENTER, PathSetpoints.FLIP_ROTATION);
+        Supplier<Pose2d> pose = () -> {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) return PathSetpoints.BLUE_PROCESSOR;
+            return PathSetpoints.RED_PROCESSOR;
+        };
 
         return driveToPose(speeds, pose);
     }
 
     public Command driveToNet(Supplier<ChassisSpeeds> speeds) {
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        Pose2d pose = PathSetpoints.NET;
-
-        if (alliance.isPresent() && alliance.get().equals(Alliance.Red)) 
-            pose = pose.rotateAround(PathSetpoints.FIELD_CENTER, PathSetpoints.FLIP_ROTATION);
+        Supplier<Pose2d> pose = () -> {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) return PathSetpoints.BLUE_NET;
+            return PathSetpoints.RED_NET;
+        };
         
         return driveToPose(speeds, pose);
     }
@@ -492,6 +472,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public Pose2d getTargetPose() {
         return targetPose;
+    }
+
+    public Command nullTargetPose() {
+        return Commands.runOnce(() -> targetPose = null, this);
     }
 
     // TODO: Some edits will need to be made to these methods in the future

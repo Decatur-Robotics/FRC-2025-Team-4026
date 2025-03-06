@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -133,10 +132,13 @@ public class RobotContainer {
         bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
         bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
 
+        // triggerLeft.onFalse(swerve.nullTargetPose());
+        // triggerRight.onFalse(swerve.nullTargetPose());
+        // bumperLeft.onFalse(swerve.nullTargetPose());
+        // bumperRight.onFalse(swerve.nullTargetPose());
+
         // Reset heading
         a.onTrue(swerve.runOnce(() -> swerve.resetRotation(swerve.getOperatorForwardDirection())));
-
-        b.onTrue(swerve.runOnce(() -> swerve.resetPose(PathSetpoints.REEF_A)));
 
         swerve.configureShuffleboard(desiredChassisSpeeds);
 
@@ -158,7 +160,7 @@ public class RobotContainer {
         JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
 
-        Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.start).getAsBoolean();
+        Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
         Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
