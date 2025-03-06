@@ -13,10 +13,10 @@ import edu.wpi.first.math.util.Units;
 
 public class SwerveConstants {
 
-    // public static final RobotConfig CONFIG = new RobotConfig(0, 
-    //     0, 
-    //     new ModuleConfig(0.0508, 0, 0, null, 0, 0), 
-    //     0.6217666);
+    public static final RobotConfig CONFIG = new RobotConfig(0, 
+        0, 
+        new ModuleConfig(0.0508, 4.73, 1, DCMotor.getKrakenX60(1), 120, 1), 
+        0.74295);
 
     public static final PathConstraints CONSTRAINTS = new PathConstraints(0, 0, 
         Units.degreesToRadians(0), Units.degreesToRadians(0));
