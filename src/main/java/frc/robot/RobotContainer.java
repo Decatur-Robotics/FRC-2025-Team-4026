@@ -77,14 +77,25 @@ public class RobotContainer {
 
     private final Telemetry logger;
 
-    private SendableChooser<Auto> autoChooser;
+    private SendableChooser<AutoSide> autoSideChooser;
+    private SendableChooser<AutoLevel> autoLevelChooser;
 
-    private enum Auto {
+    private enum AutoSide {
         Left("Left Side"), Center("Center"), Right("Right Side");
 
         private final String autoName;
 
-        private Auto(String autoName) {
+        private AutoSide(String autoName) {
+            this.autoName = autoName;
+        }
+    }
+
+    private enum AutoLevel {
+        L1("L1"), L4("L4");
+
+        private final String autoName;
+
+        private AutoLevel(String autoName) {
             this.autoName = autoName;
         }
     }
@@ -115,13 +126,19 @@ public class RobotContainer {
         configurePrimaryBindings();
         configureSecondaryBindings();
 
-        autoChooser = new SendableChooser<>();
-        autoChooser.setDefaultOption(Auto.Center.autoName, Auto.Center);
-        autoChooser.addOption(Auto.Left.autoName, Auto.Left);
-        autoChooser.addOption(Auto.Center.autoName, Auto.Center);
-        autoChooser.addOption(Auto.Right.autoName, Auto.Right);
+        autoSideChooser = new SendableChooser<>();
+        autoSideChooser.setDefaultOption(AutoSide.Center.autoName, AutoSide.Center);
+        autoSideChooser.addOption(AutoSide.Left.autoName, AutoSide.Left);
+        autoSideChooser.addOption(AutoSide.Center.autoName, AutoSide.Center);
+        autoSideChooser.addOption(AutoSide.Right.autoName, AutoSide.Right);
 
-        shuffleboardTab.add(autoChooser);
+        autoLevelChooser = new SendableChooser<>();
+        autoLevelChooser.setDefaultOption(AutoLevel.L4.autoName, AutoLevel.L4);
+        autoLevelChooser.addOption(AutoLevel.L1.autoName, AutoLevel.L1);
+        autoLevelChooser.addOption(AutoLevel.L4.autoName, AutoLevel.L4);
+
+        shuffleboardTab.add(autoSideChooser);
+        shuffleboardTab.add(autoLevelChooser);
     }
 
     /**
@@ -291,8 +308,58 @@ public class RobotContainer {
         return vision;
     }
 
-    //For Center leave
-    public Command autoCommandLeft() {
+    public Command autoCommandLeftL1() {
+        return Commands.sequence(new FunctionalCommand(
+            () -> {
+                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
+                    swerve.resetPose(AutoConstants.BLUE_LEFT_INITIAL_POSE);
+                else swerve.resetPose(AutoConstants.RED_LEFT_INITIAL_POSE);
+            }, 
+            () -> {
+                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
+                    swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.BLUE_REEF_J);
+                else swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.RED_REEF_J);
+            }, 
+            interrupted -> {}, 
+            () -> swerve.isAtTargetPose(),  
+            swerve), superstructure.scoreCoralL1Command(() -> true, () -> false)); 
+    }
+
+    public Command autoCommandCenterL1() {
+        return Commands.sequence(new FunctionalCommand(
+            () -> {
+                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
+                    swerve.resetPose(AutoConstants.BLUE_CENTER_INITIAL_POSE);
+                else swerve.resetPose(AutoConstants.RED_CENTER_INITIAL_POSE);
+            }, 
+            () -> {
+                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
+                    swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.BLUE_REEF_G);
+                else swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.RED_REEF_G);
+            }, 
+            interrupted -> {}, 
+            () -> swerve.isAtTargetPose(),  
+            swerve), superstructure.scoreCoralL1Command(() -> true, () -> false));
+    }
+
+    public Command autoCommandRightL1() {
+        return Commands.sequence(new FunctionalCommand(
+            () -> {
+                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
+                    swerve.resetPose(AutoConstants.BLUE_RIGHT_INITIAL_POSE);
+                else swerve.resetPose(AutoConstants.RED_RIGHT_INITIAL_POSE);
+            }, 
+            () -> {
+                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
+                    swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.BLUE_REEF_E);
+                else swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.RED_REEF_E);
+            }, 
+            interrupted -> {}, 
+            () -> swerve.isAtTargetPose(),  
+            swerve), superstructure.scoreCoralL1Command(() -> true, () -> false));
+    }
+
+    public Command autoCommandLeftL4() {
         return Commands.sequence(new FunctionalCommand(
             () -> {
                 if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
@@ -309,8 +376,7 @@ public class RobotContainer {
             swerve), superstructure.scoreCoralL4Command(() -> true, () -> false)); 
     }
 
-    //For Lower Leave
-    public Command autoCommandCenter() {
+    public Command autoCommandCenterL4() {
         return Commands.sequence(new FunctionalCommand(
             () -> {
                 if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
@@ -324,10 +390,10 @@ public class RobotContainer {
             }, 
             interrupted -> {}, 
             () -> swerve.isAtTargetPose(),  
-            swerve), superstructure.scoreCoralL4Command(() -> true, () -> false));}
+            swerve), superstructure.scoreCoralL4Command(() -> true, () -> false));
+    }
 
-    //For Upper Leave
-    public Command autoCommandRight() {
+    public Command autoCommandRightL4() {
         return Commands.sequence(new FunctionalCommand(
             () -> {
                 if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
@@ -345,10 +411,17 @@ public class RobotContainer {
     }
 
     public Command getAutoCommand() {
-        if (autoChooser.getSelected().equals(Auto.Left)) return autoCommandLeft();
-        if (autoChooser.getSelected().equals(Auto.Center)) return autoCommandCenter();
-        if (autoChooser.getSelected().equals(Auto.Right)) return autoCommandRight();
-        return autoCommandCenter();
+        if (autoLevelChooser.getSelected().equals(AutoLevel.L1)) {
+            if (autoSideChooser.getSelected().equals(AutoSide.Left)) return autoCommandLeftL1();
+            else if (autoSideChooser.getSelected().equals(AutoSide.Center)) return autoCommandCenterL1();
+            else if (autoSideChooser.getSelected().equals(AutoSide.Right)) return autoCommandRightL1();
+        }
+        else if (autoLevelChooser.getSelected().equals(AutoLevel.L4)) {
+            if (autoSideChooser.getSelected().equals(AutoSide.Left)) return autoCommandLeftL4();
+            else if (autoSideChooser.getSelected().equals(AutoSide.Center)) return autoCommandCenterL4();
+            else if (autoSideChooser.getSelected().equals(AutoSide.Right)) return autoCommandRightL4();
+        }
+        return autoCommandCenterL4();
     }
 
 }
