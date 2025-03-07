@@ -195,17 +195,17 @@ public class RobotContainer {
          * Testing buttons
          */
 
-        GenericEntry elevatorVoltage = shuffleboardTab.add("Elevator Voltage", 0)
-            .withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", -1, "max", 1))
-            .getEntry();
+        // GenericEntry elevatorVoltage = shuffleboardTab.add("Elevator Voltage", 0)
+        //     .withWidget(BuiltInWidgets.kNumberSlider)
+        //     .withProperties(Map.of("min", -1, "max", 1))
+        //     .getEntry();
             
         // triggerLeft.whileTrue(elevator.tuneVoltageCommand(() -> elevatorVoltage.getDouble(0)));
 
-        GenericEntry armVoltage = shuffleboardTab.add("Arm Voltage", 0)
-            .withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", 0, "max", 1.5))
-            .getEntry();
+        // GenericEntry armVoltage = shuffleboardTab.add("Arm Voltage", 0)
+        //     .withWidget(BuiltInWidgets.kNumberSlider)
+        //     .withProperties(Map.of("min", 0, "max", 1.5))
+        //     .getEntry();
 
         // triggerLeft.whileTrue(arm.tuneVoltageCommand(() -> armVoltage.getDouble(0)));
         // triggerRight.whileTrue(arm.tuneVoltageCommand(() -> -armVoltage.getDouble(0)));
