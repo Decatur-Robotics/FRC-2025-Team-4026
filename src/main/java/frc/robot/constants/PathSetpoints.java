@@ -62,8 +62,8 @@ public class PathSetpoints {
         RED_REEF_AB, RED_REEF_CD, RED_REEF_EF, RED_REEF_GH, RED_REEF_IJ, RED_REEF_KL};
 
     // Algae scoring locations
-    public final static Pose2d BLUE_PROCESSOR = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-    public final static Pose2d RED_PROCESSOR = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d BLUE_PROCESSOR = new Pose2d(5.987542, 0.634365, Rotation2d.fromDegrees(0));
+    public final static Pose2d RED_PROCESSOR = new Pose2d(11.56081, 7.417435, Rotation2d.fromDegrees(0));
     // Would be cool to get net pathing so that it locks the x axis and rotation but lets us control the y axis
     public final static Pose2d BLUE_NET = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
     public final static Pose2d RED_NET = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
