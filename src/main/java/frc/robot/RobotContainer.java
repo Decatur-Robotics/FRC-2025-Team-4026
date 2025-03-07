@@ -140,10 +140,12 @@ public class RobotContainer {
         autoLevelChooser.addOption(AutoLevel.L1.autoName, AutoLevel.L1);
         autoLevelChooser.addOption(AutoLevel.L4.autoName, AutoLevel.L4);
 
-        shuffleboardTab.add(autoSideChooser);
-        shuffleboardTab.add(autoLevelChooser);
+        ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
 
-        shuffleboardTab.addBoolean("Auto Ran", () -> autoRan);
+        autoTab.add(autoSideChooser);
+        autoTab.add(autoLevelChooser);
+
+        autoTab.addBoolean("Auto Ran", () -> autoRan);
     }
 
     /**
@@ -263,7 +265,7 @@ public class RobotContainer {
 
         // start.onTrue(arm.zeroArmCommand());
 
-        // bumperLeft.whileTrue(arm.setVoltageCommand(2));
+        // bumperLeft.whileTrue(arm.setVoltageCommand(1));
         // bumperRight.whileTrue(arm.setVoltageCommand(-1));
         // triggerLeft.onTrue(arm.setPositionCommand(4.5));
         // triggerRight.onTrue(arm.setPositionCommand(20));

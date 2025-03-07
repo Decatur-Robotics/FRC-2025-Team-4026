@@ -44,7 +44,7 @@ public class SuperstructureConstants {
     public static final SuperstructureState CORAL_STOWED_STATE = new SuperstructureState(
         ElevatorConstants.STOWED_POSITION, 
         ArmConstants.STOWED_POSITION, 
-        WristConstants.PARALLEL_CURRENT, 
+        WristConstants.PERPENDICULAR_CURRENT, 
         ClawConstants.CLOSED_CURRENT,
         IntakeConstants.CORAL_REST_VELOCITY);
 
