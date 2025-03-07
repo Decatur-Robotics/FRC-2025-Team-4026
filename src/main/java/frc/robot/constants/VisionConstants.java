@@ -9,6 +9,9 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 
 public class VisionConstants {
+
+    // Apriltag ID 18 is 12.13 inches off the ground
+    // 14.625 inches from center of robot to edge
     
     public static final String CAMERA_FRONT_LEFT_NAME = "FrontLeftCamera"; // 2
     public static final String CAMERA_FRONT_RIGHT_NAME = "FrontRightCamera"; // 3
