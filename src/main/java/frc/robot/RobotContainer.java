@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -76,6 +77,18 @@ public class RobotContainer {
 
     private final Telemetry logger;
 
+    private SendableChooser<Auto> autoChooser;
+
+    private enum Auto {
+        Left("Left Side"), Center("Center"), Right("Right Side");
+
+        private final String autoName;
+
+        private Auto(String autoName) {
+            this.autoName = autoName;
+        }
+    }
+
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         instance = this;
@@ -101,6 +114,14 @@ public class RobotContainer {
         // Configure button bindings
         configurePrimaryBindings();
         configureSecondaryBindings();
+
+        autoChooser = new SendableChooser<>();
+        autoChooser.setDefaultOption(Auto.Center.autoName, Auto.Center);
+        autoChooser.addOption(Auto.Left.autoName, Auto.Left);
+        autoChooser.addOption(Auto.Center.autoName, Auto.Center);
+        autoChooser.addOption(Auto.Right.autoName, Auto.Right);
+
+        shuffleboardTab.add(autoChooser);
     }
 
     /**
@@ -321,6 +342,13 @@ public class RobotContainer {
             interrupted -> {}, 
             () -> swerve.isAtTargetPose(),  
             swerve), superstructure.scoreCoralL4Command(() -> true, () -> false));
+    }
+
+    public Command getAutoCommand() {
+        if (autoChooser.getSelected().equals(Auto.Left)) return autoCommandLeft();
+        if (autoChooser.getSelected().equals(Auto.Center)) return autoCommandCenter();
+        if (autoChooser.getSelected().equals(Auto.Right)) return autoCommandRight();
+        return autoCommandCenter();
     }
 
 }
