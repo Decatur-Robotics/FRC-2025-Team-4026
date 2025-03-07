@@ -268,8 +268,8 @@ public class RobotContainer {
     }
 
     //For Center leave
-    public Command autoCommandReefG(){
-        return Commands.sequence( new FunctionalCommand(
+    public Command autoCommandReefG() {
+        return Commands.sequence(new FunctionalCommand(
             () -> swerve.resetPose(new Pose2d()), 
             () -> swerve.driveToPose(() -> new ChassisSpeeds(), () -> PathSetpoints.BLUE_REEF_G), 
             interrupted -> {}, 
@@ -278,8 +278,8 @@ public class RobotContainer {
     }
 
     //For Lower Leave
-    public Command autoCommandReefE(){
-        return Commands.sequence( new FunctionalCommand(
+    public Command autoCommandReefE() {
+        return Commands.sequence(new FunctionalCommand(
             () -> swerve.resetPose(new Pose2d()), 
             () -> swerve.driveToPose(() -> new ChassisSpeeds(), () -> PathSetpoints.BLUE_REEF_E), 
             interrupted -> {}, 
@@ -287,8 +287,8 @@ public class RobotContainer {
             swerve), superstructure.scoreCoralL4Command(() -> true, () -> true));}
 
     //For Upper Leave
-    public Command autoCommandReefJ(){
-        return Commands.sequence( new FunctionalCommand(
+    public Command autoCommandReefJ() {
+        return Commands.sequence(new FunctionalCommand(
             () -> swerve.resetPose(new Pose2d()), 
             () -> swerve.driveToPose(() -> new ChassisSpeeds(), () -> PathSetpoints.BLUE_REEF_J), 
             interrupted -> {}, 

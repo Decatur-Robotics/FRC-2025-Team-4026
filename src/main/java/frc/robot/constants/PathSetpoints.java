@@ -6,6 +6,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public class PathSetpoints {
 
+    // Robot center should 25.125 inches from reef face for coral scoring
+    // Robot center should 0.638175 meters from reef face for coral scoring
+    // 6.47 inches from apriltag to reef branch on parallel plane
+    // 0.164338 meters from apriltag to reef branch on parallel plane
+
     // Field center
     public static final Translation2d FIELD_CENTER = new Translation2d(8.774176, 4.026281);
 
