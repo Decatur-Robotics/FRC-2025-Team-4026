@@ -21,6 +21,9 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -246,5 +249,51 @@ public class RobotContainer {
         // a.onTrue(Commands.runOnce(() -> SignalLogger.start()));
         // b.onTrue(Commands.runOnce(() -> SignalLogger.stop()));
     }
-    
+
+
+    public static ShuffleboardTab getShuffleboardTab() {
+		return instance.shuffleboardTab;
+	}
+
+    public SuperstructureSubsystem getSuperstructure() {
+        return superstructure;
+    }
+
+    public CommandSwerveDrivetrain getSwerve() {
+        return swerve;
+    }
+
+    public VisionSubsystem GetVision() {
+        return vision;
+    }
+
+    //For Center leave
+    public Command autoCommandReefG(){
+        return Commands.sequence( new FunctionalCommand(
+            () -> swerve.resetPose(new Pose2d()), 
+            () -> swerve.driveToPose(() -> new ChassisSpeeds(), PathSetpoints.REEF_G), 
+            interrupted -> {}, 
+            () -> swerve.isAtTargetPose(),  
+            swerve), superstructure.scoreCoralL4Command(() -> true, () -> true)); 
+    }
+
+    //For Lower Leave
+    public Command autoCommandReefE(){
+        return Commands.sequence( new FunctionalCommand(
+            () -> swerve.resetPose(new Pose2d()), 
+            () -> swerve.driveToPose(() -> new ChassisSpeeds(), PathSetpoints.REEF_E), 
+            interrupted -> {}, 
+            () -> swerve.isAtTargetPose(),  
+            swerve), superstructure.scoreCoralL4Command(() -> true, () -> true));}
+
+    //For Upper Leave
+    public Command autoCommandReefJ(){
+        return Commands.sequence( new FunctionalCommand(
+            () -> swerve.resetPose(new Pose2d()), 
+            () -> swerve.driveToPose(() -> new ChassisSpeeds(), PathSetpoints.REEF_J), 
+            interrupted -> {}, 
+            () -> swerve.isAtTargetPose(),  
+            swerve), superstructure.scoreCoralL4Command(() -> true, () -> true));
+    }
+
 }
