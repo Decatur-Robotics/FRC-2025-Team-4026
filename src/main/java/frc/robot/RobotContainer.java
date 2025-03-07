@@ -271,7 +271,7 @@ public class RobotContainer {
     public Command autoCommandReefG(){
         return Commands.sequence( new FunctionalCommand(
             () -> swerve.resetPose(new Pose2d()), 
-            () -> swerve.driveToPose(() -> new ChassisSpeeds(), PathSetpoints.REEF_G), 
+            () -> swerve.driveToPose(() -> new ChassisSpeeds(), () -> PathSetpoints.BLUE_REEF_G), 
             interrupted -> {}, 
             () -> swerve.isAtTargetPose(),  
             swerve), superstructure.scoreCoralL4Command(() -> true, () -> true)); 
@@ -281,7 +281,7 @@ public class RobotContainer {
     public Command autoCommandReefE(){
         return Commands.sequence( new FunctionalCommand(
             () -> swerve.resetPose(new Pose2d()), 
-            () -> swerve.driveToPose(() -> new ChassisSpeeds(), PathSetpoints.REEF_E), 
+            () -> swerve.driveToPose(() -> new ChassisSpeeds(), () -> PathSetpoints.BLUE_REEF_E), 
             interrupted -> {}, 
             () -> swerve.isAtTargetPose(),  
             swerve), superstructure.scoreCoralL4Command(() -> true, () -> true));}
@@ -290,7 +290,7 @@ public class RobotContainer {
     public Command autoCommandReefJ(){
         return Commands.sequence( new FunctionalCommand(
             () -> swerve.resetPose(new Pose2d()), 
-            () -> swerve.driveToPose(() -> new ChassisSpeeds(), PathSetpoints.REEF_J), 
+            () -> swerve.driveToPose(() -> new ChassisSpeeds(), () -> PathSetpoints.BLUE_REEF_J), 
             interrupted -> {}, 
             () -> swerve.isAtTargetPose(),  
             swerve), superstructure.scoreCoralL4Command(() -> true, () -> true));
