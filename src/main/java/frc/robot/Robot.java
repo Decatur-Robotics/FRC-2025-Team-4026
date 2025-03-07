@@ -9,8 +9,11 @@ import java.util.Optional;
 import com.pathplanner.lib.commands.PathfindingCommand;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.constants.Constants;
 import frc.robot.core.ILogSource;
 import frc.robot.core.IModeChangeListener;
 
@@ -18,6 +21,7 @@ public class Robot extends TimedRobot implements ILogSource, IModeChangeListener
 {
 
 	private static Robot instance;
+	private RobotContainer robotContainer;
 
 	private Optional<Command> autonomousCommand;
 
@@ -30,10 +34,15 @@ public class Robot extends TimedRobot implements ILogSource, IModeChangeListener
 	@Override
 	public void robotInit()
 	{
-		
 		if (instance != null)
 			System.err.println("WARNING: Robot instance already exists!");
 		instance = this;
+
+		autonomousCommand = Optional.empty();
+
+		robotContainer = new RobotContainer();
+
+		Shuffleboard.getTab(Constants.SHUFFLEBOARD_SUPERSTRUCTURE_TAB).add(CommandScheduler.getInstance());
 
 		PathfindingCommand.warmupCommand().schedule();
 	}
