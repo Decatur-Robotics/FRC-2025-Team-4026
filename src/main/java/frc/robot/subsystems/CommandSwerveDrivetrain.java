@@ -306,6 +306,30 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         });
     }
 
+    public void driveAutoToPose(Pose2d pose) {
+       
+            double targetX = translationalController.calculate(
+                    getState().Pose.getX(), pose.getX());
+            double targetY = translationalController.calculate(
+                getState().Pose.getY(), pose.getY());
+            double targetAngle = rotationalController.calculate(
+                getState().Pose.getRotation().getRadians(), pose.getRotation().getRadians());
+
+            ChassisSpeeds speeds = new ChassisSpeeds(targetX, targetY, targetAngle);
+
+            // Note: it is important to not discretize speeds before or after
+            // using the setpoint generator, as it will discretize them for you
+            previousSetpoint = setpointGenerator.generateSetpoint(
+                previousSetpoint, // The previous setpoint
+                speeds, // The desired target speeds
+                0.02 // The loop time of the robot code, in seconds
+            );
+
+            System.out.println(targetX);
+
+            setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
+    }
+
     /**
      * Runs the SysId Quasistatic test in the given direction for the routine
      * specified by {@link #m_sysIdRoutineToApply}.

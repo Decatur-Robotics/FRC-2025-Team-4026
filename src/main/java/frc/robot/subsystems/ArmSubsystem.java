@@ -140,6 +140,10 @@ public class ArmSubsystem extends SubsystemBase {
             .finallyDo(() -> setVoltage(0));
     }
 
+	public Command zeroArmCommand() {
+		return Commands.runOnce(() -> motor.setPosition(0), this);
+	}
+
 	// public Command resetTalonEncoderCommand() {
 	// 	return Commands.runOnce(() -> resetTalonEncoder());
 	// }

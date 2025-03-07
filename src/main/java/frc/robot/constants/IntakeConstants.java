@@ -29,8 +29,8 @@ public class IntakeConstants {
         .withKI(0)
         .withKD(0)
         .withKS(0.23) // 0.23
-        .withKV(0.0635) // 0.0635
-        .withKA(0);
+        .withKV(0.0706) // 0.0706
+        .withKA(0.002); // 0.002
     public static final CommutationConfigs COMMUTATION_CONFIGS = new CommutationConfigs()
         .withMotorArrangement(MotorArrangementValue.NEO550_JST);
     public static final MotorOutputConfigs LEFT_MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()

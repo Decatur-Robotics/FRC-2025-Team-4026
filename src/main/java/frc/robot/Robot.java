@@ -94,6 +94,8 @@ public class Robot extends TimedRobot implements ILogSource, IModeChangeListener
 			modeChangeListener.autonomousInit();
 		}
 
+		autonomousCommand = Optional.ofNullable(robotContainer.getAutoCommand());
+
 		logFine("Getting and running auto command...");
 		// schedule the autonomous command (example)
 		if (autonomousCommand.isPresent())

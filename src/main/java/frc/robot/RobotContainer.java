@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
@@ -59,6 +60,8 @@ import frc.robot.subsystems.WristSubsystem;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
+    private boolean autoRan = false;
 
     private static RobotContainer instance;
 
@@ -139,6 +142,8 @@ public class RobotContainer {
 
         shuffleboardTab.add(autoSideChooser);
         shuffleboardTab.add(autoLevelChooser);
+
+        shuffleboardTab.addBoolean("Auto Ran", () -> autoRan);
     }
 
     /**
@@ -194,6 +199,8 @@ public class RobotContainer {
     private void configureSecondaryBindings() {
         Joystick joystick = new Joystick(1);
 
+        JoystickButton start = new JoystickButton(joystick, LogitechControllerButtons.start);
+
         POVButton down = new POVButton(joystick, LogitechControllerButtons.down);
         POVButton up = new POVButton(joystick, LogitechControllerButtons.up);
         POVButton left = new POVButton(joystick, LogitechControllerButtons.left);
@@ -208,6 +215,7 @@ public class RobotContainer {
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
 
         Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
+        // Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.start).getAsBoolean();
         Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
@@ -224,8 +232,8 @@ public class RobotContainer {
         x.whileTrue(superstructure.intakeAlgaeReefCommand(getTargetPose));
 
         // bumperRight.whileTrue(climber.climbCommand());
-        bumperLeft.whileTrue(climber.setVoltageCommand(-12));
-        bumperRight.whileTrue(climber.setVoltageCommand(12));
+        bumperLeft.whileTrue(climber.setVoltageCommand(-8));
+        bumperRight.whileTrue(climber.setVoltageCommand(8));
 
         // bumperLeft.onTrue(superstructure.zeroSuperstructureCommand());
 
@@ -252,6 +260,8 @@ public class RobotContainer {
         // triggerRight.whileTrue(elevator.setVoltageCommand(-1));
         // // bumperLeft.onTrue(elevator.setPositionCommand(10));
         // // bumperRight.onTrue(elevator.setPositionCommand(40));
+
+        // start.onTrue(arm.zeroArmCommand());
 
         // bumperLeft.whileTrue(arm.setVoltageCommand(2));
         // bumperRight.whileTrue(arm.setVoltageCommand(-1));
@@ -385,10 +395,10 @@ public class RobotContainer {
             }, 
             () -> {
                 if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.BLUE_REEF_G);
-                else swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.RED_REEF_G);
+                    swerve.driveAutoToPose(PathSetpoints.BLUE_REEF_G);
+                else swerve.driveAutoToPose(PathSetpoints.RED_REEF_G);
             }, 
-            interrupted -> {}, 
+            interrupted -> {autoRan = true;}, 
             () -> swerve.isAtTargetPose(),  
             swerve), superstructure.scoreCoralL4Command(() -> true, () -> false));
     }

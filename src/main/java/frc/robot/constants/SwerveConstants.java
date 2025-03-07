@@ -28,11 +28,11 @@ public class SwerveConstants {
     public static final PIDConstants AUTO_ROTATIONAL_CONSTANTS = new PIDConstants(7, 0, 0);
 
     public static final PIDController TRANSLATIONAL_CONTROLLER = new PIDController(
-        10,
+        3,
         0,
         0);
     public static final ProfiledPIDController ROTATIONAL_CONTROLLER = new ProfiledPIDController(
-        7,
+        2,
         0,
         0,
         new TrapezoidProfile.Constraints(2 * Math.PI, 4 * Math.PI)); // Radians
