@@ -10,9 +10,9 @@ import edu.wpi.first.math.numbers.N3;
 
 public class VisionConstants {
     
-    public static final String CAMERA_FRONT_LEFT_NAME = "FrontLeftCamera";
-    public static final String CAMERA_FRONT_RIGHT_NAME = "FrontRightCamera";
-    public static final String CAMERA_BACK_NAME = "BackCamera";
+    public static final String CAMERA_FRONT_LEFT_NAME = "FrontLeftCamera"; // 2
+    public static final String CAMERA_FRONT_RIGHT_NAME = "FrontRightCamera"; // 3
+    public static final String CAMERA_BACK_NAME = "BackCamera"; // 1
 
     public static final Transform3d ROBOT_TO_CAMERA_FRONT_LEFT = new Transform3d(
         new Translation3d(0, 0, 0), 

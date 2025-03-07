@@ -22,8 +22,10 @@ public class IntakeSubsystem extends SubsystemBase {
     private VelocityVoltage velocityRequest;
     private VoltageOut voltageRequest;
 
-    private LinearFilter currentFilter;
-    private double filteredCurrent;
+    private LinearFilter currentFilterLeft;
+    private double filteredCurrentLeft;
+    private LinearFilter currentFilterRight;
+    private double filteredCurrentRight;
 
     private double voltage;
     
@@ -57,7 +59,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
         voltageRequest = new VoltageOut(voltage);
 
-        currentFilter = LinearFilter.movingAverage(10);
+        currentFilterLeft = LinearFilter.movingAverage(10);
+        currentFilterRight = LinearFilter.movingAverage(10);
 
         configureShuffleboard();
     }
@@ -67,7 +70,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
         tab.addDouble("Target Intake Velocity", () -> velocity);
         tab.addDouble("Actual Intake Velocity", () -> getVelocity());
-        tab.addDouble("Filtered Intake Current", () -> filteredCurrent);
+        tab.addDouble("Filtered Intake Current", () -> filteredCurrentLeft);
         tab.addDouble("Target Intake Voltage", () -> voltage);
         tab.addDouble("Actual Intake Voltage", () -> motorRight.getMotorVoltage().getValueAsDouble());
         tab.addDouble("Intake Current", () -> motorRight.getStatorCurrent().getValueAsDouble());
@@ -75,7 +78,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        filteredCurrent = currentFilter.calculate(getCurrent());
+        filteredCurrentLeft = currentFilterLeft.calculate(getCurrent());
+        filteredCurrentRight = currentFilterRight.calculate(getCurrent());
     }
 
     public void setVelocity(double velocity) {
@@ -92,8 +96,12 @@ public class IntakeSubsystem extends SubsystemBase {
         return motorLeft.getStatorCurrent().getValueAsDouble();
     }
 
-    public double getFilteredCurrent() {
-        return filteredCurrent;
+    public double getFilteredCurrentLeft() {
+        return filteredCurrentLeft;
+    }
+
+    public double getFilteredCurrentRight() {
+        return filteredCurrentRight;
     }
 
     public void setVoltage(double voltage) {
