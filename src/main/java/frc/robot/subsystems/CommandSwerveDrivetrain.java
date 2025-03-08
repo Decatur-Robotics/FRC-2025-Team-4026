@@ -338,7 +338,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double targetAngle = rotationalController.calculate(
             getState().Pose.getRotation().getRadians(), pose.getRotation().getRadians());
 
-        ChassisSpeeds speeds = new ChassisSpeeds(targetX, targetY, -targetAngle);
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(-targetX, -targetY, targetAngle, this.getState().Pose.getRotation().plus(getOperatorForwardDirection()));
 
         // Note: it is important to not discretize speeds before or after
         // using the setpoint generator, as it will discretize them for you
@@ -347,8 +347,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             speeds, // The desired target speeds
             0.02 // The loop time of the robot code, in seconds
         );
-
-        System.out.println(targetX);
 
         setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
     }
@@ -458,9 +456,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     getState().Pose.getRotation().getRadians(), this.targetPose.getRotation().getRadians());
             }
 
-            ChassisSpeeds newSpeeds = new ChassisSpeeds(targetX, targetY, targetRotation);
+            ChassisSpeeds newSpeeds = new ChassisSpeeds(-targetX, -targetY, targetRotation);
 
-            this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(newSpeeds, getOperatorForwardDirection()));
+            this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(newSpeeds, this.getState().Pose.getRotation().plus(getOperatorForwardDirection())));
         }, this)
         .finallyDo(() -> this.targetPose = null);
     }

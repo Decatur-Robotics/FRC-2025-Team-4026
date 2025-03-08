@@ -25,13 +25,13 @@
       "buttonCount": 8,
       "buttonKeys": [
         -1,
-        86,
+        -1,
         -1,
         -1,
         90,
         88,
         67,
-        -1
+        86
       ],
       "povConfig": [
         {
