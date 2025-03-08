@@ -216,8 +216,8 @@ public class RobotContainer {
         JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
 
-        Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
-        // Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.start).getAsBoolean();
+        // Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
+        Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.start).getAsBoolean();
         Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
@@ -229,9 +229,9 @@ public class RobotContainer {
         triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAtTargetPose, overrideLineUp));
 
         b.whileTrue(superstructure.intakeCoralGroundCommand());
-        y.whileTrue(superstructure.intakeCoralHumanPlayerCommand());
         a.whileTrue(superstructure.intakeAlgaeGroundCommand());
-        x.whileTrue(superstructure.intakeAlgaeReefCommand(getTargetPose));
+        x.whileTrue(superstructure.intakeAlgaeReefLowCommand());
+        y.whileTrue(superstructure.intakeAlgaeReefHighCommand());
 
         // bumperRight.whileTrue(climber.climbCommand());
         bumperLeft.whileTrue(climber.setVoltageCommand(-8));
@@ -380,12 +380,12 @@ public class RobotContainer {
             }, 
             () -> {
                 if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.BLUE_REEF_J);
-                else swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.RED_REEF_J);
+                    swerve.driveAutoToPose(PathSetpoints.BLUE_REEF_J);
+                else swerve.driveAutoToPose(PathSetpoints.RED_REEF_J);
             }, 
-            interrupted -> {}, 
+            interrupted -> {autoRan = true;}, 
             () -> swerve.isAtTargetPose(),  
-            swerve), superstructure.scoreCoralL4Command(() -> true, () -> false)); 
+            swerve), superstructure.scoreCoralL4Command(() -> true, () -> false));
     }
 
     public Command autoCommandCenterL4() {
@@ -414,10 +414,10 @@ public class RobotContainer {
             }, 
             () -> {
                 if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.BLUE_REEF_E);
-                else swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.RED_REEF_E);
+                    swerve.driveAutoToPose(PathSetpoints.BLUE_REEF_E);
+                else swerve.driveAutoToPose(PathSetpoints.RED_REEF_E);
             }, 
-            interrupted -> {}, 
+            interrupted -> {autoRan = true;}, 
             () -> swerve.isAtTargetPose(),  
             swerve), superstructure.scoreCoralL4Command(() -> true, () -> false));
     }

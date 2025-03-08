@@ -196,6 +196,16 @@ public class SuperstructureSubsystem extends SubsystemBase {
             SuperstructureConstants.ALGAE_STOWED_STATE);
     }
 
+    public Command intakeAlgaeReefLowCommand() {
+        return intakeCommand(() -> SuperstructureConstants.ALGAE_LOW_REEF_INTAKING_STATE, 
+            SuperstructureConstants.ALGAE_STOWED_STATE);
+    }
+
+    public Command intakeAlgaeReefHighCommand() {
+        return intakeCommand(() -> SuperstructureConstants.ALGAE_HIGH_REEF_INTAKING_STATE, 
+            SuperstructureConstants.ALGAE_STOWED_STATE);
+    }
+
     public Command intakeAlgaeReefCommand(Supplier<Pose2d> targetPose) {
         Supplier<SuperstructureState> intakingState = () -> {
             if (!(targetPose == null) && (targetPose.get().equals(PathSetpoints.BLUE_REEF_AB) || targetPose.get().equals(PathSetpoints.BLUE_REEF_EF) 
@@ -266,7 +276,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return Commands.sequence(
             Commands.runOnce(() -> setState(stagingState),
                 elevator, arm, wrist, claw, intake),
-            Commands.waitUntil(() -> (isAtTargetState() && isAtTargetPose.get()) || overrideLineUp.get()),
+            Commands.waitUntil(() -> ((isAtTargetState() && isAtTargetPose.get()) || overrideLineUp.get())),
             Commands.runOnce(() -> setState(placingState),
                 elevator, arm, wrist, claw, intake),
             Commands.waitUntil(() -> isAtTargetState()),

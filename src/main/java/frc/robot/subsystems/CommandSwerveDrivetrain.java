@@ -70,9 +70,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         .getStructTopic("Robot Pose", Pose2d.struct).publish();
 
     private PIDController translationalController = new PIDController(
-        10, 0, 0);
-    private ProfiledPIDController rotationalController = new ProfiledPIDController(
-        7, 0, 0, new TrapezoidProfile.Constraints(2 * Math.PI, 4 * Math.PI));
+        1, 0, 0);
+    private PIDController rotationalController = new PIDController(
+        1, 0, 0);
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
