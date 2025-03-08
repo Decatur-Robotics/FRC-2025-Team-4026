@@ -32,6 +32,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -48,6 +50,9 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  * Subsystem so it can easily be used in command-based projects.
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
+    private static final double kSimLoopPeriod = 0.005; // 5 ms
+    private Notifier m_simNotifier = null;
+    private double m_lastSimTime;
 
     private Double coralPose;
     private Double coralShift;
@@ -168,7 +173,28 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
 
+        if (Utils.isSimulation()) {
+            startSimThread();
+        }
+
         configureAutoBuilder();
+
+        rotationalController.enableContinuousInput(0, 2*Math.PI);
+    }
+
+    private void startSimThread() {
+        m_lastSimTime = Utils.getCurrentTimeSeconds();
+
+        /* Run simulation at a faster rate so PID gains behave more reasonably */
+        m_simNotifier = new Notifier(() -> {
+            final double currentTime = Utils.getCurrentTimeSeconds();
+            double deltaTime = currentTime - m_lastSimTime;
+            m_lastSimTime = currentTime;
+
+            /* use the measured time delta, get battery voltage from WPILib */
+            updateSimState(deltaTime, RobotController.getBatteryVoltage());
+        });
+        m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
     private void configureAutoBuilder() {
@@ -307,27 +333,26 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public void driveAutoToPose(Pose2d pose) {
-       
-            double targetX = translationalController.calculate(
-                    getState().Pose.getX(), pose.getX());
-            double targetY = translationalController.calculate(
-                getState().Pose.getY(), pose.getY());
-            double targetAngle = rotationalController.calculate(
-                getState().Pose.getRotation().getRadians(), pose.getRotation().getRadians());
+        double targetX = translationalController.calculate(
+                getState().Pose.getX(), pose.getX());
+        double targetY = translationalController.calculate(
+            getState().Pose.getY(), pose.getY());
+        double targetAngle = rotationalController.calculate(
+            getState().Pose.getRotation().getRadians(), pose.getRotation().getRadians());
 
-            ChassisSpeeds speeds = new ChassisSpeeds(targetX, targetY, targetAngle);
+        ChassisSpeeds speeds = new ChassisSpeeds(targetX, targetY, -targetAngle);
 
-            // Note: it is important to not discretize speeds before or after
-            // using the setpoint generator, as it will discretize them for you
-            previousSetpoint = setpointGenerator.generateSetpoint(
-                previousSetpoint, // The previous setpoint
-                speeds, // The desired target speeds
-                0.02 // The loop time of the robot code, in seconds
-            );
+        // Note: it is important to not discretize speeds before or after
+        // using the setpoint generator, as it will discretize them for you
+        previousSetpoint = setpointGenerator.generateSetpoint(
+            previousSetpoint, // The previous setpoint
+            speeds, // The desired target speeds
+            0.02 // The loop time of the robot code, in seconds
+        );
 
-            System.out.println(targetX);
+        System.out.println(targetX);
 
-            setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
+        setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
     }
 
     /**
@@ -437,19 +462,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
             ChassisSpeeds newSpeeds = new ChassisSpeeds(targetX, targetY, targetRotation);
 
-            this.pathingFieldRelative(newSpeeds);
+            this.pathingRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(newSpeeds, getOperatorForwardDirection()));
         }, this)
         .finallyDo(() -> this.targetPose = null);
     }
 
-    public void pathingFieldRelative(ChassisSpeeds speeds) {
+    public void pathingRobotRelative(ChassisSpeeds speeds) {
         previousSetpoint = setpointGenerator.generateSetpoint(
             previousSetpoint, // The previous setpoint
             speeds, // The desired target speeds
             0.02 // The loop time of the robot code, in seconds
         );
-
-        if (!(targetPose == null)) System.out.println(targetPose.getX());
 
         setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
     }
