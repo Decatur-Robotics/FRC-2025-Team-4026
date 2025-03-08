@@ -286,7 +286,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * @return Command to run
      */
     public Command driveFieldRelative(Supplier<ChassisSpeeds> speeds) {
-        return driveRobotRelative(() -> ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), this.getState().Pose.getRotation().plus(getOperatorForwardDirection())));
+        return Commands.run(() -> driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), this.getState().Pose.getRotation().plus(getOperatorForwardDirection()))), this);
     }
 
     /**
@@ -295,18 +295,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * @param speeds Function returning the robot relative chassis speeds to apply
      * @return Command to run
      */
-    public Command driveRobotRelative(Supplier<ChassisSpeeds> speeds) {
-        return Commands.run(() -> {
-            // Note: it is important to not discretize speeds before or after
-            // using the setpoint generator, as it will discretize them for you
-            previousSetpoint = setpointGenerator.generateSetpoint(
-                previousSetpoint, // The previous setpoint
-                speeds.get(), // The desired target speeds
-                0.02 // The loop time of the robot code, in seconds
-            );
+    public void driveRobotRelative(ChassisSpeeds speeds) {
+        // Note: it is important to not discretize speeds before or after
+        // using the setpoint generator, as it will discretize them for you
+        previousSetpoint = setpointGenerator.generateSetpoint(
+            previousSetpoint, // The previous setpoint
+            speeds, // The desired target speeds
+            0.02 // The loop time of the robot code, in seconds
+        );
 
-            setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
-        }, this);
+        setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
     }
 
     /**
@@ -462,7 +460,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
             ChassisSpeeds newSpeeds = new ChassisSpeeds(targetX, targetY, targetRotation);
 
-            this.pathingRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(newSpeeds, getOperatorForwardDirection()));
+            this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(newSpeeds, getOperatorForwardDirection()));
         }, this)
         .finallyDo(() -> this.targetPose = null);
     }
