@@ -15,7 +15,7 @@ public class IntakeConstants {
     public static final double ALGAE_REST_VELOCITY = -10;
     public static final double INTAKE_VELOCITY = -200;
     public static final double L1_EJECT_VELOCITY = 50;
-    public static final double PROCESSOR_EJECT_VELOCITY = 120;
+    public static final double PROCESSOR_EJECT_VELOCITY = 200;
     public static final double NET_EJECT_VELOCITY = 80;
 
     public static final double STALL_DEBOUNCE_TIME = 0.25;

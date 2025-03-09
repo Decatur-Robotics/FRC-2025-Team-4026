@@ -37,7 +37,9 @@ import frc.robot.constants.AutoConstants;
 import frc.robot.constants.ClawConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.LedConstants;
 import frc.robot.constants.PathSetpoints;
+import frc.robot.constants.SuperstructureConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.constants.WristConstants;
 import frc.robot.core.LogitechControllerButtons;
@@ -234,8 +236,8 @@ public class RobotContainer {
         y.whileTrue(superstructure.intakeAlgaeReefHighCommand());
 
         // bumperRight.whileTrue(climber.climbCommand());
-        bumperLeft.whileTrue(climber.setVoltageCommand(-8));
-        bumperRight.whileTrue(climber.setVoltageCommand(8));
+        // bumperLeft.whileTrue(climber.setVoltageCommand(-8));
+        // bumperRight.whileTrue(climber.setVoltageCommand(8));
 
         // bumperLeft.onTrue(superstructure.zeroSuperstructureCommand());
 
@@ -263,10 +265,10 @@ public class RobotContainer {
         // // bumperLeft.onTrue(elevator.setPositionCommand(10));
         // // bumperRight.onTrue(elevator.setPositionCommand(40));
 
-        // start.onTrue(arm.zeroArmCommand());
+        start.onTrue(arm.zeroArmCommand());
 
-        // bumperLeft.whileTrue(arm.setVoltageCommand(1));
-        // bumperRight.whileTrue(arm.setVoltageCommand(-1));
+        bumperLeft.whileTrue(arm.setVoltageCommand(1));
+        bumperRight.whileTrue(arm.setVoltageCommand(-1));
         // triggerLeft.onTrue(arm.setPositionCommand(4.5));
         // triggerRight.onTrue(arm.setPositionCommand(20));
 
@@ -332,7 +334,11 @@ public class RobotContainer {
                     swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.BLUE_REEF_J);
                 else swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.RED_REEF_J);
             }, 
-            interrupted -> {}, 
+            interrupted -> {
+                autoRan = true;
+                swerve.nullTargetPose();
+                swerve.driveRobotRelative(new ChassisSpeeds());
+            }, 
             () -> swerve.isAtTargetPose(),  
             swerve), superstructure.scoreCoralL1Command(() -> true, () -> false)); 
     }
@@ -349,7 +355,11 @@ public class RobotContainer {
                     swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.BLUE_REEF_G);
                 else swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.RED_REEF_G);
             }, 
-            interrupted -> {}, 
+            interrupted -> {
+                autoRan = true;
+                swerve.nullTargetPose();
+                swerve.driveRobotRelative(new ChassisSpeeds());
+            },  
             () -> swerve.isAtTargetPose(),  
             swerve), superstructure.scoreCoralL1Command(() -> true, () -> false));
     }
@@ -366,7 +376,11 @@ public class RobotContainer {
                     swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.BLUE_REEF_E);
                 else swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.RED_REEF_E);
             }, 
-            interrupted -> {}, 
+            interrupted -> {
+                autoRan = true;
+                swerve.nullTargetPose();
+                swerve.driveRobotRelative(new ChassisSpeeds());
+            },
             () -> swerve.isAtTargetPose(),  
             swerve), superstructure.scoreCoralL1Command(() -> true, () -> false));
     }
@@ -383,26 +397,36 @@ public class RobotContainer {
                     swerve.driveAutoToPose(PathSetpoints.BLUE_REEF_J);
                 else swerve.driveAutoToPose(PathSetpoints.RED_REEF_J);
             }, 
-            interrupted -> {autoRan = true;}, 
+            interrupted -> {
+                autoRan = true;
+                swerve.nullTargetPose();
+                swerve.driveRobotRelative(new ChassisSpeeds());
+            },  
             () -> swerve.isAtTargetPose(),  
             swerve), superstructure.scoreCoralL4Command(() -> true, () -> false));
     }
 
     public Command autoCommandCenterL4() {
-        return Commands.sequence(new FunctionalCommand(
-            () -> {
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
-                    swerve.resetPose(AutoConstants.BLUE_CENTER_INITIAL_POSE);
-                else swerve.resetPose(AutoConstants.RED_CENTER_INITIAL_POSE);
-            }, 
-            () -> {
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveAutoToPose(PathSetpoints.BLUE_REEF_G);
-                else swerve.driveAutoToPose(PathSetpoints.RED_REEF_G);
-            }, 
-            interrupted -> {autoRan = true;}, 
-            () -> swerve.isAtTargetPose(),  
-            swerve), superstructure.scoreCoralL4Command(() -> true, () -> false));
+        return Commands.sequence(
+            new FunctionalCommand(
+                () -> {
+                    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
+                        swerve.resetPose(AutoConstants.BLUE_CENTER_INITIAL_POSE);
+                    else swerve.resetPose(AutoConstants.RED_CENTER_INITIAL_POSE);
+                }, 
+                () -> {
+                    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
+                        swerve.driveAutoToPose(PathSetpoints.BLUE_REEF_G);
+                    else swerve.driveAutoToPose(PathSetpoints.RED_REEF_G);
+                }, 
+                interrupted -> {
+                    autoRan = true;
+                    swerve.nullTargetPose();
+                    swerve.driveRobotRelative(new ChassisSpeeds());
+                }, 
+                () -> swerve.isAtTargetPose(),  
+                swerve), 
+            Commands.run(() -> superstructure.scoreCoralL4Command(() -> true, () -> false)));
     }
 
     public Command autoCommandRightL4() {
@@ -417,23 +441,44 @@ public class RobotContainer {
                     swerve.driveAutoToPose(PathSetpoints.BLUE_REEF_E);
                 else swerve.driveAutoToPose(PathSetpoints.RED_REEF_E);
             }, 
-            interrupted -> {autoRan = true;}, 
+            interrupted -> {
+                autoRan = true;
+                swerve.nullTargetPose();
+                swerve.driveRobotRelative(new ChassisSpeeds());
+            }, 
             () -> swerve.isAtTargetPose(),  
             swerve), superstructure.scoreCoralL4Command(() -> true, () -> false));
     }
 
     public Command getAutoCommand() {
-        if (autoLevelChooser.getSelected().equals(AutoLevel.L1)) {
-            if (autoSideChooser.getSelected().equals(AutoSide.Left)) return autoCommandLeftL1();
-            else if (autoSideChooser.getSelected().equals(AutoSide.Center)) return autoCommandCenterL1();
-            else if (autoSideChooser.getSelected().equals(AutoSide.Right)) return autoCommandRightL1();
-        }
-        else if (autoLevelChooser.getSelected().equals(AutoLevel.L4)) {
-            if (autoSideChooser.getSelected().equals(AutoSide.Left)) return autoCommandLeftL4();
-            else if (autoSideChooser.getSelected().equals(AutoSide.Center)) return autoCommandCenterL4();
-            else if (autoSideChooser.getSelected().equals(AutoSide.Right)) return autoCommandRightL4();
-        }
-        return autoCommandCenterL4();
+        // if (autoLevelChooser.getSelected().equals(AutoLevel.L1)) {
+        //     if (autoSideChooser.getSelected().equals(AutoSide.Left)) return autoCommandLeftL1();
+        //     else if (autoSideChooser.getSelected().equals(AutoSide.Center)) return autoCommandCenterL1();
+        //     else if (autoSideChooser.getSelected().equals(AutoSide.Right)) return autoCommandRightL1();
+        // }
+        // else if (autoLevelChooser.getSelected().equals(AutoLevel.L4)) {
+        //     if (autoSideChooser.getSelected().equals(AutoSide.Left)) return autoCommandLeftL4();
+        //     else if (autoSideChooser.getSelected().equals(AutoSide.Center)) return autoCommandCenterL4();
+        //     else if (autoSideChooser.getSelected().equals(AutoSide.Right)) return autoCommandRightL4();
+        // }
+        // return autoCommandCenterL4();
+
+        final double speedX;
+
+        if (DriverStation.getAlliance().get().equals(Alliance.Blue)) speedX = -0.5;
+        else speedX = 0.5;
+
+        return Commands.sequence(
+            Commands.race(
+                swerve.driveFieldRelative(() -> new ChassisSpeeds(speedX, 0, 0)),
+                Commands.waitSeconds(3)
+            ),
+            Commands.race(
+                swerve.driveFieldRelative(() -> new ChassisSpeeds(0, 0, 0)),
+                Commands.waitSeconds(0.1)
+            ),
+            superstructure.autoScoreCommand()
+        );
     }
 
 }

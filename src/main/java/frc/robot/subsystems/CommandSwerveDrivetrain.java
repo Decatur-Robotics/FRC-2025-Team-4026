@@ -74,10 +74,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private StructPublisher<Pose2d> posePublisher = NetworkTableInstance.getDefault()
         .getStructTopic("Robot Pose", Pose2d.struct).publish();
 
-    private PIDController translationalController = new PIDController(
-        1, 0, 0);
+    private PIDController translationalControllerX = new PIDController(
+        2, 0, 0); // p = 5 maybe
+    private PIDController translationalControllerY = new PIDController(
+        2, 0, 0);
     private PIDController rotationalController = new PIDController(
-        1, 0, 0);
+        2, 0, 0);
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -331,9 +333,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public void driveAutoToPose(Pose2d pose) {
-        double targetX = translationalController.calculate(
+        this.targetPose = pose;
+
+        double targetX = translationalControllerX.calculate(
                 getState().Pose.getX(), pose.getX());
-        double targetY = translationalController.calculate(
+        double targetY = translationalControllerY.calculate(
             getState().Pose.getY(), pose.getY());
         double targetAngle = rotationalController.calculate(
             getState().Pose.getRotation().getRadians(), pose.getRotation().getRadians());
@@ -445,9 +449,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             double targetRotation = speeds.get().omegaRadiansPerSecond;
 
             if (speeds.get().vxMetersPerSecond == 0 && speeds.get().vyMetersPerSecond == 0) {
-                targetX = translationalController.calculate(
+                targetX = translationalControllerX.calculate(
                     getState().Pose.getX(), this.targetPose.getX());
-                targetY = translationalController.calculate(
+                targetY = translationalControllerY.calculate(
                     getState().Pose.getY(), this.targetPose.getY());
             }
 
@@ -506,9 +510,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public boolean isAtTargetPose() {
         if (targetPose == null) return false;
         
-        boolean isAtTargetX = Math.abs(getState().Pose.getX()) - Math.abs(targetPose.getX()) < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
-        boolean isAtTargetY = Math.abs(getState().Pose.getY()) - Math.abs(targetPose.getY()) < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
-        boolean isAtTargetRotation = Math.abs(getState().Pose.getRotation().getRadians()) - Math.abs(targetPose.getRotation().getRadians()) < SwerveConstants.ROTATIONAL_ERROR_MARGIN;
+        boolean isAtTargetX = Math.abs(translationalControllerX.getError()) < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
+        boolean isAtTargetY = Math.abs(translationalControllerY.getError()) < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
+        boolean isAtTargetRotation = Math.abs(rotationalController.getError()) < SwerveConstants.ROTATIONAL_ERROR_MARGIN;
 
         return isAtTargetX && isAtTargetY && isAtTargetRotation;
     }

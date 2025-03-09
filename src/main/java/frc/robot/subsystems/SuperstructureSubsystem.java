@@ -310,4 +310,21 @@ public class SuperstructureSubsystem extends SubsystemBase {
         });
     }
 
+    public Command autoScoreCommand() {
+        return Commands.sequence(
+            Commands.runOnce(() -> setState(SuperstructureConstants.MOVE_TO_L1_STATE),
+                elevator, arm, wrist, claw, intake),
+            Commands.waitUntil(() -> isAtTargetState()),
+            Commands.run(() -> {
+                setState(SuperstructureConstants.EJECT_L1_STATE);
+                led.flashAllPixels(LedConstants.YELLOW, 5);
+            },
+                elevator, arm, wrist, claw, intake, led)
+        )
+        .finallyDo(() -> {
+            if (claw.getCurrent() > 0) setState(SuperstructureConstants.CORAL_STOWED_STATE);
+            else setState(SuperstructureConstants.ALGAE_STOWED_STATE);
+        });
+    }
+
 }
