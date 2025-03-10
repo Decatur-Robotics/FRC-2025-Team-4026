@@ -265,10 +265,10 @@ public class RobotContainer {
         // // bumperLeft.onTrue(elevator.setPositionCommand(10));
         // // bumperRight.onTrue(elevator.setPositionCommand(40));
 
-        start.onTrue(arm.zeroArmCommand());
+        // start.onTrue(arm.zeroArmCommand());
 
-        bumperLeft.whileTrue(arm.setVoltageCommand(1));
-        bumperRight.whileTrue(arm.setVoltageCommand(-1));
+        // bumperLeft.whileTrue(arm.setVoltageCommand(1));
+        // bumperRight.whileTrue(arm.setVoltageCommand(-1));
         // triggerLeft.onTrue(arm.setPositionCommand(4.5));
         // triggerRight.onTrue(arm.setPositionCommand(20));
 
