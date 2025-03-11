@@ -352,59 +352,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
 
-    public Pose2d getClosestPoseFromArray(Pose2d[] poses) {
-        double distanceToClosestPose;
-        Pose2d closestPose;
-
-        distanceToClosestPose = poses[0].getTranslation().getDistance(getState().Pose.getTranslation());
-        closestPose = poses[0];
-
-        for (Pose2d pose : poses) {
-            double distanceToPose = pose.getTranslation().getDistance(getState().Pose.getTranslation());
-            if (distanceToPose < distanceToClosestPose) {
-                distanceToClosestPose = distanceToPose;
-                closestPose = pose;
-            }
-        }
-
-        return closestPose;
-    }
-
-    public Command driveToPose(Supplier<ChassisSpeeds> speeds, Supplier<Pose2d> targetPose) {
-        return Commands.run(() -> {
-            this.targetPose = targetPose.get();
-
-            double targetTranslation = speeds.get().vxMetersPerSecond;
-            double targetRotation = speeds.get().omegaRadiansPerSecond;
-
-            if (speeds.get().omegaRadiansPerSecond == 0) {
-                targetRotation = rotationalController.calculate(
-                    getState().Pose.getRotation().getRadians(), this.targetPose.getRotation().getRadians());
-            }
-
-            if (speeds.get().vxMetersPerSecond == 0 && speeds.get().vyMetersPerSecond == 0) {
-                targetTranslation = translationalController.calculate(
-                    0, getState().Pose.getTranslation().getDistance(this.targetPose.getTranslation()));
-
-                ChassisSpeeds newSpeeds = new ChassisSpeeds(targetTranslation, 0, targetRotation);
-
-                Rotation2d travelRotation = this.targetPose.getTranslation().minus(getState().Pose.getTranslation()).getAngle();
-
-                this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(
-                    newSpeeds, getState().RawHeading.minus(travelRotation)));
-            }
-            else {
-                ChassisSpeeds newSpeeds = new ChassisSpeeds(speeds.get().vxMetersPerSecond, speeds.get().vyMetersPerSecond, targetRotation);
-
-                this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(
-                    newSpeeds, getState().RawHeading.plus(getOperatorForwardDirection())));
-            }
-
-            
-        }, this)
-        .finallyDo(() -> this.targetPose = null);
-    }
-
     /**
      * Returns a command that applies specified a swerve setpoint from specified robot relative chassis speeds to this swerve drivetrain.
      * For PathPlanner.
@@ -428,48 +375,74 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         });
     }
 
-    public void driveAutoToPose(Pose2d pose) {
-        this.targetPose = pose;
+    public Pose2d getClosestPoseFromArray(Pose2d[] poses) {
+        double distanceToClosestPose;
+        Pose2d closestPose;
 
-        double targetX = translationalController.calculate(
-                getState().Pose.getX(), pose.getX());
-        double targetY = 0; // TODO: make like teleop to pose
-        double targetAngle = rotationalController.calculate(
-            getState().Pose.getRotation().getRadians(), pose.getRotation().getRadians());
+        distanceToClosestPose = poses[0].getTranslation().getDistance(getState().Pose.getTranslation());
+        closestPose = poses[0];
 
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(-targetX, -targetY, targetAngle, this.getState().Pose.getRotation().plus(getOperatorForwardDirection()));
+        for (Pose2d pose : poses) {
+            double distanceToPose = pose.getTranslation().getDistance(getState().Pose.getTranslation());
+            if (distanceToPose < distanceToClosestPose) {
+                distanceToClosestPose = distanceToPose;
+                closestPose = pose;
+            }
+        }
 
-        // Note: it is important to not discretize speeds before or after
-        // using the setpoint generator, as it will discretize them for you
-        previousSetpoint = setpointGenerator.generateSetpoint(
-            previousSetpoint, // The previous setpoint
-            speeds, // The desired target speeds
-            0.02 // The loop time of the robot code, in seconds
-        );
-
-        setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
+        return closestPose;
     }
 
-    public void pathingRobotRelative(ChassisSpeeds speeds) {
-        previousSetpoint = setpointGenerator.generateSetpoint(
-            previousSetpoint, // The previous setpoint
-            speeds, // The desired target speeds
-            0.02 // The loop time of the robot code, in seconds
-        );
+    public Command driveToPoseTeleop(Supplier<ChassisSpeeds> speeds, Supplier<Pose2d> targetPose) {
+        return Commands.run(() -> driveToPose(speeds, targetPose), this)
+            .finallyDo(() -> this.targetPose = null);
+    }
 
-        setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
+    public Command driveToPoseAuto(Pose2d targetPose) {
+        return Commands.run(() -> driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> targetPose), this)
+            .finallyDo(() -> this.targetPose = null);
+    }
+
+    public void driveToPose(Supplier<ChassisSpeeds> speeds, Supplier<Pose2d> targetPose) {
+        this.targetPose = targetPose.get();
+
+        double targetTranslation = speeds.get().vxMetersPerSecond;
+        double targetRotation = speeds.get().omegaRadiansPerSecond;
+
+        if (speeds.get().omegaRadiansPerSecond == 0) {
+            targetRotation = rotationalController.calculate(
+                getState().Pose.getRotation().getRadians(), this.targetPose.getRotation().getRadians());
+        }
+
+        if (speeds.get().vxMetersPerSecond == 0 && speeds.get().vyMetersPerSecond == 0) {
+            targetTranslation = translationalController.calculate(
+                0, getState().Pose.getTranslation().getDistance(this.targetPose.getTranslation()));
+
+            ChassisSpeeds newSpeeds = new ChassisSpeeds(targetTranslation, 0, targetRotation);
+
+            Rotation2d travelRotation = this.targetPose.getTranslation().minus(getState().Pose.getTranslation()).getAngle();
+
+            this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(
+                newSpeeds, getState().RawHeading.minus(travelRotation)));
+        }
+        else {
+            ChassisSpeeds newSpeeds = new ChassisSpeeds(speeds.get().vxMetersPerSecond, speeds.get().vyMetersPerSecond, targetRotation);
+
+            this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(
+                newSpeeds, getState().RawHeading.plus(getOperatorForwardDirection())));
+        }
     }
 
     public Command driveToClosestBranch(Supplier<ChassisSpeeds> speeds) {
         Supplier<Pose2d> pose = () -> getClosestPoseFromArray(PathSetpoints.CORAL_SCORING_POSES);
 
-        return driveToPose(speeds, pose);
+        return driveToPoseTeleop(speeds, pose);
     }
 
     public Command driveToClosestReefAlgae(Supplier<ChassisSpeeds> speeds) {
         Supplier<Pose2d> pose = () -> getClosestPoseFromArray(PathSetpoints.REEF_ALGAE_POSES);
         
-        return driveToPose(speeds, pose);
+        return driveToPoseTeleop(speeds, pose);
     }
 
     public Command driveToProcessor(Supplier<ChassisSpeeds> speeds) {
@@ -478,7 +451,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return PathSetpoints.RED_PROCESSOR;
         };
 
-        return driveToPose(speeds, pose);
+        return driveToPoseTeleop(speeds, pose);
     }
 
     public Command driveToNet(Supplier<ChassisSpeeds> speeds) {
@@ -487,7 +460,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return PathSetpoints.RED_NET;
         };
         
-        return driveToPose(speeds, pose);
+        return driveToPoseTeleop(speeds, pose);
     }
 
     public boolean isAtTargetPose() {

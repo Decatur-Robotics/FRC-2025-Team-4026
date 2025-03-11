@@ -331,8 +331,8 @@ public class RobotContainer {
             }, 
             () -> {
                 if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.BLUE_REEF_J);
-                else swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.RED_REEF_J);
+                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_J);
+                else swerve.driveToPoseAuto(PathSetpoints.RED_REEF_J);
             }, 
             interrupted -> {
                 autoRan = true;
@@ -352,8 +352,8 @@ public class RobotContainer {
             }, 
             () -> {
                 if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.BLUE_REEF_G);
-                else swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.RED_REEF_G);
+                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_G);
+                else swerve.driveToPoseAuto(PathSetpoints.RED_REEF_G);
             }, 
             interrupted -> {
                 autoRan = true;
@@ -373,8 +373,8 @@ public class RobotContainer {
             }, 
             () -> {
                 if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.BLUE_REEF_E);
-                else swerve.driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> PathSetpoints.RED_REEF_E);
+                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_E);
+                else swerve.driveToPoseAuto(PathSetpoints.RED_REEF_E);
             }, 
             interrupted -> {
                 autoRan = true;
@@ -394,8 +394,8 @@ public class RobotContainer {
             }, 
             () -> {
                 if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveAutoToPose(PathSetpoints.BLUE_REEF_J);
-                else swerve.driveAutoToPose(PathSetpoints.RED_REEF_J);
+                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_J);
+                else swerve.driveToPoseAuto(PathSetpoints.RED_REEF_J);
             }, 
             interrupted -> {
                 autoRan = true;
@@ -416,8 +416,8 @@ public class RobotContainer {
                 }, 
                 () -> {
                     if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                        swerve.driveAutoToPose(PathSetpoints.BLUE_REEF_G);
-                    else swerve.driveAutoToPose(PathSetpoints.RED_REEF_G);
+                        swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_G);
+                    else swerve.driveToPoseAuto(PathSetpoints.RED_REEF_G);
                 }, 
                 interrupted -> {
                     autoRan = true;
@@ -438,8 +438,8 @@ public class RobotContainer {
             }, 
             () -> {
                 if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveAutoToPose(PathSetpoints.BLUE_REEF_E);
-                else swerve.driveAutoToPose(PathSetpoints.RED_REEF_E);
+                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_E);
+                else swerve.driveToPoseAuto(PathSetpoints.RED_REEF_E);
             }, 
             interrupted -> {
                 autoRan = true;
@@ -468,17 +468,19 @@ public class RobotContainer {
         if (DriverStation.getAlliance().get().equals(Alliance.Blue)) speedX = -0.5;
         else speedX = 0.5;
 
-        return Commands.sequence(
-            Commands.race(
-                swerve.driveFieldRelative(() -> new ChassisSpeeds(speedX, 0, 0)),
-                Commands.waitSeconds(3)
-            ),
-            Commands.race(
-                swerve.driveFieldRelative(() -> new ChassisSpeeds(0, 0, 0)),
-                Commands.waitSeconds(0.1)
-            ),
-            superstructure.autoScoreCommand()
-        );
+        return Commands.sequence(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_A));
+
+        // return Commands.sequence(
+        //     Commands.race(
+        //         swerve.driveFieldRelative(() -> new ChassisSpeeds(speedX, 0, 0)),
+        //         Commands.waitSeconds(3)
+        //     ),
+        //     Commands.race(
+        //         swerve.driveFieldRelative(() -> new ChassisSpeeds(0, 0, 0)),
+        //         Commands.waitSeconds(0.1)
+        //     ),
+        //     superstructure.autoScoreCommand()
+        // );
     }
 
 }
