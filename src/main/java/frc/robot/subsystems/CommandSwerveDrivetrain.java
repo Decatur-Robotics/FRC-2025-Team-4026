@@ -74,12 +74,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private StructPublisher<Pose2d> posePublisher = NetworkTableInstance.getDefault()
         .getStructTopic("Robot Pose", Pose2d.struct).publish();
 
-    private PIDController translationalControllerX = new PIDController(
-        2, 0, 0); // p = 5 maybe
-    private PIDController translationalControllerY = new PIDController(
-        2, 0, 0);
+    private PIDController translationalController = new PIDController(
+        5, 0, 0); // p = 5 maybe
     private PIDController rotationalController = new PIDController(
-        2, 0, 0);
+        5, 0, 0);
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -281,102 +279,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
-    /**
-     * Returns a command that applies specified a swerve setpoint from specified field relative chassis speeds to this swerve drivetrain.
-     * 
-     * @param speeds Function returning the field relative chassis speeds to apply
-     * @return Command to run
-     */
-    public Command driveFieldRelative(Supplier<ChassisSpeeds> speeds) {
-        return Commands.run(() -> driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), this.getState().Pose.getRotation().plus(getOperatorForwardDirection()))), this);
-    }
-
-    /**
-     * Returns a command that applies specified a swerve setpoint from specified robot relative chassis speeds to this swerve drivetrain.
-     * 
-     * @param speeds Function returning the robot relative chassis speeds to apply
-     * @return Command to run
-     */
-    public void driveRobotRelative(ChassisSpeeds speeds) {
-        // Note: it is important to not discretize speeds before or after
-        // using the setpoint generator, as it will discretize them for you
-        previousSetpoint = setpointGenerator.generateSetpoint(
-            previousSetpoint, // The previous setpoint
-            speeds, // The desired target speeds
-            0.02 // The loop time of the robot code, in seconds
-        );
-
-        setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
-    }
-
-    /**
-     * Returns a command that applies specified a swerve setpoint from specified robot relative chassis speeds to this swerve drivetrain.
-     * For PathPlanner.
-     * 
-     * @param speeds Function returning the robot relative chassis speeds to apply
-     * @return Command to run
-     */
-    public Command driveAuto(Supplier<ChassisSpeeds> speeds, Supplier<DriveFeedforwards> feedforwards) {
-        return run(() -> {
-            // Note: it is important to not discretize speeds before or after
-            // using the setpoint generator, as it will discretize them for you
-            previousSetpoint = setpointGenerator.generateSetpoint(
-                previousSetpoint, // The previous setpoint
-                speeds.get(), // The desired target speeds
-                0.02 // The loop time of the robot code, in seconds
-            );
-
-            setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds())
-                .withWheelForceFeedforwardsX(feedforwards.get().robotRelativeForcesXNewtons())
-                .withWheelForceFeedforwardsY(feedforwards.get().robotRelativeForcesYNewtons()));
-        });
-    }
-
-    public void driveAutoToPose(Pose2d pose) {
-        this.targetPose = pose;
-
-        double targetX = translationalControllerX.calculate(
-                getState().Pose.getX(), pose.getX());
-        double targetY = translationalControllerY.calculate(
-            getState().Pose.getY(), pose.getY());
-        double targetAngle = rotationalController.calculate(
-            getState().Pose.getRotation().getRadians(), pose.getRotation().getRadians());
-
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(-targetX, -targetY, targetAngle, this.getState().Pose.getRotation().plus(getOperatorForwardDirection()));
-
-        // Note: it is important to not discretize speeds before or after
-        // using the setpoint generator, as it will discretize them for you
-        previousSetpoint = setpointGenerator.generateSetpoint(
-            previousSetpoint, // The previous setpoint
-            speeds, // The desired target speeds
-            0.02 // The loop time of the robot code, in seconds
-        );
-
-        setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
-    }
-
-    /**
-     * Runs the SysId Quasistatic test in the given direction for the routine
-     * specified by {@link #m_sysIdRoutineToApply}.
-     *
-     * @param direction Direction of the SysId Quasistatic test
-     * @return Command to run
-     */
-    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-        return m_sysIdRoutineToApply.quasistatic(direction);
-    }
-
-    /**
-     * Runs the SysId Dynamic test in the given direction for the routine
-     * specified by {@link #m_sysIdRoutineToApply}.
-     *
-     * @param direction Direction of the SysId Dynamic test
-     * @return Command to run
-     */
-    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        return m_sysIdRoutineToApply.dynamic(direction);
-    }
-
     @Override
     public void periodic() {
         /*
@@ -399,6 +301,34 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         if (!(targetPose == null)) targetPosePublisher.set(targetPose);
         posePublisher.set(getState().Pose);
+    }
+
+/**
+     * Returns a command that applies specified a swerve setpoint from specified field relative chassis speeds to this swerve drivetrain.
+     * 
+     * @param speeds Function returning the field relative chassis speeds to apply
+     * @return Command to run
+     */
+    public Command driveFieldRelative(Supplier<ChassisSpeeds> speeds) {
+        return Commands.run(() -> driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), getState().RawHeading.plus(getOperatorForwardDirection()))), this);
+    }
+
+    /**
+     * Returns a command that applies specified a swerve setpoint from specified robot relative chassis speeds to this swerve drivetrain.
+     * 
+     * @param speeds Function returning the robot relative chassis speeds to apply
+     * @return Command to run
+     */
+    public void driveRobotRelative(ChassisSpeeds speeds) {
+        // Note: it is important to not discretize speeds before or after
+        // using the setpoint generator, as it will discretize them for you
+        previousSetpoint = setpointGenerator.generateSetpoint(
+            previousSetpoint, // The previous setpoint
+            speeds, // The desired target speeds
+            0.02 // The loop time of the robot code, in seconds
+        );
+
+        setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
     }
 
     /**
@@ -444,27 +374,80 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return Commands.run(() -> {
             this.targetPose = targetPose.get();
 
-            double targetX = speeds.get().vxMetersPerSecond;
-            double targetY = speeds.get().vyMetersPerSecond;
+            double targetTranslation = speeds.get().vxMetersPerSecond;
             double targetRotation = speeds.get().omegaRadiansPerSecond;
-
-            if (speeds.get().vxMetersPerSecond == 0 && speeds.get().vyMetersPerSecond == 0) {
-                targetX = translationalControllerX.calculate(
-                    getState().Pose.getX(), this.targetPose.getX());
-                targetY = translationalControllerY.calculate(
-                    getState().Pose.getY(), this.targetPose.getY());
-            }
 
             if (speeds.get().omegaRadiansPerSecond == 0) {
                 targetRotation = rotationalController.calculate(
                     getState().Pose.getRotation().getRadians(), this.targetPose.getRotation().getRadians());
             }
 
-            ChassisSpeeds newSpeeds = new ChassisSpeeds(-targetX, -targetY, targetRotation);
+            if (speeds.get().vxMetersPerSecond == 0 && speeds.get().vyMetersPerSecond == 0) {
+                targetTranslation = translationalController.calculate(
+                    0, getState().Pose.getTranslation().getDistance(this.targetPose.getTranslation()));
 
-            this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(newSpeeds, this.getState().Pose.getRotation().plus(getOperatorForwardDirection())));
+                ChassisSpeeds newSpeeds = new ChassisSpeeds(targetTranslation, 0, targetRotation);
+
+                Rotation2d travelRotation = this.targetPose.getTranslation().minus(getState().Pose.getTranslation()).getAngle();
+
+                this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(
+                    newSpeeds, getState().RawHeading.minus(travelRotation)));
+            }
+            else {
+                ChassisSpeeds newSpeeds = new ChassisSpeeds(speeds.get().vxMetersPerSecond, speeds.get().vyMetersPerSecond, targetRotation);
+
+                this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(
+                    newSpeeds, getState().RawHeading.plus(getOperatorForwardDirection())));
+            }
+
+            
         }, this)
         .finallyDo(() -> this.targetPose = null);
+    }
+
+    /**
+     * Returns a command that applies specified a swerve setpoint from specified robot relative chassis speeds to this swerve drivetrain.
+     * For PathPlanner.
+     * 
+     * @param speeds Function returning the robot relative chassis speeds to apply
+     * @return Command to run
+     */
+    public Command driveAuto(Supplier<ChassisSpeeds> speeds, Supplier<DriveFeedforwards> feedforwards) {
+        return run(() -> {
+            // Note: it is important to not discretize speeds before or after
+            // using the setpoint generator, as it will discretize them for you
+            previousSetpoint = setpointGenerator.generateSetpoint(
+                previousSetpoint, // The previous setpoint
+                speeds.get(), // The desired target speeds
+                0.02 // The loop time of the robot code, in seconds
+            );
+
+            setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds())
+                .withWheelForceFeedforwardsX(feedforwards.get().robotRelativeForcesXNewtons())
+                .withWheelForceFeedforwardsY(feedforwards.get().robotRelativeForcesYNewtons()));
+        });
+    }
+
+    public void driveAutoToPose(Pose2d pose) {
+        this.targetPose = pose;
+
+        double targetX = translationalController.calculate(
+                getState().Pose.getX(), pose.getX());
+        double targetY = 0; // TODO: make like teleop to pose
+        double targetAngle = rotationalController.calculate(
+            getState().Pose.getRotation().getRadians(), pose.getRotation().getRadians());
+
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(-targetX, -targetY, targetAngle, this.getState().Pose.getRotation().plus(getOperatorForwardDirection()));
+
+        // Note: it is important to not discretize speeds before or after
+        // using the setpoint generator, as it will discretize them for you
+        previousSetpoint = setpointGenerator.generateSetpoint(
+            previousSetpoint, // The previous setpoint
+            speeds, // The desired target speeds
+            0.02 // The loop time of the robot code, in seconds
+        );
+
+        setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
     }
 
     public void pathingRobotRelative(ChassisSpeeds speeds) {
@@ -510,11 +493,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public boolean isAtTargetPose() {
         if (targetPose == null) return false;
         
-        boolean isAtTargetX = Math.abs(translationalControllerX.getError()) < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
-        boolean isAtTargetY = Math.abs(translationalControllerY.getError()) < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
+        boolean isAtTargetX = Math.abs(translationalController.getError()) < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
         boolean isAtTargetRotation = Math.abs(rotationalController.getError()) < SwerveConstants.ROTATIONAL_ERROR_MARGIN;
 
-        return isAtTargetX && isAtTargetY && isAtTargetRotation;
+        return isAtTargetX && isAtTargetRotation;
     }
 
     public Pose2d getTargetPose() {
@@ -539,9 +521,34 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     //   //  }
     // }
 
-    
     // public Command coralMeta(){
     //   return AutoBuilder.pathfindToPose(new Pose2d(coralPose + 0.5, Math.pow(coralDistance, 2) - Math.pow(coralPose, 2), new Rotation2d(coralRotation)), SwerveConstants.CONSTRAINTS, 0);  
     // }
+
+    /* 
+     * SysId Commands
+     */
+
+    /**
+     * Runs the SysId Quasistatic test in the given direction for the routine
+     * specified by {@link #m_sysIdRoutineToApply}.
+     *
+     * @param direction Direction of the SysId Quasistatic test
+     * @return Command to run
+     */
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutineToApply.quasistatic(direction);
+    }
+
+    /**
+     * Runs the SysId Dynamic test in the given direction for the routine
+     * specified by {@link #m_sysIdRoutineToApply}.
+     *
+     * @param direction Direction of the SysId Dynamic test
+     * @return Command to run
+     */
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutineToApply.dynamic(direction);
+    }
 
 }
