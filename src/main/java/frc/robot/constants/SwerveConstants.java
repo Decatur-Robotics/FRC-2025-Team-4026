@@ -45,4 +45,6 @@ public class SwerveConstants {
     public static final double TRANSLATIONAL_ERROR_MARGIN = 0.1;
     public static final double ROTATIONAL_ERROR_MARGIN = 0.1;
 
+    public static final double VELOCITY_ERROR_MARGIN = 0.2;
+
 }

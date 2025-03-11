@@ -220,15 +220,15 @@ public class RobotContainer {
 
         // Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
         Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.start).getAsBoolean();
-        Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
+        Supplier<Boolean> isAligned = () -> swerve.isAligned();
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
-        down.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
-        right.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
-        left.whileTrue(superstructure.scoreCoralL3Command(isAtTargetPose, overrideLineUp));
-        up.whileTrue(superstructure.scoreCoralL4Command(isAtTargetPose, overrideLineUp));
-        triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isAtTargetPose, overrideLineUp));
-        triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAtTargetPose, overrideLineUp));
+        down.whileTrue(superstructure.scoreCoralL1Command(isAligned, overrideLineUp));
+        right.whileTrue(superstructure.scoreCoralL2Command(isAligned, overrideLineUp));
+        left.whileTrue(superstructure.scoreCoralL3Command(isAligned, overrideLineUp));
+        up.whileTrue(superstructure.scoreCoralL4Command(isAligned, overrideLineUp));
+        triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isAligned, overrideLineUp));
+        triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAligned, overrideLineUp));
 
         b.whileTrue(superstructure.intakeCoralGroundCommand());
         a.whileTrue(superstructure.intakeAlgaeGroundCommand());
@@ -339,7 +339,7 @@ public class RobotContainer {
                 swerve.nullTargetPose();
                 swerve.driveRobotRelative(new ChassisSpeeds());
             }, 
-            () -> swerve.isAtTargetPose(),  
+            () -> swerve.isAligned(),  
             swerve), superstructure.scoreCoralL1Command(() -> true, () -> false)); 
     }
 
@@ -360,7 +360,7 @@ public class RobotContainer {
                 swerve.nullTargetPose();
                 swerve.driveRobotRelative(new ChassisSpeeds());
             },  
-            () -> swerve.isAtTargetPose(),  
+            () -> swerve.isAligned(),  
             swerve), superstructure.scoreCoralL1Command(() -> true, () -> false));
     }
 
@@ -381,7 +381,7 @@ public class RobotContainer {
                 swerve.nullTargetPose();
                 swerve.driveRobotRelative(new ChassisSpeeds());
             },
-            () -> swerve.isAtTargetPose(),  
+            () -> swerve.isAligned(),  
             swerve), superstructure.scoreCoralL1Command(() -> true, () -> false));
     }
 
@@ -402,7 +402,7 @@ public class RobotContainer {
                 swerve.nullTargetPose();
                 swerve.driveRobotRelative(new ChassisSpeeds());
             },  
-            () -> swerve.isAtTargetPose(),  
+            () -> swerve.isAligned(),  
             swerve), superstructure.scoreCoralL4Command(() -> true, () -> false));
     }
 
@@ -424,7 +424,7 @@ public class RobotContainer {
                     swerve.nullTargetPose();
                     swerve.driveRobotRelative(new ChassisSpeeds());
                 }, 
-                () -> swerve.isAtTargetPose(),  
+                () -> swerve.isAligned(),  
                 swerve), 
             Commands.run(() -> superstructure.scoreCoralL4Command(() -> true, () -> false)));
     }
@@ -446,7 +446,7 @@ public class RobotContainer {
                 swerve.nullTargetPose();
                 swerve.driveRobotRelative(new ChassisSpeeds());
             }, 
-            () -> swerve.isAtTargetPose(),  
+            () -> swerve.isAligned(),  
             swerve), superstructure.scoreCoralL4Command(() -> true, () -> false));
     }
 

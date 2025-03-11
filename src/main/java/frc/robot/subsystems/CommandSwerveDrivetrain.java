@@ -260,6 +260,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         tab.addDouble("Actual Module 3 Velocity", () -> getState().ModuleStates[3].speedMetersPerSecond);
     
         tab.addBoolean("At Target Pose", () -> isAtTargetPose());
+        tab.addBoolean("Aligned", () -> isAligned());
 
         tab.addDouble("Operator Rotation", () -> getOperatorForwardDirection().getDegrees());
 
@@ -470,6 +471,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         boolean isAtTargetRotation = Math.abs(rotationalController.getError()) < SwerveConstants.ROTATIONAL_ERROR_MARGIN;
 
         return isAtTargetX && isAtTargetRotation;
+    }
+
+    public boolean isAligned() {
+        boolean velocityAligned = true; 
+
+        for (SwerveModuleState module : getState().ModuleStates) {
+            if (module.speedMetersPerSecond > SwerveConstants.VELOCITY_ERROR_MARGIN) 
+                velocityAligned = false;
+        }
+
+        return isAtTargetPose() && velocityAligned;
     }
 
     public Pose2d getTargetPose() {
