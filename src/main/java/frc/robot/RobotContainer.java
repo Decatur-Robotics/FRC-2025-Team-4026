@@ -21,7 +21,6 @@ import frc.robot.constants.SwerveConstants;
 import frc.robot.core.LogitechControllerButtons;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -44,7 +43,6 @@ public class RobotContainer {
     private final ElevatorSubsystem elevator;
     private final ArmSubsystem arm;
     private final WristSubsystem wrist;
-    private final ClawSubsystem claw;
     private final IntakeSubsystem intake;
     private final SuperstructureSubsystem superstructure;
     private final CommandSwerveDrivetrain swerve;
@@ -72,9 +70,8 @@ public class RobotContainer {
         elevator = new ElevatorSubsystem();
         arm = new ArmSubsystem();
         wrist = new WristSubsystem();
-        claw = new ClawSubsystem();
         intake = new IntakeSubsystem();
-        superstructure = new SuperstructureSubsystem(elevator, arm, wrist, claw, intake);
+        superstructure = new SuperstructureSubsystem(elevator, arm, wrist, intake);
         swerve = TunerConstants.createDrivetrain();
         vision = new VisionSubsystem(swerve);
 

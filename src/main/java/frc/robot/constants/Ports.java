@@ -10,8 +10,6 @@ public class Ports {
 
     public static final int CLIMBER_MOTOR = 4;
 
-    public static final int CLAW_MOTOR = 40;
-
     public static final int INTAKE_MOTOR_LEFT = 30;
     public static final int INTAKE_MOTOR_RIGHT = 31;
 

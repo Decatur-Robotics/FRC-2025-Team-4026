@@ -18,18 +18,16 @@ public class SuperstructureSubsystem extends SubsystemBase {
     private ElevatorSubsystem elevator;
     private ArmSubsystem arm;
     private WristSubsystem wrist;
-    private ClawSubsystem claw;
     private IntakeSubsystem intake;
 
     private SuperstructureState goalTargetState;
     private SuperstructureState targetState;
 
     public SuperstructureSubsystem(ElevatorSubsystem elevator, ArmSubsystem arm, WristSubsystem wrist,
-            ClawSubsystem claw, IntakeSubsystem intake) {
+             IntakeSubsystem intake) {
         this.elevator = elevator;
         this.arm = arm;
         this.wrist = wrist;
-        this.claw = claw;
         this.intake = intake;
 
         goalTargetState = SuperstructureConstants.CORAL_STOWED_STATE.copyInstance();
@@ -47,12 +45,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
         if (getActualElevatorPosition() < SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION) {
             targetState = new SuperstructureState(goalTargetState.elevatorPosition, 
                     Math.max(SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION, goalTargetState.armPosition), 
-                    goalTargetState.wristCurrent, goalTargetState.clawCurrent, goalTargetState.intakeVelocity);
+                    goalTargetState.wristCurrent, goalTargetState.intakeVelocity);
         }
         else if (getActualArmPosition() < SuperstructureConstants.ARM_MINIMUM_STOWED_POSITION) {
             targetState = new SuperstructureState(
                     Math.max(SuperstructureConstants.ELEVATOR_MINIMUM_UNSTOWED_POSITION, goalTargetState.elevatorPosition), 
-                    goalTargetState.armPosition, goalTargetState.wristCurrent, goalTargetState.clawCurrent, goalTargetState.intakeVelocity);
+                    goalTargetState.armPosition, goalTargetState.wristCurrent, goalTargetState.intakeVelocity);
         }
         else {
             targetState = goalTargetState.copyInstance();
@@ -70,7 +68,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
             elevator.setPosition(targetState.elevatorPosition);
             arm.setPosition(targetState.armPosition);
             wrist.setCurrent(targetState.wristCurrent);
-            claw.setCurrent(targetState.clawCurrent);
             intake.setVelocity(targetState.intakeVelocity);
         }
     }
@@ -80,8 +77,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     public boolean isAtGoalTargetState() {
         return isElevatorAtGoalTargetPosition() &&
                 isArmAtGoalTargetPosition() &&
-                isWristAtGoalTargetPosition() &&
-                isClawAtGoalTargetPosition();
+                isWristAtGoalTargetPosition();
     }
 
     public boolean isElevatorAtGoalTargetPosition() {
@@ -101,12 +97,9 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
 
     public boolean isWristAtGoalTargetPosition() {
-        return claw.isSlammed();
+        return wrist.isSlammed();
     }
 
-    public boolean isClawAtGoalTargetPosition() {
-        return claw.isSlammed();
-    }
 
     // Get goal states
 
@@ -118,7 +111,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public SuperstructureState getActualState() {
         return new SuperstructureState(getActualElevatorPosition(), getActualArmPosition(), 
-            getActualWristCurrent(), getActualClawCurrent(), getActualIntakeVelocity());
+            getActualWristCurrent(), getActualIntakeVelocity());
     }
 
     public double getActualElevatorPosition() {
@@ -133,9 +126,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return wrist.getCurrent();
     }
 
-    public double getActualClawCurrent() {
-        return claw.getCurrent();
-    }
 
     public double getActualIntakeVelocity() {
         return intake.getVelocity();
@@ -164,12 +154,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
         wrist.setCurrent(current);
     }
 
-    public void setClawCurrent(double current) {
-        goalTargetState.clawCurrent = current;
-        targetState.clawCurrent = current;
-        
-        claw.setCurrent(current);
-    }
 
     public void setIntakeVelocity(double velocity) {
         goalTargetState.intakeVelocity = velocity;
