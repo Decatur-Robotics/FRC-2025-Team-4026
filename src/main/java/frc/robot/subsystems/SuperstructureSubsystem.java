@@ -228,17 +228,17 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public Command scoreCoralL2Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
         return scorePlaceCommand(SuperstructureConstants.STAGING_L2_STATE, SuperstructureConstants.PLACE_L2_STATE,
-            SuperstructureConstants.DROP_L2_STATE, SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
+            SuperstructureConstants.RETRACT_L2_STATE, SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreCoralL3Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
         return scorePlaceCommand(SuperstructureConstants.STAGING_L3_STATE, SuperstructureConstants.PLACE_L3_STATE,
-            SuperstructureConstants.DROP_L3_STATE, SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
+            SuperstructureConstants.RETRACT_L3_STATE, SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreCoralL4Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
         return scorePlaceCommand(SuperstructureConstants.STAGING_L4_STATE, SuperstructureConstants.PLACE_L4_STATE,
-            SuperstructureConstants.DROP_L4_STATE, SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
+            SuperstructureConstants.RETRACT_L4_STATE, SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreAlgaeProcessorCommand(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
@@ -252,7 +252,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
 
     public Command scorePlaceCommand(SuperstructureState stagingState, SuperstructureState placingState, 
-            SuperstructureState droppingState, SuperstructureState stowedState, 
+            SuperstructureState retractingState, SuperstructureState stowedState, 
             Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
         return Commands.sequence(
             Commands.runOnce(() -> setState(stagingState),
@@ -262,7 +262,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 elevator, arm, wrist, intake),
             Commands.waitUntil(() -> isAtTargetState()),
             Commands.run(() -> {
-                setState(droppingState);
+                setState(retractingState);
                 led.flashAllPixels(LedConstants.YELLOW, 5);
             },
                 elevator, arm, wrist, intake, led)

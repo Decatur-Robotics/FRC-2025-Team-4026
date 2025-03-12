@@ -73,7 +73,7 @@ public class SuperstructureConstants {
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
-    public static final SuperstructureState DROP_L2_STATE = new SuperstructureState(
+    public static final SuperstructureState RETRACT_L2_STATE = new SuperstructureState(
         ElevatorConstants.DROP_L2_POSITION, 
         ArmConstants.DROP_L2_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
@@ -91,7 +91,7 @@ public class SuperstructureConstants {
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
-    public static final SuperstructureState DROP_L3_STATE = new SuperstructureState(
+    public static final SuperstructureState RETRACT_L3_STATE = new SuperstructureState(
         ElevatorConstants.DROP_L3_POSITION, 
         ArmConstants.DROP_L3_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
@@ -109,7 +109,7 @@ public class SuperstructureConstants {
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
-    public static final SuperstructureState DROP_L4_STATE = new SuperstructureState(
+    public static final SuperstructureState RETRACT_L4_STATE = new SuperstructureState(
         ElevatorConstants.DROP_L4_POSITION, 
         ArmConstants.DROP_L4_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
