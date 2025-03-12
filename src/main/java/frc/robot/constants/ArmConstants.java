@@ -22,15 +22,9 @@ public class ArmConstants {
 
     // Scoring positions
     public static final double L1_POSITION = -7.55;
-    public static final double MOVE_TO_L2_POSITION = STOWED_POSITION;
-    public static final double PLACE_L2_POSITION = -8;
-    public static final double DROP_L2_POSITION = -8;
-    public static final double MOVE_TO_L3_POSITION = STOWED_POSITION;
-    public static final double PLACE_L3_POSITION = -8;
-    public static final double DROP_L3_POSITION = -8;
-    public static final double MOVE_TO_L4_POSITION = STOWED_POSITION;
-    public static final double PLACE_L4_POSITION = -8;
-    public static final double DROP_L4_POSITION = -8;
+    public static final double L2_POSITION = -8;
+    public static final double L3_POSITION = -8;
+    public static final double L4_POSITION = -8;
     public static final double PROCESSOR_POSITION = -13;
     public static final double NET_POSITION = -4;
 

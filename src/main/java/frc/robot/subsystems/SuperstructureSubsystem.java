@@ -221,43 +221,63 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     // Scoring commands
 
-    public Command scoreCoralL1Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
-        return scoreEjectCommand(SuperstructureConstants.STAGING_L1_STATE, SuperstructureConstants.EJECT_L1_STATE,
-            SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
+    public Command scoreCoralL1Command(Supplier<Boolean> isNearTargetPose, Supplier<Boolean> isAtTargetPose, 
+            Supplier<Boolean> overrideNearPose, Supplier<Boolean> overrideAtPose) {
+        return scoreEjectCommand(SuperstructureConstants.STAGE_L1_STATE, SuperstructureConstants.EJECT_L1_STATE,
+            SuperstructureConstants.CORAL_STOWED_STATE, 
+            isNearTargetPose, isAtTargetPose, overrideNearPose, overrideAtPose);
     }
 
-    public Command scoreCoralL2Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
-        return scorePlaceCommand(SuperstructureConstants.STAGING_L2_STATE, SuperstructureConstants.PLACE_L2_STATE,
-            SuperstructureConstants.RETRACT_L2_STATE, SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
+    public Command scoreCoralL2Command(Supplier<Boolean> isNearTargetPose, Supplier<Boolean> isAtTargetPose, 
+            Supplier<Boolean> overrideNearPose, Supplier<Boolean> overrideAtPose) {
+        return scorePlaceCommand(SuperstructureConstants.TRAVEL_L2_STATE, SuperstructureConstants.STAGE_L2_STATE, 
+            SuperstructureConstants.PLACE_L2_STATE, SuperstructureConstants.RETRACT_L2_STATE, SuperstructureConstants.CORAL_STOWED_STATE, 
+            isNearTargetPose, isAtTargetPose, 
+            overrideNearPose, overrideAtPose);
     }
 
-    public Command scoreCoralL3Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
-        return scorePlaceCommand(SuperstructureConstants.STAGING_L3_STATE, SuperstructureConstants.PLACE_L3_STATE,
-            SuperstructureConstants.RETRACT_L3_STATE, SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
+    public Command scoreCoralL3Command(Supplier<Boolean> isNearTargetPose, Supplier<Boolean> isAtTargetPose, 
+            Supplier<Boolean> overrideNearPose, Supplier<Boolean> overrideAtPose) {
+        return scorePlaceCommand(SuperstructureConstants.TRAVEL_L3_STATE, SuperstructureConstants.STAGE_L3_STATE, 
+            SuperstructureConstants.PLACE_L3_STATE, SuperstructureConstants.RETRACT_L3_STATE, SuperstructureConstants.CORAL_STOWED_STATE, 
+            isNearTargetPose, isAtTargetPose, 
+            overrideNearPose, overrideAtPose);
     }
 
-    public Command scoreCoralL4Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
-        return scorePlaceCommand(SuperstructureConstants.STAGING_L4_STATE, SuperstructureConstants.PLACE_L4_STATE,
-            SuperstructureConstants.RETRACT_L4_STATE, SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
+    public Command scoreCoralL4Command(Supplier<Boolean> isNearTargetPose, Supplier<Boolean> isAtTargetPose, 
+            Supplier<Boolean> overrideNearPose, Supplier<Boolean> overrideAtPose) {
+        return scorePlaceCommand(SuperstructureConstants.TRAVEL_L4_STATE, SuperstructureConstants.STAGE_L4_STATE, 
+            SuperstructureConstants.PLACE_L4_STATE, SuperstructureConstants.RETRACT_L4_STATE, SuperstructureConstants.CORAL_STOWED_STATE, 
+            isNearTargetPose, isAtTargetPose, 
+            overrideNearPose, overrideAtPose);
     }
 
-    public Command scoreAlgaeProcessorCommand(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
-        return scoreEjectCommand(SuperstructureConstants.STAGING_PROCESSOR_STATE, SuperstructureConstants.EJECT_PROCESSOR_STATE,
-            SuperstructureConstants.ALGAE_STOWED_STATE, isAtTargetPose, overrideLineUp);
+    public Command scoreAlgaeProcessorCommand(Supplier<Boolean> isNearTargetPose, Supplier<Boolean> isAtTargetPose, 
+            Supplier<Boolean> overrideNearPose, Supplier<Boolean> overrideAtPose) {
+        return scoreEjectCommand(SuperstructureConstants.STAGE_PROCESSOR_STATE, SuperstructureConstants.EJECT_PROCESSOR_STATE,
+            SuperstructureConstants.ALGAE_STOWED_STATE, 
+            isNearTargetPose, isAtTargetPose, overrideNearPose, overrideAtPose);
     }
 
-    public Command scoreAlgaeNetCommand(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
-        return scoreEjectCommand(SuperstructureConstants.STAGING_NET_STATE, SuperstructureConstants.EJECT_NET_STATE,
-            SuperstructureConstants.ALGAE_STOWED_STATE, isAtTargetPose, overrideLineUp);
+    public Command scoreAlgaeNetCommand(Supplier<Boolean> isNearTargetPose, Supplier<Boolean> isAtTargetPose, 
+            Supplier<Boolean> overrideNearPose, Supplier<Boolean> overrideAtPose) {
+        return scoreEjectCommand(SuperstructureConstants.STAGE_NET_STATE, SuperstructureConstants.EJECT_NET_STATE,
+            SuperstructureConstants.ALGAE_STOWED_STATE, 
+            isNearTargetPose, isAtTargetPose, overrideNearPose, overrideAtPose);
     }
 
-    public Command scorePlaceCommand(SuperstructureState stagingState, SuperstructureState placingState, 
-            SuperstructureState retractingState, SuperstructureState stowedState, 
-            Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
+    public Command scorePlaceCommand(SuperstructureState travelState, SuperstructureState stagingState, 
+            SuperstructureState placingState, SuperstructureState retractingState, SuperstructureState stowedState, 
+            Supplier<Boolean> isNearTargetPose, Supplier<Boolean> isAtTargetPose, 
+            Supplier<Boolean> overrideNearPose, Supplier<Boolean> overrideAtPose) {
         return Commands.sequence(
+            Commands.waitUntil(() -> (isNearTargetPose.get() || overrideNearPose.get())),
+            Commands.runOnce(() -> setState(travelState),
+                elevator, arm, wrist, intake),
+            Commands.waitUntil(() -> (isElevatorAtTargetPosition() || overrideAtPose.get())),
             Commands.runOnce(() -> setState(stagingState),
                 elevator, arm, wrist, intake),
-            Commands.waitUntil(() -> ((isAtTargetState() && isAtTargetPose.get()) || overrideLineUp.get())),
+            Commands.waitUntil(() -> ((isAtTargetState() && isAtTargetPose.get()) || overrideAtPose.get())),
             Commands.runOnce(() -> setState(placingState),
                 elevator, arm, wrist, intake),
             Commands.waitUntil(() -> isAtTargetState()),
@@ -273,11 +293,14 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
 
     public Command scoreEjectCommand(SuperstructureState stagingState, SuperstructureState ejectingState, 
-            SuperstructureState stowedState, Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
+            SuperstructureState stowedState, 
+            Supplier<Boolean> isNearTargetPose, Supplier<Boolean> isAtTargetPose, 
+            Supplier<Boolean> overrideNearPose, Supplier<Boolean> overrideAtPose) {
         return Commands.sequence(
+            Commands.waitUntil(() -> (isNearTargetPose.get() || overrideNearPose.get())),
             Commands.runOnce(() -> setState(stagingState),
                 elevator, arm, wrist, intake),
-            Commands.waitUntil(() -> (isAtTargetState() && isAtTargetPose.get()) || overrideLineUp.get()),
+            Commands.waitUntil(() -> (isAtTargetState() && isAtTargetPose.get()) || overrideAtPose.get()),
             Commands.run(() -> {
                 setState(ejectingState);
                 led.flashAllPixels(LedConstants.YELLOW, 5);
@@ -292,7 +315,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     // Temporary values
     public Command autoScoreCommand() {
         return Commands.sequence(
-            Commands.runOnce(() -> setState(SuperstructureConstants.STAGING_L1_STATE),
+            Commands.runOnce(() -> setState(SuperstructureConstants.STAGE_L1_STATE),
                 elevator, arm, wrist, intake),
             Commands.waitUntil(() -> isAtTargetState()),
             Commands.run(() -> {

@@ -214,17 +214,18 @@ public class RobotContainer {
         JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
 
-        // Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
-        Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.start).getAsBoolean();
+        Supplier<Boolean> overrideAtPose = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
+        Supplier<Boolean> overrideNearPose = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.start).getAsBoolean();
+        Supplier<Boolean> isNearAligned = () -> swerve.isNearAligned();
         Supplier<Boolean> isAligned = () -> swerve.isAligned();
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
-        down.whileTrue(superstructure.scoreCoralL1Command(isAligned, overrideLineUp));
-        right.whileTrue(superstructure.scoreCoralL2Command(isAligned, overrideLineUp));
-        left.whileTrue(superstructure.scoreCoralL3Command(isAligned, overrideLineUp));
-        up.whileTrue(superstructure.scoreCoralL4Command(isAligned, overrideLineUp));
-        triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isAligned, overrideLineUp));
-        triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAligned, overrideLineUp));
+        down.whileTrue(superstructure.scoreCoralL1Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        right.whileTrue(superstructure.scoreCoralL2Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        left.whileTrue(superstructure.scoreCoralL3Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        up.whileTrue(superstructure.scoreCoralL4Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
 
         b.whileTrue(superstructure.intakeCoralGroundCommand());
         a.whileTrue(superstructure.intakeAlgaeGroundCommand());
@@ -318,165 +319,9 @@ public class RobotContainer {
         return vision;
     }
 
-    public Command autoCommandLeftL1() {
-        return Commands.sequence(new FunctionalCommand(
-            () -> {
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
-                    swerve.resetPose(AutoConstants.BLUE_LEFT_INITIAL_POSE);
-                else swerve.resetPose(AutoConstants.RED_LEFT_INITIAL_POSE);
-            }, 
-            () -> {
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_J);
-                else swerve.driveToPoseAuto(PathSetpoints.RED_REEF_J);
-            }, 
-            interrupted -> {
-                autoRan = true;
-                swerve.nullTargetPose();
-                swerve.driveRobotRelative(new ChassisSpeeds());
-            }, 
-            () -> swerve.isAligned(),  
-            swerve), superstructure.scoreCoralL1Command(() -> true, () -> false)); 
-    }
-
-    public Command autoCommandCenterL1() {
-        return Commands.sequence(new FunctionalCommand(
-            () -> {
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
-                    swerve.resetPose(AutoConstants.BLUE_CENTER_INITIAL_POSE);
-                else swerve.resetPose(AutoConstants.RED_CENTER_INITIAL_POSE);
-            }, 
-            () -> {
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_G);
-                else swerve.driveToPoseAuto(PathSetpoints.RED_REEF_G);
-            }, 
-            interrupted -> {
-                autoRan = true;
-                swerve.nullTargetPose();
-                swerve.driveRobotRelative(new ChassisSpeeds());
-            },  
-            () -> swerve.isAligned(),  
-            swerve), superstructure.scoreCoralL1Command(() -> true, () -> false));
-    }
-
-    public Command autoCommandRightL1() {
-        return Commands.sequence(new FunctionalCommand(
-            () -> {
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
-                    swerve.resetPose(AutoConstants.BLUE_RIGHT_INITIAL_POSE);
-                else swerve.resetPose(AutoConstants.RED_RIGHT_INITIAL_POSE);
-            }, 
-            () -> {
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_E);
-                else swerve.driveToPoseAuto(PathSetpoints.RED_REEF_E);
-            }, 
-            interrupted -> {
-                autoRan = true;
-                swerve.nullTargetPose();
-                swerve.driveRobotRelative(new ChassisSpeeds());
-            },
-            () -> swerve.isAligned(),  
-            swerve), superstructure.scoreCoralL1Command(() -> true, () -> false));
-    }
-
-    public Command autoCommandLeftL4() {
-        return Commands.sequence(new FunctionalCommand(
-            () -> {
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
-                    swerve.resetPose(AutoConstants.BLUE_LEFT_INITIAL_POSE);
-                else swerve.resetPose(AutoConstants.RED_LEFT_INITIAL_POSE);
-            }, 
-            () -> {
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_J);
-                else swerve.driveToPoseAuto(PathSetpoints.RED_REEF_J);
-            }, 
-            interrupted -> {
-                autoRan = true;
-                swerve.nullTargetPose();
-                swerve.driveRobotRelative(new ChassisSpeeds());
-            },  
-            () -> swerve.isAligned(),  
-            swerve), superstructure.scoreCoralL4Command(() -> true, () -> false));
-    }
-
-    public Command autoCommandCenterL4() {
-        return Commands.sequence(
-            new FunctionalCommand(
-                () -> {
-                    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
-                        swerve.resetPose(AutoConstants.BLUE_CENTER_INITIAL_POSE);
-                    else swerve.resetPose(AutoConstants.RED_CENTER_INITIAL_POSE);
-                }, 
-                () -> {
-                    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                        swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_G);
-                    else swerve.driveToPoseAuto(PathSetpoints.RED_REEF_G);
-                }, 
-                interrupted -> {
-                    autoRan = true;
-                    swerve.nullTargetPose();
-                    swerve.driveRobotRelative(new ChassisSpeeds());
-                }, 
-                () -> swerve.isAligned(),  
-                swerve), 
-            Commands.run(() -> superstructure.scoreCoralL4Command(() -> true, () -> false)));
-    }
-
-    public Command autoCommandRightL4() {
-        return Commands.sequence(new FunctionalCommand(
-            () -> {
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue))
-                    swerve.resetPose(AutoConstants.BLUE_RIGHT_INITIAL_POSE);
-                else swerve.resetPose(AutoConstants.RED_RIGHT_INITIAL_POSE);
-            }, 
-            () -> {
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) 
-                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_E);
-                else swerve.driveToPoseAuto(PathSetpoints.RED_REEF_E);
-            }, 
-            interrupted -> {
-                autoRan = true;
-                swerve.nullTargetPose();
-                swerve.driveRobotRelative(new ChassisSpeeds());
-            }, 
-            () -> swerve.isAligned(),  
-            swerve), superstructure.scoreCoralL4Command(() -> true, () -> false));
-    }
-
+    // TODO: make autos
     public Command getAutoCommand() {
-        // if (autoLevelChooser.getSelected().equals(AutoLevel.L1)) {
-        //     if (autoSideChooser.getSelected().equals(AutoSide.Left)) return autoCommandLeftL1();
-        //     else if (autoSideChooser.getSelected().equals(AutoSide.Center)) return autoCommandCenterL1();
-        //     else if (autoSideChooser.getSelected().equals(AutoSide.Right)) return autoCommandRightL1();
-        // }
-        // else if (autoLevelChooser.getSelected().equals(AutoLevel.L4)) {
-        //     if (autoSideChooser.getSelected().equals(AutoSide.Left)) return autoCommandLeftL4();
-        //     else if (autoSideChooser.getSelected().equals(AutoSide.Center)) return autoCommandCenterL4();
-        //     else if (autoSideChooser.getSelected().equals(AutoSide.Right)) return autoCommandRightL4();
-        // }
-        // return autoCommandCenterL4();
-
-        final double speedX;
-
-        if (DriverStation.getAlliance().get().equals(Alliance.Blue)) speedX = -0.5;
-        else speedX = 0.5;
-
         return Commands.sequence(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_A));
-
-        // return Commands.sequence(
-        //     Commands.race(
-        //         swerve.driveFieldRelative(() -> new ChassisSpeeds(speedX, 0, 0)),
-        //         Commands.waitSeconds(3)
-        //     ),
-        //     Commands.race(
-        //         swerve.driveFieldRelative(() -> new ChassisSpeeds(0, 0, 0)),
-        //         Commands.waitSeconds(0.1)
-        //     ),
-        //     superstructure.autoScoreCommand()
-        // );
     }
 
 }
