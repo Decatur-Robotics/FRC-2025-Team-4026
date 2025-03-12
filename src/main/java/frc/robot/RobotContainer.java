@@ -216,8 +216,8 @@ public class RobotContainer {
 
         Supplier<Boolean> overrideAtPose = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
         Supplier<Boolean> overrideNearPose = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.start).getAsBoolean();
-        Supplier<Boolean> isNearAligned = () -> swerve.isNearAligned();
-        Supplier<Boolean> isAligned = () -> swerve.isAligned();
+        Supplier<Boolean> isNearAligned = () -> (swerve.isNearAligned() || Robot.isTestMode());
+        Supplier<Boolean> isAligned = () -> (swerve.isAligned() || Robot.isTestMode());
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
         down.whileTrue(superstructure.scoreCoralL1Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));

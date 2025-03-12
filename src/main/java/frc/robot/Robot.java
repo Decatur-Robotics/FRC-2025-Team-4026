@@ -166,4 +166,8 @@ public class Robot extends TimedRobot implements ILogSource, IModeChangeListener
 	{
 		instance.modeChangeListeners.add(modeChangeListener);
 	}
+
+	public static boolean isTestMode() {
+		return instance.isTest();
+	}
 }
