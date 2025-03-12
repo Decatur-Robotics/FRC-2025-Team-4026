@@ -467,21 +467,41 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public boolean isAtTargetPose() {
         if (targetPose == null) return false;
         
-        boolean isAtTargetX = Math.abs(translationalController.getError()) < SwerveConstants.TRANSLATIONAL_ERROR_MARGIN;
-        boolean isAtTargetRotation = Math.abs(rotationalController.getError()) < SwerveConstants.ROTATIONAL_ERROR_MARGIN;
+        boolean isAtTargetX = Math.abs(translationalController.getError()) < SwerveConstants.TRANSLATIONAL_ALIGNED_ERROR_MARGIN;
+        boolean isAtTargetRotation = Math.abs(rotationalController.getError()) < SwerveConstants.ROTATIONAL_ALIGNED_ERROR_MARGIN;
 
         return isAtTargetX && isAtTargetRotation;
+    }
+
+    public boolean isNearTargetPose() {
+        if (targetPose == null) return false;
+        
+        boolean isNearTargetX = Math.abs(translationalController.getError()) < SwerveConstants.TRANSLATIONAL_NEAR_ALIGNED_ERROR_MARGIN;
+        boolean isNearTargetRotation = Math.abs(rotationalController.getError()) < SwerveConstants.ROTATIONAL_NEAR_ALIGNED_ERROR_MARGIN;
+
+        return isNearTargetX && isNearTargetRotation;
     }
 
     public boolean isAligned() {
         boolean velocityAligned = true; 
 
         for (SwerveModuleState module : getState().ModuleStates) {
-            if (module.speedMetersPerSecond > SwerveConstants.VELOCITY_ERROR_MARGIN) 
+            if (module.speedMetersPerSecond > SwerveConstants.VELOCITY_ALIGNED_ERROR_MARGIN) 
                 velocityAligned = false;
         }
 
         return isAtTargetPose() && velocityAligned;
+    }
+
+    public boolean isNearAligned() {
+        boolean velocityNearAligned = true;
+
+        for (SwerveModuleState module : getState().ModuleStates) {
+            if (module.speedMetersPerSecond > SwerveConstants.VELOCITY_NEAR_ALIGNED_ERROR_MARGIN) 
+                velocityNearAligned = false;
+        }
+
+        return isNearTargetPose() && velocityNearAligned;
     }
 
     public Pose2d getTargetPose() {
