@@ -200,6 +200,7 @@ public class RobotContainer {
         Joystick joystick = new Joystick(1);
 
         JoystickButton start = new JoystickButton(joystick, LogitechControllerButtons.start);
+        JoystickButton home = new JoystickButton(joystick, LogitechControllerButtons.home);
 
         POVButton down = new POVButton(joystick, LogitechControllerButtons.down);
         POVButton up = new POVButton(joystick, LogitechControllerButtons.up);
@@ -262,7 +263,8 @@ public class RobotContainer {
         // // bumperLeft.onTrue(elevator.setPositionCommand(10));
         // // bumperRight.onTrue(elevator.setPositionCommand(40));
 
-        // start.onTrue(arm.zeroArmCommand());
+        // home.onTrue(arm.setZeroPositionCommand());
+        // home.onTrue(elevator.setZeroPositionCommand());
 
         // bumperLeft.whileTrue(arm.setVoltageCommand(1));
         // bumperRight.whileTrue(arm.setVoltageCommand(-1));

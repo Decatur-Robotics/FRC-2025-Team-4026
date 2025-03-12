@@ -135,6 +135,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         });
     }
 
+    public Command setZeroPositionCommand() {
+        return Commands.runOnce(() -> motorMain.setPosition(0));
+    }
+
     public Command setPositionCommand(double position) {
         return Commands.runOnce(() -> setPosition(position));
     }
