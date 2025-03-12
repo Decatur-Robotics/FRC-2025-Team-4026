@@ -34,7 +34,6 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.AutoConstants;
-import frc.robot.constants.ClawConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.LedConstants;
@@ -45,7 +44,6 @@ import frc.robot.constants.WristConstants;
 import frc.robot.core.LogitechControllerButtons;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -71,7 +69,6 @@ public class RobotContainer {
     private final ElevatorSubsystem elevator;
     private final ArmSubsystem arm;
     private final WristSubsystem wrist;
-    private final ClawSubsystem claw;
     private final IntakeSubsystem intake;
     private final LedSubsystem led;
     private final SuperstructureSubsystem superstructure;
@@ -120,10 +117,9 @@ public class RobotContainer {
         elevator = new ElevatorSubsystem();
         arm = new ArmSubsystem();
         wrist = new WristSubsystem();
-        claw = new ClawSubsystem();
         intake = new IntakeSubsystem();
         led = new LedSubsystem();
-        superstructure = new SuperstructureSubsystem(elevator, arm, wrist, claw, intake, led);
+        superstructure = new SuperstructureSubsystem(elevator, arm, wrist, intake, led);
         swerve = TunerConstants.createDrivetrain();
         vision = new VisionSubsystem(swerve);
 
