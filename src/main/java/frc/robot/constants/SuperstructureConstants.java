@@ -49,7 +49,7 @@ public class SuperstructureConstants {
         IntakeConstants.ALGAE_REST_VELOCITY);
 
     // Scoring states
-    public static final SuperstructureState MOVE_TO_L1_STATE = new SuperstructureState(
+    public static final SuperstructureState STAGING_L1_STATE = new SuperstructureState(
         ElevatorConstants.L1_POSITION, 
         ArmConstants.L1_POSITION, 
         WristConstants.PERPENDICULAR_CURRENT, 
@@ -61,7 +61,7 @@ public class SuperstructureConstants {
         WristConstants.PERPENDICULAR_CURRENT, 
         IntakeConstants.L1_EJECT_VELOCITY);
 
-    public static final SuperstructureState MOVE_TO_L2_STATE = new SuperstructureState(
+    public static final SuperstructureState STAGING_L2_STATE = new SuperstructureState(
         ElevatorConstants.MOVE_TO_L2_POSITION, 
         ArmConstants.MOVE_TO_L2_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
@@ -79,7 +79,7 @@ public class SuperstructureConstants {
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
-    public static final SuperstructureState MOVE_TO_L3_STATE = new SuperstructureState(
+    public static final SuperstructureState STAGING_L3_STATE = new SuperstructureState(
         ElevatorConstants.MOVE_TO_L3_POSITION, 
         ArmConstants.MOVE_TO_L3_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
@@ -97,7 +97,7 @@ public class SuperstructureConstants {
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
-    public static final SuperstructureState MOVE_TO_L4_STATE = new SuperstructureState(
+    public static final SuperstructureState STAGING_L4_STATE = new SuperstructureState(
         ElevatorConstants.MOVE_TO_L4_POSITION, 
         ArmConstants.MOVE_TO_L4_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
@@ -115,7 +115,7 @@ public class SuperstructureConstants {
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
-    public static final SuperstructureState MOVE_TO_PROCESSOR_STATE = new SuperstructureState(
+    public static final SuperstructureState STAGING_PROCESSOR_STATE = new SuperstructureState(
         ElevatorConstants.PROCESSOR_POSITION, 
         ArmConstants.PROCESSOR_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
@@ -127,7 +127,7 @@ public class SuperstructureConstants {
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.PROCESSOR_EJECT_VELOCITY);
 
-    public static final SuperstructureState MOVE_TO_NET_STATE = new SuperstructureState(
+    public static final SuperstructureState STAGING_NET_STATE = new SuperstructureState(
         ElevatorConstants.NET_POSITION, 
         ArmConstants.NET_POSITION, 
         WristConstants.PARALLEL_CURRENT, 

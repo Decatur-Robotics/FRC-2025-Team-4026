@@ -16,7 +16,6 @@ import frc.robot.constants.LedConstants;
 import frc.robot.constants.PathSetpoints;
 import frc.robot.constants.SuperstructureConstants;
 import frc.robot.util.SuperstructureState;
-import frc.robot.util.TeamColor;
 
 public class SuperstructureSubsystem extends SubsystemBase {
     
@@ -223,32 +222,32 @@ public class SuperstructureSubsystem extends SubsystemBase {
     // Scoring commands
 
     public Command scoreCoralL1Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
-        return scoreEjectCommand(SuperstructureConstants.MOVE_TO_L1_STATE, SuperstructureConstants.EJECT_L1_STATE,
+        return scoreEjectCommand(SuperstructureConstants.STAGING_L1_STATE, SuperstructureConstants.EJECT_L1_STATE,
             SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreCoralL2Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
-        return scorePlaceCommand(SuperstructureConstants.MOVE_TO_L2_STATE, SuperstructureConstants.PLACE_L2_STATE,
+        return scorePlaceCommand(SuperstructureConstants.STAGING_L2_STATE, SuperstructureConstants.PLACE_L2_STATE,
             SuperstructureConstants.DROP_L2_STATE, SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreCoralL3Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
-        return scorePlaceCommand(SuperstructureConstants.MOVE_TO_L3_STATE, SuperstructureConstants.PLACE_L3_STATE,
+        return scorePlaceCommand(SuperstructureConstants.STAGING_L3_STATE, SuperstructureConstants.PLACE_L3_STATE,
             SuperstructureConstants.DROP_L3_STATE, SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreCoralL4Command(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
-        return scorePlaceCommand(SuperstructureConstants.MOVE_TO_L4_STATE, SuperstructureConstants.PLACE_L4_STATE,
+        return scorePlaceCommand(SuperstructureConstants.STAGING_L4_STATE, SuperstructureConstants.PLACE_L4_STATE,
             SuperstructureConstants.DROP_L4_STATE, SuperstructureConstants.CORAL_STOWED_STATE, isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreAlgaeProcessorCommand(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
-        return scoreEjectCommand(SuperstructureConstants.MOVE_TO_PROCESSOR_STATE, SuperstructureConstants.EJECT_PROCESSOR_STATE,
+        return scoreEjectCommand(SuperstructureConstants.STAGING_PROCESSOR_STATE, SuperstructureConstants.EJECT_PROCESSOR_STATE,
             SuperstructureConstants.ALGAE_STOWED_STATE, isAtTargetPose, overrideLineUp);
     }
 
     public Command scoreAlgaeNetCommand(Supplier<Boolean> isAtTargetPose, Supplier<Boolean> overrideLineUp) {
-        return scoreEjectCommand(SuperstructureConstants.MOVE_TO_NET_STATE, SuperstructureConstants.EJECT_NET_STATE,
+        return scoreEjectCommand(SuperstructureConstants.STAGING_NET_STATE, SuperstructureConstants.EJECT_NET_STATE,
             SuperstructureConstants.ALGAE_STOWED_STATE, isAtTargetPose, overrideLineUp);
     }
 
@@ -293,7 +292,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     // Temporary values
     public Command autoScoreCommand() {
         return Commands.sequence(
-            Commands.runOnce(() -> setState(SuperstructureConstants.MOVE_TO_L1_STATE),
+            Commands.runOnce(() -> setState(SuperstructureConstants.STAGING_L1_STATE),
                 elevator, arm, wrist, intake),
             Commands.waitUntil(() -> isAtTargetState()),
             Commands.run(() -> {
