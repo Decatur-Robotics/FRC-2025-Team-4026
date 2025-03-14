@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -80,14 +81,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         5, 0, 0);
 
     public enum PathLocation {
-        NONE,
-        REEF,
-        PROCESSOR,
-        NET,
-        HUMAN_PLAYER
+        None(List.of()),
+        Reef(List.of(6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22)),
+        Processor(List.of(3, 16)),
+        Net(List.of(4, 5, 14, 15)),
+        HumanPlayer(List.of(1, 2, 12, 13));
+
+        private final List<Integer> apriltagIds;
+
+        private PathLocation(List<Integer> apriltagIds) {
+            this.apriltagIds = apriltagIds;
+        }
+
+        public List<Integer> getApriltagIds() {
+            return this.apriltagIds;
+        }
     }
 
-    private PathLocation targetPoseLocation = PathLocation.NONE;
+    private PathLocation targetPoseLocation = PathLocation.None;
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -413,7 +424,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return Commands.run(() -> driveToPose(speeds, targetPose, targetPoseLocation), this)
             .finallyDo(() -> {
                 this.targetPose = null;
-                this.targetPoseLocation = PathLocation.NONE;
+                this.targetPoseLocation = PathLocation.None;
             });
     }
 
@@ -423,7 +434,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 () -> targetPose, targetPoseLocation), this)
             .finallyDo(() -> {
                 this.targetPose = null;
-                this.targetPoseLocation = PathLocation.NONE;
+                this.targetPoseLocation = PathLocation.None;
             });
     }
 
@@ -462,13 +473,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Command driveToClosestBranch(Supplier<ChassisSpeeds> speeds) {
         Supplier<Pose2d> pose = () -> getClosestPoseFromArray(PathSetpoints.CORAL_SCORING_POSES);
 
-        return driveToPoseTeleop(speeds, pose, PathLocation.REEF);
+        return driveToPoseTeleop(speeds, pose, PathLocation.Reef);
     }
 
     public Command driveToClosestReefAlgae(Supplier<ChassisSpeeds> speeds) {
         Supplier<Pose2d> pose = () -> getClosestPoseFromArray(PathSetpoints.REEF_ALGAE_POSES);
         
-        return driveToPoseTeleop(speeds, pose, PathLocation.REEF);
+        return driveToPoseTeleop(speeds, pose, PathLocation.Reef);
     }
 
     public Command driveToProcessor(Supplier<ChassisSpeeds> speeds) {
@@ -477,7 +488,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return PathSetpoints.RED_PROCESSOR;
         };
 
-        return driveToPoseTeleop(speeds, pose, PathLocation.PROCESSOR);
+        return driveToPoseTeleop(speeds, pose, PathLocation.Processor);
     }
 
     public Command driveToNet(Supplier<ChassisSpeeds> speeds) {
@@ -486,7 +497,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return PathSetpoints.RED_NET;
         };
         
-        return driveToPoseTeleop(speeds, pose, PathLocation.NET);
+        return driveToPoseTeleop(speeds, pose, PathLocation.Net);
     }
 
     public boolean isAtTargetPose() {

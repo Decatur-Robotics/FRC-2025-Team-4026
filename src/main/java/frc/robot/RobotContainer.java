@@ -316,7 +316,7 @@ public class RobotContainer {
 
     // TODO: make autos
     public Command getAutoCommand() {
-        return Commands.sequence(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_A, PathLocation.REEF));
+        return Commands.sequence(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_A, PathLocation.Reef));
     }
 
 }

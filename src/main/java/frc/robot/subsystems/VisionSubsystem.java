@@ -10,7 +10,6 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -22,6 +21,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.VisionConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain.PathLocation;
 
 public class VisionSubsystem extends SubsystemBase {
 
@@ -70,15 +70,24 @@ public class VisionSubsystem extends SubsystemBase {
         Matrix<N3, N1> standardDeviations = VisionConstants.SINGLE_TAG_STANDARD_DEVIATIONS;
 
         for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
-            // TODO: add logic to tell if we are looking for a specific tag and what tag
-            if (false) {
+            
+
+            if (!swerve.getTargetPoseLocation().equals(PathLocation.None)) {
                 List<PhotonTrackedTarget> targets = result.getTargets();
 
+                List<PhotonTrackedTarget> desiredTargets = List.of();
+
+                List<Integer> apriltagIds = swerve.getTargetPoseLocation().getApriltagIds();
+
                 for (PhotonTrackedTarget target : targets) {
-                    if (target.getFiducialId() == 1) {
-                        result = new PhotonPipelineResult(result.metadata, List.of(target), Optional.empty());
+                    for (int i : apriltagIds) {
+                        if (target.getFiducialId() == i) {
+                            desiredTargets.add(target);
+                        }
                     }
                 }
+
+                result = new PhotonPipelineResult(result.metadata, desiredTargets, Optional.empty());
             }
 
             poseEstimate = poseEstimator.update(result);
