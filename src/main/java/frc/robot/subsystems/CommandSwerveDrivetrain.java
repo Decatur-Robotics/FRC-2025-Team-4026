@@ -332,7 +332,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * @return Command to run
      */
     public Command driveFieldRelative(Supplier<ChassisSpeeds> speeds) {
-        return Commands.run(() -> driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), getState().RawHeading.plus(getOperatorForwardDirection()))), this);
+        return Commands.run(() -> driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), getState().Pose.getRotation())), this);
     }
 
     /**
@@ -460,13 +460,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Rotation2d travelRotation = this.targetPose.getTranslation().minus(getState().Pose.getTranslation()).getAngle();
 
             this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(
-                newSpeeds, getState().RawHeading.minus(travelRotation)));
+                newSpeeds, getState().Pose.getRotation().minus(travelRotation)));
         }
         else {
             ChassisSpeeds newSpeeds = new ChassisSpeeds(speeds.get().vxMetersPerSecond, speeds.get().vyMetersPerSecond, targetRotation);
 
             this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(
-                newSpeeds, getState().RawHeading.plus(getOperatorForwardDirection())));
+                newSpeeds, getState().Pose.getRotation().plus(getOperatorForwardDirection())));
         }
     }
 
