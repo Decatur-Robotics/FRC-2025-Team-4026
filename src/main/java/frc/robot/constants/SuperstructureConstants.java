@@ -88,7 +88,7 @@ public class SuperstructureConstants {
         ElevatorConstants.SCORE_L2_POSITION, 
         ArmConstants.STOWED_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
-        IntakeConstants.CORAL_REST_VELOCITY);
+        IntakeConstants.BRANCH_EJECT_VELOCITY);
 
     // L3 scoring states
 
@@ -114,7 +114,7 @@ public class SuperstructureConstants {
         ElevatorConstants.SCORE_L3_POSITION, 
         ArmConstants.STOWED_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
-        IntakeConstants.CORAL_REST_VELOCITY);
+        IntakeConstants.BRANCH_EJECT_VELOCITY);
 
     // L4 scoring states
 
@@ -140,7 +140,7 @@ public class SuperstructureConstants {
         ElevatorConstants.SCORE_L4_POSITION, 
         ArmConstants.STOWED_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
-        IntakeConstants.CORAL_REST_VELOCITY);
+        IntakeConstants.BRANCH_EJECT_VELOCITY);
 
     // Processor scoring states
 
