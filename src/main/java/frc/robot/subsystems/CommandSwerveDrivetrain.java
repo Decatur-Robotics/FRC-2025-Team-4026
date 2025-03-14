@@ -79,6 +79,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private PIDController rotationalController = new PIDController(
         5, 0, 0);
 
+    public enum PathLocation {
+        NONE,
+        REEF,
+        PROCESSOR,
+        NET,
+        HUMAN_PLAYER
+    }
+
+    private PathLocation targetPoseLocation = PathLocation.NONE;
+
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
     /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
@@ -376,6 +386,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         });
     }
 
+    public PathLocation getTargetPoseLocation() {
+        return targetPoseLocation;
+    }
+
     public Pose2d getClosestPoseFromArray(Pose2d[] poses) {
         double distanceToClosestPose;
         Pose2d closestPose;
@@ -394,18 +408,29 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return closestPose;
     }
 
-    public Command driveToPoseTeleop(Supplier<ChassisSpeeds> speeds, Supplier<Pose2d> targetPose) {
-        return Commands.run(() -> driveToPose(speeds, targetPose), this)
-            .finallyDo(() -> this.targetPose = null);
+    public Command driveToPoseTeleop(Supplier<ChassisSpeeds> speeds, Supplier<Pose2d> targetPose,
+            PathLocation targetPoseLocation) {
+        return Commands.run(() -> driveToPose(speeds, targetPose, targetPoseLocation), this)
+            .finallyDo(() -> {
+                this.targetPose = null;
+                this.targetPoseLocation = PathLocation.NONE;
+            });
     }
 
-    public Command driveToPoseAuto(Pose2d targetPose) {
-        return Commands.run(() -> driveToPose(() -> new ChassisSpeeds(0, 0, 0), () -> targetPose), this)
-            .finallyDo(() -> this.targetPose = null);
+    public Command driveToPoseAuto(Pose2d targetPose,
+            PathLocation targetPoseLocation) {
+        return Commands.run(() -> driveToPose(() -> new ChassisSpeeds(0, 0, 0), 
+                () -> targetPose, targetPoseLocation), this)
+            .finallyDo(() -> {
+                this.targetPose = null;
+                this.targetPoseLocation = PathLocation.NONE;
+            });
     }
 
-    public void driveToPose(Supplier<ChassisSpeeds> speeds, Supplier<Pose2d> targetPose) {
+    public void driveToPose(Supplier<ChassisSpeeds> speeds, Supplier<Pose2d> targetPose,
+            PathLocation targetPoseLocation) {
         this.targetPose = targetPose.get();
+        this.targetPoseLocation = targetPoseLocation;
 
         double targetTranslation = speeds.get().vxMetersPerSecond;
         double targetRotation = speeds.get().omegaRadiansPerSecond;
@@ -437,13 +462,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Command driveToClosestBranch(Supplier<ChassisSpeeds> speeds) {
         Supplier<Pose2d> pose = () -> getClosestPoseFromArray(PathSetpoints.CORAL_SCORING_POSES);
 
-        return driveToPoseTeleop(speeds, pose);
+        return driveToPoseTeleop(speeds, pose, PathLocation.REEF);
     }
 
     public Command driveToClosestReefAlgae(Supplier<ChassisSpeeds> speeds) {
         Supplier<Pose2d> pose = () -> getClosestPoseFromArray(PathSetpoints.REEF_ALGAE_POSES);
         
-        return driveToPoseTeleop(speeds, pose);
+        return driveToPoseTeleop(speeds, pose, PathLocation.REEF);
     }
 
     public Command driveToProcessor(Supplier<ChassisSpeeds> speeds) {
@@ -452,7 +477,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return PathSetpoints.RED_PROCESSOR;
         };
 
-        return driveToPoseTeleop(speeds, pose);
+        return driveToPoseTeleop(speeds, pose, PathLocation.PROCESSOR);
     }
 
     public Command driveToNet(Supplier<ChassisSpeeds> speeds) {
@@ -461,7 +486,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             return PathSetpoints.RED_NET;
         };
         
-        return driveToPoseTeleop(speeds, pose);
+        return driveToPoseTeleop(speeds, pose, PathLocation.NET);
     }
 
     public boolean isAtTargetPose() {

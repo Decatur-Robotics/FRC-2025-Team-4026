@@ -52,6 +52,7 @@ import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.SuperstructureSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.WristSubsystem;
+import frc.robot.subsystems.CommandSwerveDrivetrain.PathLocation;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -315,7 +316,7 @@ public class RobotContainer {
 
     // TODO: make autos
     public Command getAutoCommand() {
-        return Commands.sequence(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_A));
+        return Commands.sequence(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_A, PathLocation.REEF));
     }
 
 }
