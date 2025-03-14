@@ -12,11 +12,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 public class IntakeConstants {
 
     public static final double CORAL_REST_VELOCITY = 0;
-    public static final double ALGAE_REST_VELOCITY = -10;
-    public static final double INTAKE_VELOCITY = -200;
-    public static final double L1_EJECT_VELOCITY = 50;
-    public static final double PROCESSOR_EJECT_VELOCITY = 200;
-    public static final double NET_EJECT_VELOCITY = 80;
+    public static final double ALGAE_REST_VELOCITY = 10;
+    public static final double INTAKE_VELOCITY = 200;
+    public static final double L1_EJECT_VELOCITY = -50;
+    public static final double PROCESSOR_EJECT_VELOCITY = -200;
+    public static final double NET_EJECT_VELOCITY = -80;
 
     public static final double STALL_DEBOUNCE_TIME = 0.25;
     public static final int STALL_CURRENT = 15;
@@ -29,7 +29,7 @@ public class IntakeConstants {
         .withKI(0)
         .withKD(0)
         .withKS(0.23) // 0.23
-        .withKV(0.0706) // 0.0706
+        .withKV(0.0658) // 0.0658
         .withKA(0.002); // 0.002
     public static final CommutationConfigs COMMUTATION_CONFIGS = new CommutationConfigs()
         .withMotorArrangement(MotorArrangementValue.NEO550_JST);

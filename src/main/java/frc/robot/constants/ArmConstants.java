@@ -32,11 +32,11 @@ public class ArmConstants {
 	public static final double LEVEL_POSITION = 0;
 
     /** The encoder value when the arm is parallel to the floor */
-    public static final double THROUGH_BORE_ENCODER_ZERO_OFFSET = 0.41;
+    public static final double THROUGH_BORE_ENCODER_ZERO_OFFSET = 0.152;
 
     public static final double TALON_ENCODER_TO_ROTATIONS_RATIO = 0.015625; // how many motor encoder rotations it takes to complete one rotation of the mechanism
 
-    public static final double KG = 0.475; // 0.375
+    public static final double KG = 0.32912; // 0.375
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)
@@ -46,7 +46,7 @@ public class ArmConstants {
         .withKI(0)
         .withKD(0)
         .withKS(0.105) // 0.105
-        .withKV(0.1326) // 0.1376
+        .withKV(0.1376) // 0.1376
         .withKA(0.01); // 0.01
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(50)
