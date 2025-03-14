@@ -243,20 +243,15 @@ public class RobotContainer {
          * Testing buttons
          */
 
-        // GenericEntry elevatorVoltage = shuffleboardTab.add("Elevator Voltage", 0)
-        //     .withWidget(BuiltInWidgets.kNumberSlider)
-        //     .withProperties(Map.of("min", -1, "max", 1))
-        //     .getEntry();
+        GenericEntry testingVoltage = shuffleboardTab.add("Testing Voltage", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("min", 0, "max", 2))
+            .getEntry();
             
-        // triggerLeft.whileTrue(elevator.tuneVoltageCommand(() -> elevatorVoltage.getDouble(0)));
+        // triggerLeft.whileTrue(elevator.tuneVoltageCommand(() -> testingVoltage.getDouble(0)));
 
-        // GenericEntry armVoltage = shuffleboardTab.add("Arm Voltage", 0)
-        //     .withWidget(BuiltInWidgets.kNumberSlider)
-        //     .withProperties(Map.of("min", 0, "max", 1.5))
-        //     .getEntry();
-
-        // triggerLeft.whileTrue(arm.tuneVoltageCommand(() -> armVoltage.getDouble(0)));
-        // triggerRight.whileTrue(arm.tuneVoltageCommand(() -> -armVoltage.getDouble(0)));
+        // triggerLeft.whileTrue(arm.tuneVoltageCommand(() -> testingVoltage.getDouble(0)));
+        // triggerRight.whileTrue(arm.tuneVoltageCommand(() -> -testingVoltage.getDouble(0)));
 
         // triggerLeft.whileTrue(elevator.setVoltageCommand(2));
         // triggerRight.whileTrue(elevator.setVoltageCommand(-1));
@@ -274,14 +269,11 @@ public class RobotContainer {
         // triggerLeft.whileTrue(wrist.setCurrentCommand(WristConstants.PARALLEL_CURRENT));
         // triggerRight.whileTrue(wrist.setCurrentCommand(WristConstants.PERPENDICULAR_CURRENT));
 
-        // a.whileTrue(claw.setCurrentCommand(ClawConstants.CLOSED_CURRENT));
-        // triggerRight.whileTrue(claw.setCurrentCommand(ClawConstants.OPEN_CURRENT));
-
-        // triggerLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.INTAKE_VELOCITY));
-        // triggerRight.whileTrue(intake.setVelocityCommand(IntakeConstants.L1_EJECT_VELOCITY));
+        // triggerLeft.whileTrue(intake.setVoltageCommand(0.3));
+        // triggerRight.whileTrue(intake.setVoltageCommand(0.25));
         // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
-        // triggerLeft.whileTrue(intake.setVoltageCommand(0.23));
+        // bumperLeft.whileTrue(intake.setVoltageCommand(testingVoltage.getDouble(0)));
 
         // triggerLeft.whileTrue(climber.setVoltageCommand(6));
         // triggerRight.whileTrue(climber.setVoltageCommand(-6));

@@ -72,8 +72,8 @@ public class IntakeSubsystem extends SubsystemBase {
         tab.addDouble("Actual Intake Velocity", () -> getVelocity());
         tab.addDouble("Filtered Intake Current", () -> filteredCurrentLeft);
         tab.addDouble("Target Intake Voltage", () -> voltage);
-        tab.addDouble("Actual Intake Voltage", () -> motorRight.getMotorVoltage().getValueAsDouble());
-        tab.addDouble("Intake Current", () -> motorRight.getStatorCurrent().getValueAsDouble());
+        tab.addDouble("Actual Intake Voltage", () -> motorLeft.getMotorVoltage().getValueAsDouble());
+        tab.addDouble("Intake Current", () -> motorLeft.getStatorCurrent().getValueAsDouble());
     }
 
     @Override

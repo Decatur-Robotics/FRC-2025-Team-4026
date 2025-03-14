@@ -2,7 +2,6 @@ package frc.robot.constants;
 
 public class Ports {
 
-
     public static final int ARM_MOTOR = 22;
 
     public static final int ELEVATOR_MOTOR_LEFT = 18;

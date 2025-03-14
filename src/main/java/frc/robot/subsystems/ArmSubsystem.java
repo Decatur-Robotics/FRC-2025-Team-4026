@@ -155,9 +155,9 @@ public class ArmSubsystem extends SubsystemBase {
 	private final SysIdRoutine sysIdRoutine =
 		new SysIdRoutine(
 			new SysIdRoutine.Config(
-				Volts.of(1).per(Second), // Quasistatic
-				Volts.of(4), // Dynamic
-				Seconds.of(10), // Timeout
+				Volts.of(0.1).per(Second), // Quasistatic
+				Volts.of(0.5), // Dynamic
+				Seconds.of(20), // Timeout
 				(state) -> SignalLogger.writeString("state", state.toString())
 			),
 			new SysIdRoutine.Mechanism(

@@ -67,7 +67,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         motorFollower.setControl(new Follower(motorMain.getDeviceID(), true));
 
         positionRequest = new MotionMagicVoltage(position).withEnableFOC(true);
-        motorMain.setControl(positionRequest);
+        // motorMain.setControl(positionRequest);
 
         voltageRequest = new VoltageOut(voltage).withEnableFOC(true);
         velocityRequest = new VelocityVoltage(0).withEnableFOC(true);
@@ -103,7 +103,7 @@ public class ElevatorSubsystem extends SubsystemBase {
  
     public void setPosition(double position) {
         this.position = position;
-        motorMain.setControl(positionRequest.withPosition(position));
+        // motorMain.setControl(positionRequest.withPosition(position));
     }
 
     public double getPosition() {
