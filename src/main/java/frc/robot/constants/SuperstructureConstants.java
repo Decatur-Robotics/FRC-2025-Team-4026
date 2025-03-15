@@ -69,7 +69,7 @@ public class SuperstructureConstants {
     public static final SuperstructureState TRAVEL_L2_STATE = new SuperstructureState(
         ElevatorConstants.STAGE_L2_POSITION, 
         ArmConstants.STOWED_POSITION, 
-        WristConstants.PARALLEL_CURRENT, 
+        WristConstants.PERPENDICULAR_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState STAGE_L2_STATE = new SuperstructureState(
@@ -85,7 +85,7 @@ public class SuperstructureConstants {
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState RETRACT_L2_STATE = new SuperstructureState(
-        ElevatorConstants.SCORE_L2_POSITION, 
+        ElevatorConstants.RETRACT_L2_POSITION, 
         ArmConstants.STOWED_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.BRANCH_EJECT_VELOCITY);
@@ -95,7 +95,7 @@ public class SuperstructureConstants {
     public static final SuperstructureState TRAVEL_L3_STATE = new SuperstructureState(
         ElevatorConstants.STAGE_L3_POSITION, 
         ArmConstants.STOWED_POSITION, 
-        WristConstants.PARALLEL_CURRENT, 
+        WristConstants.PERPENDICULAR_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState STAGE_L3_STATE = new SuperstructureState(
@@ -111,7 +111,7 @@ public class SuperstructureConstants {
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState RETRACT_L3_STATE = new SuperstructureState(
-        ElevatorConstants.SCORE_L3_POSITION, 
+        ElevatorConstants.RETRACT_L3_POSITION, 
         ArmConstants.STOWED_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.BRANCH_EJECT_VELOCITY);
@@ -121,7 +121,7 @@ public class SuperstructureConstants {
     public static final SuperstructureState TRAVEL_L4_STATE = new SuperstructureState(
         ElevatorConstants.STAGE_L4_POSITION, 
         ArmConstants.STOWED_POSITION, 
-        WristConstants.PARALLEL_CURRENT, 
+        WristConstants.PERPENDICULAR_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState STAGE_L4_STATE = new SuperstructureState(
@@ -137,7 +137,7 @@ public class SuperstructureConstants {
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState RETRACT_L4_STATE = new SuperstructureState(
-        ElevatorConstants.SCORE_L4_POSITION, 
+        ElevatorConstants.RETRACT_L4_POSITION, 
         ArmConstants.STOWED_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.BRANCH_EJECT_VELOCITY);
@@ -171,7 +171,7 @@ public class SuperstructureConstants {
         IntakeConstants.NET_EJECT_VELOCITY);
 
     // Error margins
-    public static final double ELEVATOR_ERROR_MARGIN = 2;
+    public static final double ELEVATOR_ERROR_MARGIN = 1;
     public static final double ARM_ERROR_MARGIN = 2;
     public static final double WRIST_ERROR_MARGIN = 0;
     public static final double CLAW_ERROR_MARGIN = 0;
