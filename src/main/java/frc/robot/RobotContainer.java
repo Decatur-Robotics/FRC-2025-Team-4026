@@ -169,7 +169,7 @@ public class RobotContainer {
         Supplier<ChassisSpeeds> desiredChassisSpeeds = () -> { 
             double velocityX = -joystick.getY() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
             double velocityY = -joystick.getX() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
-            double velocityAngular = joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
+            double velocityAngular = -joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
 
             if (Math.abs(velocityX) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityX = 0;
             if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityY = 0;
@@ -201,7 +201,7 @@ public class RobotContainer {
         Joystick joystick = new Joystick(1);
 
         JoystickButton start = new JoystickButton(joystick, LogitechControllerButtons.start);
-        JoystickButton home = new JoystickButton(joystick, LogitechControllerButtons.home);
+        JoystickButton home = new JoystickButton(joystick, LogitechControllerButtons.back);
 
         POVButton down = new POVButton(joystick, LogitechControllerButtons.down);
         POVButton up = new POVButton(joystick, LogitechControllerButtons.up);
@@ -222,17 +222,17 @@ public class RobotContainer {
         Supplier<Boolean> isAligned = () -> (swerve.isAligned() || Robot.isTestMode());
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
-        down.whileTrue(superstructure.scoreCoralL1Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
-        right.whileTrue(superstructure.scoreCoralL2Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
-        left.whileTrue(superstructure.scoreCoralL3Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
-        up.whileTrue(superstructure.scoreCoralL4Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
-        triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
-        triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        // down.whileTrue(superstructure.scoreCoralL1Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        // right.whileTrue(superstructure.scoreCoralL2Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        // left.whileTrue(superstructure.scoreCoralL3Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        // up.whileTrue(superstructure.scoreCoralL4Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        // triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        // triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
 
-        b.whileTrue(superstructure.intakeCoralGroundCommand());
-        a.whileTrue(superstructure.intakeAlgaeGroundCommand());
-        x.whileTrue(superstructure.intakeAlgaeReefLowCommand());
-        y.whileTrue(superstructure.intakeAlgaeReefHighCommand());
+        // b.whileTrue(superstructure.intakeCoralGroundCommand());
+        // a.whileTrue(superstructure.intakeAlgaeGroundCommand());
+        // x.whileTrue(superstructure.intakeAlgaeReefLowCommand());
+        // y.whileTrue(superstructure.intakeAlgaeReefHighCommand());
 
         // bumperRight.whileTrue(climber.climbCommand());
         // bumperLeft.whileTrue(climber.setVoltageCommand(-8));

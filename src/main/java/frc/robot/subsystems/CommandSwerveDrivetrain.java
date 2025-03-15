@@ -332,7 +332,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * @return Command to run
      */
     public Command driveFieldRelative(Supplier<ChassisSpeeds> speeds) {
-        return Commands.run(() -> driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), getState().Pose.getRotation())), this);
+        return Commands.run(() -> driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), getState().Pose.getRotation().plus(getOperatorForwardDirection()))), this);
     }
 
     /**

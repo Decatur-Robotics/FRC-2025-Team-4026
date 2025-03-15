@@ -10,7 +10,7 @@ public class LogitechControllerButtons
 	public static final int bumperRight = 6;
 	public static final int triggerLeft = 7;
 	public static final int triggerRight = 8;
-	public static final int home = 9;
+	public static final int back = 9;
 	public static final int start = 10;
 
 	public static final int up = 0;
