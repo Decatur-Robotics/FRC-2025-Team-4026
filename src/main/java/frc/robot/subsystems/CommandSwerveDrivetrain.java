@@ -325,14 +325,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         posePublisher.set(getState().Pose);
     }
 
-/**
+    /**
      * Returns a command that applies specified a swerve setpoint from specified field relative chassis speeds to this swerve drivetrain.
      * 
      * @param speeds Function returning the field relative chassis speeds to apply
      * @return Command to run
      */
-    public Command driveFieldRelative(Supplier<ChassisSpeeds> speeds) {
+    public Command driveFieldRelativeCommand(Supplier<ChassisSpeeds> speeds) {
         return Commands.run(() -> driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), getState().Pose.getRotation().plus(getOperatorForwardDirection()))), this);
+    }
+
+    /**
+     * Returns a command that applies specified a swerve setpoint from specified field relative chassis speeds to this swerve drivetrain.
+     * 
+     * @param speeds Function returning the field relative chassis speeds to apply
+     * @return Command to run
+     */
+    public Command driveRobotRelativeCommand(Supplier<ChassisSpeeds> speeds) {
+        return Commands.run(() -> driveRobotRelative(speeds.get()), this);
     }
 
     /**

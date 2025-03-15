@@ -159,8 +159,10 @@ public class RobotContainer {
     private void configurePrimaryBindings() {
         Joystick joystick = new Joystick(0);
 
-        JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a);
-        JoystickButton b = new JoystickButton(joystick, LogitechControllerButtons.b);
+        JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a); 
+        JoystickButton b = new JoystickButton(joystick, LogitechControllerButtons.b); // scoring at pose override
+        JoystickButton x = new JoystickButton(joystick, LogitechControllerButtons.x);
+        JoystickButton y = new JoystickButton(joystick, LogitechControllerButtons.y);
         JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
         JoystickButton bumperLeft = new JoystickButton(joystick, LogitechControllerButtons.bumperLeft);
@@ -178,20 +180,20 @@ public class RobotContainer {
             return new ChassisSpeeds(velocityX, velocityY, velocityAngular);
         };
 
-        swerve.setDefaultCommand(swerve.driveFieldRelative(desiredChassisSpeeds));
+        // Default field relative drive command
+        swerve.setDefaultCommand(swerve.driveFieldRelativeCommand(desiredChassisSpeeds));
 
+        // Drive to pose commands
         triggerLeft.whileTrue(swerve.driveToNet(desiredChassisSpeeds));
         triggerRight.whileTrue(swerve.driveToClosestBranch(desiredChassisSpeeds));
         bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
         bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
 
-        // triggerLeft.onFalse(swerve.nullTargetPose());
-        // triggerRight.onFalse(swerve.nullTargetPose());
-        // bumperLeft.onFalse(swerve.nullTargetPose());
-        // bumperRight.onFalse(swerve.nullTargetPose());
+        // Robot relative drive command
+        a.whileTrue(swerve.driveRobotRelativeCommand(desiredChassisSpeeds));
 
         // Reset heading
-        a.onTrue(swerve.runOnce(() -> swerve.resetRotation(swerve.getOperatorForwardDirection())));
+        y.onTrue(swerve.runOnce(() -> swerve.resetRotation(swerve.getOperatorForwardDirection())));
 
         swerve.configureShuffleboard(desiredChassisSpeeds);
 
@@ -216,7 +218,7 @@ public class RobotContainer {
         JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
 
-        Supplier<Boolean> overrideAtPose = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
+        Supplier<Boolean> overrideAtPose = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.b).getAsBoolean();
         Supplier<Boolean> overrideNearPose = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.start).getAsBoolean();
         Supplier<Boolean> isNearAligned = () -> (swerve.isNearAligned() || Robot.isTestMode());
         Supplier<Boolean> isAligned = () -> (swerve.isAligned() || Robot.isTestMode());
