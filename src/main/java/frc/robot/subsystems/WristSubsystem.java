@@ -40,7 +40,7 @@ public class WristSubsystem extends SubsystemBase {
         current = 0; 
 
         controlRequest = new TorqueCurrentFOC(current);
-        // motor.setControl(controlRequest.withOutput(current));
+        motor.setControl(controlRequest.withOutput(current));
 
         velocityFilter = LinearFilter.movingAverage(10);
 

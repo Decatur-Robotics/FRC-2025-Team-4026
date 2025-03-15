@@ -14,7 +14,7 @@ public class ArmConstants {
     public static final double STOWED_POSITION = -0.5;
 
     // Intaking positions
-    public static final double CORAL_GROUND_INTAKING_POSITION = -22;
+    public static final double CORAL_GROUND_INTAKING_POSITION = -23;
     public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = -0.5;
     public static final double ALGAE_GROUND_INTAKING_POSITION = -15.7;
     public static final double ALGAE_LOW_REEF_INTAKING_POSITION = -9.85;

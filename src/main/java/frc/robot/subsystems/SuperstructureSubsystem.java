@@ -67,8 +67,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 isArmAtTargetPosition();
                 
                 // &&
-                // isWristAtTargetPosition() &&
-                // isClawAtTargetPosition();
+                // isWristAtTargetPosition() &&;
     }
 
     public boolean isElevatorAtTargetPosition() {
@@ -274,7 +273,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Commands.waitUntil(() -> (isNearTargetPose.get() || overrideNearPose.get())),
             Commands.runOnce(() -> setState(travelState),
                 elevator, arm, wrist, intake),
-            Commands.waitUntil(() -> (isElevatorAtTargetPosition() || overrideAtPose.get())),
+            Commands.waitUntil(() -> ((isElevatorAtTargetPosition() && isAtTargetPose.get()) || overrideAtPose.get())),
             Commands.runOnce(() -> setState(stagingState),
                 elevator, arm, wrist, intake),
             Commands.waitUntil(() -> ((isAtTargetState() && isAtTargetPose.get()) || overrideAtPose.get())),

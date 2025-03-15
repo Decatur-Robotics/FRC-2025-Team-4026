@@ -7,10 +7,10 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class WristConstants {
 
-    public static final double PARALLEL_CURRENT = 0; // -10;
-    public static final double REDUCED_PARALLEL_CURRENT = 0; // -10;
-    public static final double PERPENDICULAR_CURRENT = 0; // 10;
-    public static final double REDUCED_PERPENDICULAR_CURRENT = 0; // 10;
+    public static final double PARALLEL_CURRENT = -20;
+    public static final double REDUCED_PARALLEL_CURRENT = -20;
+    public static final double PERPENDICULAR_CURRENT = 20;
+    public static final double REDUCED_PERPENDICULAR_CURRENT = 20;
 
     public static final double MAX_SLAMMED_VELOCITY = 2;
 
@@ -18,7 +18,7 @@ public class WristConstants {
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)
-        .withStatorCurrentLimit(10);
+        .withStatorCurrentLimit(20);
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()
         .withNeutralMode(NeutralModeValue.Brake);
 

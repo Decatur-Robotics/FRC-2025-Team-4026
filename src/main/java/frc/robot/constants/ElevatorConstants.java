@@ -28,9 +28,9 @@ public final class ElevatorConstants {
     public static final double STAGE_L3_POSITION = 29.18;
     public static final double SCORE_L3_POSITION = 22.18;
     public static final double RETRACT_L3_POSITION = 19.18;
-    public static final double STAGE_L4_POSITION = 54;
-    public static final double SCORE_L4_POSITION = 50;
-    public static final double RETRACT_L4_POSITION = 46;
+    public static final double STAGE_L4_POSITION = 54.5;
+    public static final double SCORE_L4_POSITION = 50.5;
+    public static final double RETRACT_L4_POSITION = 46.5;
     public static final double PROCESSOR_POSITION = 0;
     public static final double NET_POSITION = 54;
 
