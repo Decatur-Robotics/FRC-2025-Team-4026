@@ -10,21 +10,29 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class ArmConstants {
 
+    public static final double ZEROING_VOLTAGE = 1.5;
+
+    public static final double STALL_DEBOUNCE_TIME = 0.3;
+    public static final double STALL_CURRENT = 50;
+
     // Stowed position
-    public static final double STOWED_POSITION = -0.5;
+    public static final double STOWED_POSITION = -3; // -2 is pretty much all the way in
 
     // Intaking positions
-    public static final double CORAL_GROUND_INTAKING_POSITION = -23;
-    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = -0.5;
-    public static final double ALGAE_GROUND_INTAKING_POSITION = -15.7;
-    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = -9.85;
+    public static final double CORAL_GROUND_INTAKING_POSITION = -26;
+    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = -3.5;
+    public static final double ALGAE_GROUND_INTAKING_POSITION = -18.2;
+    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = -12.4;
     public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = ALGAE_LOW_REEF_INTAKING_POSITION;
 
     // Scoring positions
-    public static final double L1_POSITION = -5.75;
-    public static final double L2_POSITION = -8;
-    public static final double L3_POSITION = -8;
-    public static final double L4_POSITION = -8;
+    public static final double L1_SCORING_POSITION = -8.25;
+    public static final double L2_SCORING_POSITION = -10.5;
+    public static final double L2_STAGING_POSITION = -6.5;
+    public static final double L3_SCORING_POSITION = -10.5;
+    public static final double L3_STAGING_POSITION = -6.5;
+    public static final double L4_SCORING_POSITION = -9.5;
+    public static final double L4_STAGING_POSITION = -4.5;
     public static final double PROCESSOR_POSITION = -13;
     public static final double NET_POSITION = -4;
 

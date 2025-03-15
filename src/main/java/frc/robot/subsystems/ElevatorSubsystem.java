@@ -127,9 +127,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         Debouncer debouncer = new Debouncer(ElevatorConstants.STALL_DEBOUNCE_TIME, DebounceType.kRising);
 
         return Commands.sequence(
-            Commands.runOnce(() -> setVoltage(ElevatorConstants.ZEROING_VOLTAGE)),
+            Commands.runOnce(() -> setVoltage(ElevatorConstants.ZEROING_VOLTAGE), this),
             Commands.waitUntil(() -> debouncer.calculate(filteredCurrent > Math.abs(ElevatorConstants.STALL_CURRENT))),
-            Commands.runOnce(() -> motorMain.setPosition(0))
+            Commands.runOnce(() -> {
+                motorMain.setPosition(0);
+            }, this)
         ).finallyDo(() -> {
             setPosition(ElevatorConstants.STOWED_POSITION);
         });

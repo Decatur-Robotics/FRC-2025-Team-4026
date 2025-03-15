@@ -10,12 +10,17 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public final class ElevatorConstants {
 
+    public static final double ZEROING_VOLTAGE = -1.5;
+
+    public static final double STALL_DEBOUNCE_TIME = 0.3;
+    public static final double STALL_CURRENT = 50;
+
     // Stowed position
     public static final double STOWED_POSITION = 0;
 
     // Intaking positions
     public static final double CORAL_GROUND_INTAKING_POSITION = 0;
-    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 7;
+    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 5.5;
     public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
     public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 20.47;
     public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = 36.63;
@@ -33,11 +38,6 @@ public final class ElevatorConstants {
     public static final double RETRACT_L4_POSITION = 46.5;
     public static final double PROCESSOR_POSITION = 0;
     public static final double NET_POSITION = 54;
-
-    public static final double ZEROING_VOLTAGE = -2;
-
-    public static final double STALL_DEBOUNCE_TIME = 0.3;
-    public static final double STALL_CURRENT = 100;
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)

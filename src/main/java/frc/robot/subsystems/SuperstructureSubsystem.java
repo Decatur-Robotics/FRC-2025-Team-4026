@@ -153,10 +153,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public Command zeroSuperstructureCommand() {
         return Commands.sequence(
-            Commands.runOnce(() -> setArmPosition(SuperstructureConstants.CORAL_STOWED_STATE.armPosition), arm),
-            Commands.waitUntil(() -> isArmAtTargetPosition()),
-            elevator.zeroCommand())
-            .finallyDo(() -> setState(SuperstructureConstants.ALGAE_STOWED_STATE));
+            Commands.runOnce(() -> setState(SuperstructureConstants.CORAL_STOWED_STATE), 
+                elevator, arm, wrist, intake),
+            Commands.parallel(
+                elevator.zeroCommand(),
+                arm.zeroCommand()))
+            .finallyDo(() -> setState(SuperstructureConstants.CORAL_STOWED_STATE));
     }
 
     // Intaking commands
@@ -273,7 +275,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Commands.waitUntil(() -> (isNearTargetPose.get() || overrideNearPose.get())),
             Commands.runOnce(() -> setState(travelState),
                 elevator, arm, wrist, intake),
-            Commands.waitUntil(() -> ((isElevatorAtTargetPosition() && isAtTargetPose.get()) || overrideAtPose.get())),
+            Commands.waitUntil(() -> ((isElevatorAtTargetPosition()) || overrideAtPose.get())),
             Commands.runOnce(() -> setState(stagingState),
                 elevator, arm, wrist, intake),
             Commands.waitUntil(() -> ((isAtTargetState() && isAtTargetPose.get()) || overrideAtPose.get())),

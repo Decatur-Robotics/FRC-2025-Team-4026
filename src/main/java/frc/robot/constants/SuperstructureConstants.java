@@ -54,13 +54,13 @@ public class SuperstructureConstants {
 
     public static final SuperstructureState STAGE_L1_STATE = new SuperstructureState(
         ElevatorConstants.L1_POSITION, 
-        ArmConstants.L1_POSITION, 
+        ArmConstants.L1_SCORING_POSITION, 
         WristConstants.PERPENDICULAR_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState EJECT_L1_STATE = new SuperstructureState(
         ElevatorConstants.L1_POSITION, 
-        ArmConstants.L1_POSITION, 
+        ArmConstants.L1_SCORING_POSITION, 
         WristConstants.PERPENDICULAR_CURRENT, 
         IntakeConstants.L1_EJECT_VELOCITY);
 
@@ -74,13 +74,13 @@ public class SuperstructureConstants {
 
     public static final SuperstructureState STAGE_L2_STATE = new SuperstructureState(
         ElevatorConstants.STAGE_L2_POSITION, 
-        ArmConstants.L2_POSITION, 
+        ArmConstants.L2_STAGING_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState PLACE_L2_STATE = new SuperstructureState(
         ElevatorConstants.SCORE_L2_POSITION, 
-        ArmConstants.L2_POSITION, 
+        ArmConstants.L2_SCORING_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
@@ -100,13 +100,13 @@ public class SuperstructureConstants {
 
     public static final SuperstructureState STAGE_L3_STATE = new SuperstructureState(
         ElevatorConstants.STAGE_L3_POSITION, 
-        ArmConstants.L3_POSITION, 
+        ArmConstants.L3_STAGING_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState PLACE_L3_STATE = new SuperstructureState(
         ElevatorConstants.SCORE_L3_POSITION, 
-        ArmConstants.L3_POSITION, 
+        ArmConstants.L3_SCORING_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
@@ -126,13 +126,13 @@ public class SuperstructureConstants {
 
     public static final SuperstructureState STAGE_L4_STATE = new SuperstructureState(
         ElevatorConstants.STAGE_L4_POSITION, 
-        ArmConstants.L4_POSITION, 
+        ArmConstants.L4_STAGING_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState PLACE_L4_STATE = new SuperstructureState(
         ElevatorConstants.SCORE_L4_POSITION, 
-        ArmConstants.L4_POSITION, 
+        ArmConstants.L4_SCORING_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 

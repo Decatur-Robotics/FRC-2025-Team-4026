@@ -242,7 +242,20 @@ public class RobotContainer {
         // bumperLeft.whileTrue(climber.setVoltageCommand(-8));
         // bumperRight.whileTrue(climber.setVoltageCommand(8));
 
-        // bumperLeft.onTrue(superstructure.zeroSuperstructureCommand());
+        home.onTrue(superstructure.zeroSuperstructureCommand());
+
+        /*
+         * Homing buttons
+         */
+
+        // triggerLeft.whileTrue(elevator.setVoltageCommand(1.5));
+        // triggerRight.whileTrue(elevator.setVoltageCommand(-1));
+
+        // home.onTrue(arm.setZeroPositionCommand());
+        // home.onTrue(elevator.setZeroPositionCommand());
+
+        // bumperLeft.whileTrue(arm.setVoltageCommand(1.5));
+        // bumperRight.whileTrue(arm.setVoltageCommand(-1));
 
         /*
          * Testing buttons
@@ -260,8 +273,8 @@ public class RobotContainer {
 
         // triggerLeft.whileTrue(elevator.setVoltageCommand(1.5));
         // triggerRight.whileTrue(elevator.setVoltageCommand(-1));
-        // // // bumperLeft.onTrue(elevator.setPositionCommand(10));
-        // // // bumperRight.onTrue(elevator.setPositionCommand(40));
+        // bumperLeft.onTrue(elevator.setPositionCommand(10));
+        // bumperRight.onTrue(elevator.setPositionCommand(40));
 
         // home.onTrue(arm.setZeroPositionCommand());
         // home.onTrue(elevator.setZeroPositionCommand());

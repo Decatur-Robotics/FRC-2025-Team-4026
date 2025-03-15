@@ -11,6 +11,9 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -21,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Constants;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.Ports;
 
 public class ArmSubsystem extends SubsystemBase {
@@ -39,6 +43,9 @@ public class ArmSubsystem extends SubsystemBase {
 
 	private double gravityFeedForward;
 
+	private LinearFilter currentFilter;
+    private double filteredCurrent;
+
 	public ArmSubsystem() {
 		motor = new TalonFX(Ports.ARM_MOTOR);
 
@@ -49,6 +56,7 @@ public class ArmSubsystem extends SubsystemBase {
 		motor.getVelocity().setUpdateFrequency(20);
         motor.getAcceleration().setUpdateFrequency(20);
 		motor.getMotorVoltage().setUpdateFrequency(20);
+		motor.getStatorCurrent().setUpdateFrequency(20);
 
 		position = ArmConstants.STOWED_POSITION;
 
@@ -64,6 +72,8 @@ public class ArmSubsystem extends SubsystemBase {
 		// resetTalonEncoder();
 
 		configureShuffleboard();
+
+		currentFilter = LinearFilter.movingAverage(10);
 
 		voltage = 0;
 	}
@@ -81,6 +91,7 @@ public class ArmSubsystem extends SubsystemBase {
 		tab.addDouble("Target Arm Voltage", () -> voltage);
 		tab.addDouble("Actual Arm Voltage", () -> motor.getMotorVoltage().getValueAsDouble());
 		tab.addDouble("Gravity Feed Forward", () -> gravityFeedForward);
+		tab.addDouble("Filtered Arm Current", () -> filteredCurrent);
 	}
 	
 	@Override
@@ -95,6 +106,8 @@ public class ArmSubsystem extends SubsystemBase {
 		gravityFeedForward = Math.cos(angle.getRadians()) * ArmConstants.KG;
 
 		// motor.setControl(positionRequest.withFeedForward(gravityFeedForward));
+
+		filteredCurrent = currentFilter.calculate(getCurrent());
 	}
 
 	public void setPosition(double position) {
@@ -112,6 +125,10 @@ public class ArmSubsystem extends SubsystemBase {
         return motor.getPosition().getValueAsDouble();
     }
 
+	public double getCurrent() {
+		return motor.getStatorCurrent().getValueAsDouble();
+	}
+
 	/**
 	 * @return through bore encoder position in rotations
 	 */
@@ -123,6 +140,20 @@ public class ArmSubsystem extends SubsystemBase {
     //     double rotations = getThroughBoreEncoderPosition() / ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO;
 	// 	motor.setPosition(rotations);
     // }
+
+	public Command zeroCommand() {
+        Debouncer debouncer = new Debouncer(ArmConstants.STALL_DEBOUNCE_TIME, DebounceType.kRising);
+
+        return Commands.sequence(
+            Commands.runOnce(() -> setVoltage(ArmConstants.ZEROING_VOLTAGE), this),
+            Commands.waitUntil(() -> debouncer.calculate(filteredCurrent > Math.abs(ArmConstants.STALL_CURRENT))),
+            Commands.runOnce(() -> {
+				motor.setPosition(0);
+			}, this)
+        ).finallyDo(() -> {
+            setPosition(ArmConstants.STOWED_POSITION);
+        });
+    }
 
 	public Command setPositionCommand(double position) {
 		return Commands.runOnce(() -> setPosition(position));
