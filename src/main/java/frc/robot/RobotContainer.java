@@ -173,24 +173,34 @@ public class RobotContainer {
             double velocityY = -joystick.getX() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
             double velocityAngular = -joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
 
+            if (a.getAsBoolean()) {
+                velocityX *= -SwerveConstants.PRECISION_MODE_SCALAR;
+                velocityY *= -SwerveConstants.PRECISION_MODE_SCALAR;
+                velocityAngular *= SwerveConstants.PRECISION_MODE_SCALAR;
+            }
+
             if (Math.abs(velocityX) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityX = 0;
             if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityY = 0;
             if (Math.abs(velocityAngular) < SwerveConstants.ROTATIONAL_DEADBAND) velocityAngular = 0;
 
-            return new ChassisSpeeds(velocityX, velocityY, velocityAngular);
+            if (a.getAsBoolean()) {
+                return new ChassisSpeeds(velocityX, velocityY, velocityAngular);
+            }
+            else {
+                return ChassisSpeeds.fromFieldRelativeSpeeds(
+                    new ChassisSpeeds(velocityX, velocityY, velocityAngular), 
+                    swerve.getState().Pose.getRotation().plus(swerve.getOperatorForwardDirection()));
+            }
         };
 
         // Default field relative drive command
-        swerve.setDefaultCommand(swerve.driveFieldRelativeCommand(desiredChassisSpeeds));
+        swerve.setDefaultCommand(swerve.driveCommand(desiredChassisSpeeds));
 
         // Drive to pose commands
         triggerLeft.whileTrue(swerve.driveToNet(desiredChassisSpeeds));
         triggerRight.whileTrue(swerve.driveToClosestBranch(desiredChassisSpeeds));
         bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
         bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
-
-        // Robot relative drive command
-        a.whileTrue(swerve.driveRobotRelativeCommand(desiredChassisSpeeds));
 
         // Reset heading
         y.onTrue(swerve.runOnce(() -> swerve.resetRotation(swerve.getOperatorForwardDirection())));

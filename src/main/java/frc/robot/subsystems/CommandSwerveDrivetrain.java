@@ -261,8 +261,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public void configureShuffleboard(Supplier<ChassisSpeeds> speeds){
         ShuffleboardTab tab = Shuffleboard.getTab("Swerve");
 
-        tab.addDouble("Target Swerve Speed X", () -> ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), this.getState().Pose.getRotation().plus(getOperatorForwardDirection())).vxMetersPerSecond);
-        tab.addDouble("Target Swerve Speed Y", () -> ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), this.getState().Pose.getRotation().plus(getOperatorForwardDirection())).vyMetersPerSecond);
+        tab.addDouble("Target Swerve Speed X", () -> speeds.get().vxMetersPerSecond);
+        tab.addDouble("Target Swerve Speed Y", () -> speeds.get().vyMetersPerSecond);
 
         tab.addDouble("Actual Swerve Speed X", () -> getState().Speeds.vxMetersPerSecond);
         tab.addDouble("Actual Swerve Speed Y", () -> getState().Speeds.vyMetersPerSecond);
@@ -328,20 +328,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     /**
      * Returns a command that applies specified a swerve setpoint from specified field relative chassis speeds to this swerve drivetrain.
      * 
-     * @param speeds Function returning the field relative chassis speeds to apply
+     * @param speeds Function returning the robot relative chassis speeds to apply
      * @return Command to run
      */
-    public Command driveFieldRelativeCommand(Supplier<ChassisSpeeds> speeds) {
-        return Commands.run(() -> driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), getState().Pose.getRotation().plus(getOperatorForwardDirection()))), this);
-    }
-
-    /**
-     * Returns a command that applies specified a swerve setpoint from specified field relative chassis speeds to this swerve drivetrain.
-     * 
-     * @param speeds Function returning the field relative chassis speeds to apply
-     * @return Command to run
-     */
-    public Command driveRobotRelativeCommand(Supplier<ChassisSpeeds> speeds) {
+    public Command driveCommand(Supplier<ChassisSpeeds> speeds) {
         return Commands.run(() -> driveRobotRelative(speeds.get()), this);
     }
 
@@ -448,12 +438,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
     }
 
+    /**
+     * Drive to a target pose with speed overrides
+     * 
+     * @param speeds Desired robot relative speeds from the driver
+     * @param targetPose Function returning pose to drive to
+     * @param targetPoseLocation Field location of target pose
+     * @return
+     */
     public void driveToPose(Supplier<ChassisSpeeds> speeds, Supplier<Pose2d> targetPose,
             PathLocation targetPoseLocation) {
         this.targetPose = targetPose.get();
         this.targetPoseLocation = targetPoseLocation;
 
-        double targetTranslation = speeds.get().vxMetersPerSecond;
         double targetRotation = speeds.get().omegaRadiansPerSecond;
 
         if (speeds.get().omegaRadiansPerSecond == 0) {
@@ -462,7 +459,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         if (speeds.get().vxMetersPerSecond == 0 && speeds.get().vyMetersPerSecond == 0) {
-            targetTranslation = translationalController.calculate(
+            double targetTranslation = translationalController.calculate(
                 0, getState().Pose.getTranslation().getDistance(this.targetPose.getTranslation()));
 
             ChassisSpeeds newSpeeds = new ChassisSpeeds(targetTranslation, 0, targetRotation);
@@ -475,8 +472,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         else {
             ChassisSpeeds newSpeeds = new ChassisSpeeds(speeds.get().vxMetersPerSecond, speeds.get().vyMetersPerSecond, targetRotation);
 
-            this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(
-                newSpeeds, getState().Pose.getRotation().plus(getOperatorForwardDirection())));
+            this.driveRobotRelative(newSpeeds);
         }
     }
 

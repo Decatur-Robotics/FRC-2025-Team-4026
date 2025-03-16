@@ -1,7 +1,18 @@
 {
+  "Keyboard 0 Settings": {
+    "window": {
+      "visible": true
+    }
+  },
   "keyboardJoysticks": [
     {
       "axisConfig": [
+        {
+          "decKey": 68,
+          "decayRate": 0.5,
+          "incKey": 65,
+          "keyRate": 0.5
+        },
         {
           "decKey": 83,
           "decayRate": 0.5,
@@ -9,15 +20,9 @@
           "keyRate": 0.5
         },
         {
-          "decKey": 65,
+          "decKey": 81,
           "decayRate": 0.5,
-          "incKey": 68,
-          "keyRate": 0.5
-        },
-        {
-          "decKey": 69,
-          "decayRate": 0.5,
-          "incKey": 81,
+          "incKey": 69,
           "keyRate": 0.5
         }
       ],
