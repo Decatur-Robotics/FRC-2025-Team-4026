@@ -172,7 +172,7 @@ public class SuperstructureConstants {
 
     // Error margins
     public static final double ELEVATOR_ERROR_MARGIN = 1;
-    public static final double ARM_ERROR_MARGIN = 2;
+    public static final double ARM_ERROR_MARGIN = 1;
     public static final double WRIST_ERROR_MARGIN = 0;
     public static final double CLAW_ERROR_MARGIN = 0;
 

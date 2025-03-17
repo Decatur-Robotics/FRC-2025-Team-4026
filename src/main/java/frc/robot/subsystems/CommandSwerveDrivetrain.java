@@ -279,6 +279,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         tab.addDouble("Actual Module 2 Velocity", () -> getState().ModuleStates[2].speedMetersPerSecond);
         tab.addDouble("Target Module 3 Velocity", () -> getState().ModuleTargets[3].speedMetersPerSecond);
         tab.addDouble("Actual Module 3 Velocity", () -> getState().ModuleStates[3].speedMetersPerSecond);
+
+        tab.addDouble("Module 0 Current", () -> getModule(0).getDriveMotor().getStatorCurrent().getValueAsDouble());
     
         tab.addBoolean("At Target Pose", () -> isAtTargetPose());
         tab.addBoolean("Aligned", () -> isAligned());
