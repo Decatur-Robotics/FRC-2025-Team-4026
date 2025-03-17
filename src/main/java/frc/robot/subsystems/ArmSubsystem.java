@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -24,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Constants;
-import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.Ports;
 
 public class ArmSubsystem extends SubsystemBase {
@@ -102,10 +102,10 @@ public class ArmSubsystem extends SubsystemBase {
 		}
 
 		Rotation2d angle = Rotation2d.fromRotations(getThroughBoreEncoderPosition());
+		
+		gravityFeedForward = angle.getCos() * ArmConstants.KG;
 
-		gravityFeedForward = Math.cos(angle.getRadians()) * ArmConstants.KG;
-
-		// motor.setControl(positionRequest.withFeedForward(gravityFeedForward));
+		motor.setControl(positionRequest.withFeedForward(gravityFeedForward));
 
 		filteredCurrent = currentFilter.calculate(getCurrent());
 	}
