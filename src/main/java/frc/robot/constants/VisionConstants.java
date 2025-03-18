@@ -13,16 +13,16 @@ public class VisionConstants {
     // Apriltag ID 18 is 12.13 inches off the ground
     // 14.625 inches from center of robot to edge
     
-    public static final String CAMERA_FRONT_LEFT_NAME = "FrontLeftCamera"; // 2
-    public static final String CAMERA_FRONT_RIGHT_NAME = "FrontRightCamera"; // 3
-    public static final String CAMERA_BACK_NAME = "BackCamera"; // 1
+    public static final String CAMERA_FRONT_LEFT_NAME = "Front Left Camera 3"; // 3
+    public static final String CAMERA_FRONT_RIGHT_NAME = "Front Right Camera 1"; // 1
+    public static final String CAMERA_BACK_NAME = "Back Camera 2"; // 2
 
     public static final Transform3d ROBOT_TO_CAMERA_FRONT_LEFT = new Transform3d(
-        new Translation3d(0, 0, 0), 
-        new Rotation3d(0, 0, 0));
+        new Translation3d(0.28, 0.31, 0), 
+        new Rotation3d(0, 0.698, 0));
     public static final Transform3d ROBOT_TO_CAMERA_FRONT_RIGHT = new Transform3d(
-        new Translation3d(0, 0, 0), 
-        new Rotation3d(0, 0, 0));
+        new Translation3d(0.28, -0.31, 0), 
+        new Rotation3d(0, 0.698, 0));
     public static final Transform3d ROBOT_TO_CAMERA_BACK = new Transform3d(
         new Translation3d(0, 0, 0), 
         new Rotation3d(0, 0, 0));

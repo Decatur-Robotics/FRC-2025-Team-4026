@@ -41,6 +41,7 @@ import frc.robot.constants.PathSetpoints;
 import frc.robot.constants.SuperstructureConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.constants.WristConstants;
+import frc.robot.core.Autonomous;
 import frc.robot.core.LogitechControllerButtons;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
@@ -80,28 +81,7 @@ public class RobotContainer {
 
     private final Telemetry logger;
 
-    private SendableChooser<AutoSide> autoSideChooser;
-    private SendableChooser<AutoLevel> autoLevelChooser;
-
-    private enum AutoSide {
-        Left("Left Side"), Center("Center"), Right("Right Side");
-
-        private final String autoName;
-
-        private AutoSide(String autoName) {
-            this.autoName = autoName;
-        }
-    }
-
-    private enum AutoLevel {
-        L1("L1"), L4("L4");
-
-        private final String autoName;
-
-        private AutoLevel(String autoName) {
-            this.autoName = autoName;
-        }
-    }
+    private Autonomous auto;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -128,23 +108,8 @@ public class RobotContainer {
         configurePrimaryBindings();
         configureSecondaryBindings();
 
-        autoSideChooser = new SendableChooser<>();
-        autoSideChooser.setDefaultOption(AutoSide.Center.autoName, AutoSide.Center);
-        autoSideChooser.addOption(AutoSide.Left.autoName, AutoSide.Left);
-        autoSideChooser.addOption(AutoSide.Center.autoName, AutoSide.Center);
-        autoSideChooser.addOption(AutoSide.Right.autoName, AutoSide.Right);
-
-        autoLevelChooser = new SendableChooser<>();
-        autoLevelChooser.setDefaultOption(AutoLevel.L4.autoName, AutoLevel.L4);
-        autoLevelChooser.addOption(AutoLevel.L1.autoName, AutoLevel.L1);
-        autoLevelChooser.addOption(AutoLevel.L4.autoName, AutoLevel.L4);
-
-        ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
-
-        autoTab.add(autoSideChooser);
-        autoTab.add(autoLevelChooser);
-
-        autoTab.addBoolean("Auto Ran", () -> autoRan);
+        // Configure Auto
+        auto = new Autonomous(instance);
     }
 
     /**

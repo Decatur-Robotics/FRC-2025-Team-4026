@@ -282,11 +282,12 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Commands.runOnce(() -> setState(placingState),
                 elevator, arm, wrist, intake),
             Commands.waitUntil(() -> isAtTargetState()),
-            Commands.run(() -> {
+            Commands.runOnce(() -> {
                 setState(retractingState);
                 led.flashAllPixels(LedConstants.YELLOW, 5);
             },
-                elevator, arm, wrist, intake, led)
+                elevator, arm, wrist, intake, led),
+            Commands.waitUntil(() -> isAtTargetState())
         )
         .finallyDo(() -> {
             setState(stowedState);
