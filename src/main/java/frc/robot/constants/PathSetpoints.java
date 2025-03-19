@@ -33,8 +33,8 @@ public class PathSetpoints {
     public final static Pose2d BLUE_REEF_K = new Pose2d(3.9880, 5.2230, Rotation2d.fromDegrees(120));
     public final static Pose2d BLUE_REEF_L = new Pose2d(3.7034, 5.0586, Rotation2d.fromDegrees(120));
 
-    public final static Pose2d RED_REEF_A = new Pose2d(14.95, 3.8616, Rotation2d.kZero); // new Pose2d(14.3470, 3.8616, Rotation2d.fromDegrees(0));
-    public final static Pose2d RED_REEF_B = new Pose2d(14.95, 4.1902, Rotation2d.kZero); // new Pose2d(14.3470, 4.1902, Rotation2d.fromDegrees(0));
+    public final static Pose2d RED_REEF_A = new Pose2d(14.46, 3.86, Rotation2d.fromDegrees(0)); // x: 14.46
+    public final static Pose2d RED_REEF_B = new Pose2d(14.46, 4.19, Rotation2d.fromDegrees(0));
     public final static Pose2d RED_REEF_C = new Pose2d(13.8450, 5.0586, Rotation2d.fromDegrees(60));
     public final static Pose2d RED_REEF_D = new Pose2d(13.5604, 5.2230, Rotation2d.fromDegrees(60));
     public final static Pose2d RED_REEF_E = new Pose2d(12.5575, 5.2230, Rotation2d.fromDegrees(120));

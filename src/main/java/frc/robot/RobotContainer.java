@@ -144,9 +144,9 @@ public class RobotContainer {
                 velocityAngular *= SwerveConstants.PRECISION_MODE_SCALAR;
             }
 
-            if (Math.abs(velocityX) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityX = 0;
-            if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityY = 0;
-            if (Math.abs(velocityAngular) < SwerveConstants.ROTATIONAL_DEADBAND) velocityAngular = 0;
+            if (Math.abs(velocityX) < SwerveConstants.TRANSLATIONAL_DRIVER_DEADBAND) velocityX = 0;
+            if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_DRIVER_DEADBAND) velocityY = 0;
+            if (Math.abs(velocityAngular) < SwerveConstants.ROTATIONAL_DRIVER_DEADBAND) velocityAngular = 0;
 
             if (a.getAsBoolean()) {
                 return new ChassisSpeeds(velocityX, velocityY, velocityAngular);
@@ -169,8 +169,6 @@ public class RobotContainer {
 
         // Reset heading
         y.onTrue(swerve.runOnce(() -> swerve.resetRotation(swerve.getOperatorForwardDirection())));
-
-        x.onTrue(swerve.runOnce(() -> swerve.resetPose(PathSetpoints.BLUE_REEF_A)));
 
         swerve.configureShuffleboard(desiredChassisSpeeds);
 

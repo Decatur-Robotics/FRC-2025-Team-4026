@@ -27,6 +27,8 @@ public class WristSubsystem extends SubsystemBase {
 
     private Debouncer slamDebouncer;
 
+    private Boolean isSlammed;
+
     public WristSubsystem() {
         motor = new TalonFX(Ports.WRIST_MOTOR);
 
@@ -45,6 +47,8 @@ public class WristSubsystem extends SubsystemBase {
         velocityFilter = LinearFilter.movingAverage(10);
 
         slamDebouncer = new Debouncer(WristConstants.SLAM_DEBOUNCE_TIME);
+
+        isSlammed = false;
 
         configureShuffleboard();
     }
@@ -72,6 +76,8 @@ public class WristSubsystem extends SubsystemBase {
         else if (isSlammed() && (current == WristConstants.PERPENDICULAR_CURRENT)) {
             setCurrent(WristConstants.REDUCED_PERPENDICULAR_CURRENT);
         }
+
+        isSlammed = slamDebouncer.calculate(Math.abs(filteredVelocity) < WristConstants.MAX_SLAMMED_VELOCITY);
     }
 
     public void setCurrent(double current) {
@@ -84,7 +90,7 @@ public class WristSubsystem extends SubsystemBase {
     }
 
     public boolean isSlammed() {
-        return slamDebouncer.calculate(filteredVelocity < WristConstants.MAX_SLAMMED_VELOCITY);
+        return isSlammed;
     }
 
     public Command setCurrentCommand(double current) {

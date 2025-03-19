@@ -79,9 +79,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         .getStructTopic("Robot Pose", Pose2d.struct).publish();
 
     private PIDController translationalController = new PIDController(
-        5, 0, 0); // p = 5 maybe
+        5.25, 0, 0.3); 
     private PIDController rotationalController = new PIDController(
-        5, 0, 0);
+        6, 0, 0.3);
 
     public enum PathLocation {
         None(List.of()),
@@ -288,6 +288,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         tab.addBoolean("At Target Pose", () -> isAtTargetPose());
         tab.addBoolean("Aligned", () -> isAligned());
 
+        
+        tab.addBoolean("Near Target Pose", () -> isNearTargetPose());
+        tab.addBoolean("Near Aligned", () -> isNearAligned());
+
         tab.addDouble("Operator Rotation", () -> getOperatorForwardDirection().getDegrees());
 
         tab.addDouble("Target Pose X", () -> {
@@ -355,7 +359,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             0.02 // The loop time of the robot code, in seconds
         );
 
-        setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
+        double velocityX = previousSetpoint.robotRelativeSpeeds().vxMetersPerSecond;
+        double velocityY = previousSetpoint.robotRelativeSpeeds().vyMetersPerSecond;
+        double velocityAngular = previousSetpoint.robotRelativeSpeeds().omegaRadiansPerSecond;
+
+        if (Math.abs(velocityX) < SwerveConstants.TRANSLATIONAL_AUTO_DEADBAND) velocityX = 0;
+        if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_AUTO_DEADBAND) velocityY = 0;
+        if (Math.abs(velocityAngular) < SwerveConstants.ROTATIONAL_AUTO_DEADBAND) velocityAngular = 0;
+
+        ChassisSpeeds newSpeeds = new ChassisSpeeds(velocityX, velocityY, velocityAngular);
+
+        setControl(driveRequest.withSpeeds(newSpeeds));
     }
 
     /**
@@ -495,7 +509,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             double targetTranslation = translationalController.calculate(
                 0, getState().Pose.getTranslation().getDistance(this.targetPose.getTranslation()));
 
-            ChassisSpeeds newSpeeds = new ChassisSpeeds(targetTranslation, 0, targetRotation);
+            if (targetTranslation > 8) targetTranslation = 8;
+
+            ChassisSpeeds newSpeeds = new ChassisSpeeds(
+                isAligned() ? 0 : targetTranslation, 
+                0, 
+                isAligned() ? 0 : targetRotation);
 
             Rotation2d travelRotation = this.targetPose.getTranslation().minus(getState().Pose.getTranslation()).getAngle();
 

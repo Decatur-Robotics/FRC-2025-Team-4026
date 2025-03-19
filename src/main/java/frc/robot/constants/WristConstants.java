@@ -12,9 +12,9 @@ public class WristConstants {
     public static final double PERPENDICULAR_CURRENT = 15;
     public static final double REDUCED_PERPENDICULAR_CURRENT = 15;
 
-    public static final double MAX_SLAMMED_VELOCITY = 2;
+    public static final double MAX_SLAMMED_VELOCITY = 0.3;
 
-    public static final double SLAM_DEBOUNCE_TIME = 0.5;
+    public static final double SLAM_DEBOUNCE_TIME = 0.05;
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)

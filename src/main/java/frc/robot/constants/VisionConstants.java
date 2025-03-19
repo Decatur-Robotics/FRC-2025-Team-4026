@@ -1,5 +1,7 @@
 package frc.robot.constants;
 
+import static edu.wpi.first.units.Units.Radians;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -18,16 +20,16 @@ public class VisionConstants {
     public static final String CAMERA_BACK_NAME = "Back Camera 2"; // 2
 
     public static final Transform3d ROBOT_TO_CAMERA_FRONT_LEFT = new Transform3d(
-        new Translation3d(0.28, 0.31, 0), 
-        new Rotation3d(0, 0.698, 0));
+        new Translation3d(-0.28, -0.31, 0), 
+        new Rotation3d(0, -0.34, -Math.PI));
     public static final Transform3d ROBOT_TO_CAMERA_FRONT_RIGHT = new Transform3d(
-        new Translation3d(0.28, -0.31, 0), 
-        new Rotation3d(0, 0.698, 0));
+        new Translation3d(-0.28, 0.31, 0), 
+        new Rotation3d(0, -0.34, -Math.PI));
     public static final Transform3d ROBOT_TO_CAMERA_BACK = new Transform3d(
         new Translation3d(0, 0, 0), 
         new Rotation3d(0, 0, 0));
 
-    public static final Matrix<N3, N1> SINGLE_TAG_STANDARD_DEVIATIONS = VecBuilder.fill(2, 2, 4);
-    public static final Matrix<N3, N1> MULTI_TAG_STANDARD_DEVIATIONS = VecBuilder.fill(0.5, 0.5, 1);
+    public static final Matrix<N3, N1> SINGLE_TAG_STANDARD_DEVIATIONS = VecBuilder.fill(1, 1, Double.MAX_VALUE);
+    public static final Matrix<N3, N1> MULTI_TAG_STANDARD_DEVIATIONS = VecBuilder.fill(0.25, 0.25, Double.MAX_VALUE);
 
 }

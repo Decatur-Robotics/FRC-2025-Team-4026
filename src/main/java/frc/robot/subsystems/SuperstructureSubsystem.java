@@ -65,10 +65,9 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public boolean isAtTargetState() {
         return (isElevatorAtTargetPosition() &&
-                isArmAtTargetPosition()) || Robot.isSimulation();
-                
-                // &&
-                // isWristAtTargetPosition() &&;
+                isArmAtTargetPosition() &&
+                isWristAtTargetPosition()) 
+                || Robot.isSimulation();
     }
 
     public boolean isElevatorAtTargetPosition() {

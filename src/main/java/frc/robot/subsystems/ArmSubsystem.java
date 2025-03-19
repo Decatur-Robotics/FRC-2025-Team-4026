@@ -142,11 +142,11 @@ public class ArmSubsystem extends SubsystemBase {
     // }
 
 	public Command zeroCommand() {
-        Debouncer debouncer = new Debouncer(ArmConstants.STALL_DEBOUNCE_TIME, DebounceType.kRising);
+        Debouncer debouncer = new Debouncer(ArmConstants.STALL_DEBOUNCE_TIME, DebounceType.kFalling);
 
         return Commands.sequence(
             Commands.runOnce(() -> setVoltage(ArmConstants.ZEROING_VOLTAGE), this),
-            Commands.waitUntil(() -> debouncer.calculate(filteredCurrent > Math.abs(ArmConstants.STALL_CURRENT))),
+            Commands.waitUntil(() -> debouncer.calculate(Math.abs(filteredCurrent) > ArmConstants.STALL_CURRENT)),
             Commands.runOnce(() -> {
 				motor.setPosition(0);
 			}, this)

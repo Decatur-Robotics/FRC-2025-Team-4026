@@ -128,7 +128,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         return Commands.sequence(
             Commands.runOnce(() -> setVoltage(ElevatorConstants.ZEROING_VOLTAGE), this),
-            Commands.waitUntil(() -> debouncer.calculate(filteredCurrent > Math.abs(ElevatorConstants.STALL_CURRENT))),
+            Commands.waitUntil(() -> debouncer.calculate(Math.abs(filteredCurrent) > ElevatorConstants.STALL_CURRENT)),
             Commands.runOnce(() -> {
                 motorMain.setPosition(0);
             }, this)

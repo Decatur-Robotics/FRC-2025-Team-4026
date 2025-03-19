@@ -16,6 +16,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
@@ -93,11 +94,11 @@ public class VisionSubsystem extends SubsystemBase {
 
             poseEstimate = poseEstimator.update(result);
             standardDeviations = getStandardDeviations(poseEstimate, result.getTargets());
-        }
 
-        if (poseEstimate.isPresent()) {
-            swerve.addVisionMeasurement(poseEstimate.get().estimatedPose.toPose2d(), poseEstimate.get().timestampSeconds, standardDeviations);
-            publisher.set(poseEstimate.get().estimatedPose);
+            if (poseEstimate.isPresent()) {
+                swerve.addVisionMeasurement(poseEstimate.get().estimatedPose.toPose2d(), poseEstimate.get().timestampSeconds, standardDeviations);
+                publisher.set(poseEstimate.get().estimatedPose);
+            }
         }
     }
 

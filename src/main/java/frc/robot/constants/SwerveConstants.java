@@ -39,18 +39,21 @@ public class SwerveConstants {
     /* Not tuned */
     public static final double MAX_ROTATIONAL_VELOCITY = 10;
 
-    public static final double TRANSLATIONAL_DEADBAND = MAX_TRANSLATIONAL_VELOCITY * 0.05;
-    public static final double ROTATIONAL_DEADBAND = MAX_ROTATIONAL_VELOCITY * 0.05;
+    public static final double TRANSLATIONAL_DRIVER_DEADBAND = MAX_TRANSLATIONAL_VELOCITY * 0.05;
+    public static final double ROTATIONAL_DRIVER_DEADBAND = MAX_ROTATIONAL_VELOCITY * 0.05;
 
-    public static final double TRANSLATIONAL_ALIGNED_ERROR_MARGIN = 0.1;
-    public static final double ROTATIONAL_ALIGNED_ERROR_MARGIN = 0.1;
+    public static final double TRANSLATIONAL_AUTO_DEADBAND = 0; // MAX_TRANSLATIONAL_VELOCITY * 0.01;
+    public static final double ROTATIONAL_AUTO_DEADBAND = 0; // MAX_ROTATIONAL_VELOCITY * 0.01;
+
+    public static final double TRANSLATIONAL_ALIGNED_ERROR_MARGIN = 0.035;
+    public static final double ROTATIONAL_ALIGNED_ERROR_MARGIN = 0.02;
     public static final double VELOCITY_ALIGNED_ERROR_MARGIN = 0.1;
 
     
-    public static final double TRANSLATIONAL_NEAR_ALIGNED_ERROR_MARGIN = 0.5;
-    public static final double ROTATIONAL_NEAR_ALIGNED_ERROR_MARGIN = 0.5;
+    public static final double TRANSLATIONAL_NEAR_ALIGNED_ERROR_MARGIN = 0.1;
+    public static final double ROTATIONAL_NEAR_ALIGNED_ERROR_MARGIN = 0.125;
     public static final double VELOCITY_NEAR_ALIGNED_ERROR_MARGIN = 0.5;
 
-    public static final double PRECISION_MODE_SCALAR = 0.5;
+    public static final double PRECISION_MODE_SCALAR = 0.25;
 
 }
