@@ -72,5 +72,11 @@ public class PathSetpoints {
     // Would be cool to get net pathing so that it locks the x axis and rotation but lets us control the y axis
     public final static Pose2d BLUE_NET = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
     public final static Pose2d RED_NET = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+
+    // Human player locations
+    public final static Pose2d BLUE_LEFT_HUMAN_PLAYER = new Pose2d(0, 8, Rotation2d.fromDegrees(0));
+    public final static Pose2d BLUE_RIGHT_HUMAN_PLAYER = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d RED_LEFT_HUMAN_PLAYER = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public final static Pose2d RED_RIGHT_HUMAN_PLAYER = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
     
 }

@@ -23,6 +23,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
@@ -41,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.constants.AutoConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.PathSetpoints;
 import frc.robot.constants.SwerveConstants;
@@ -432,8 +435,34 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public Command driveToPoseAuto(Pose2d targetPose,
             PathLocation targetPoseLocation) {
+        return Commands.deadline(Commands.waitUntil(() -> isAligned()), Commands.run(() -> driveToPose(() -> new ChassisSpeeds(0, 0, 0), 
+                () -> targetPose, targetPoseLocation), this))
+            .finallyDo(() -> {
+                this.targetPose = null;
+                this.targetPoseLocation = PathLocation.None;
+            });
+    }
+
+    public Command driveToHumanPlayerFromReefBacksideAuto(Pose2d targetPose) {
+        Supplier<Pose2d> humanPlayerPose = () -> {
+            double yError = Math.abs(getState().Pose.getY() - targetPose.getY());
+
+            double offset = 5 * (yError / 2.5);
+
+            if (yError < AutoConstants.Y_TOLERANCE) offset = 0;
+
+            if (offset > 5) offset = 5;
+
+            if (DriverStation.getAlliance().equals(Alliance.Blue)) {
+                return targetPose.plus(new Transform2d(new Translation2d(offset, 0), Rotation2d.k180deg)); 
+            }
+            else {
+                return targetPose.plus(new Transform2d(new Translation2d(offset, 0), Rotation2d.kZero));
+            }
+        };
+
         return Commands.run(() -> driveToPose(() -> new ChassisSpeeds(0, 0, 0), 
-                () -> targetPose, targetPoseLocation), this)
+                humanPlayerPose, PathLocation.HumanPlayer), this)
             .finallyDo(() -> {
                 this.targetPose = null;
                 this.targetPoseLocation = PathLocation.None;
