@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,12 +10,14 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -70,31 +73,17 @@ public class VisionSubsystem extends SubsystemBase {
         Matrix<N3, N1> standardDeviations = VisionConstants.SINGLE_TAG_STANDARD_DEVIATIONS;
 
         for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
-            
-
             if (!swerve.getTargetPoseLocation().equals(PathLocation.None)) {
                 List<PhotonTrackedTarget> targets = result.getTargets();
 
-                List<PhotonTrackedTarget> desiredTargets = List.of();
+                List<PhotonTrackedTarget> desiredTargets = new ArrayList<>();
 
                 List<Integer> apriltagIds = swerve.getTargetPoseLocation().getApriltagIds();
 
                 for (PhotonTrackedTarget target : targets) {
                     for (int i : apriltagIds) {
                         if (target.getFiducialId() == i) {
-                            desiredTargets.add(new PhotonTrackedTarget(
-                                target.yaw, 
-                                target.pitch, 
-                                target.area, 
-                                target.skew, 
-                                target.fiducialId, 
-                                0, 
-                                target.objDetectConf, 
-                                null, 
-                                null, 
-                                target.poseAmbiguity, 
-                                target.minAreaRectCorners, 
-                                target.detectedCorners));
+                            desiredTargets.add(target);
                         }
                     }
                 }
