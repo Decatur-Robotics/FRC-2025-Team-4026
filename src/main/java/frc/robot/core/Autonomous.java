@@ -1,5 +1,6 @@
 package frc.robot.core;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -112,62 +113,31 @@ public class Autonomous {
 
     private Command leftOneCoralAuto() {
         return Commands.either(
-            Commands.sequence(
-                Commands.runOnce(() -> swerve.resetPose(AutoConstants.BLUE_LEFT_INITIAL_POSE), swerve),
-                Commands.parallel(
-                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_J, PathLocation.Reef),
-                    autoL4Command())), 
-            Commands.sequence(
-                Commands.runOnce(() -> swerve.resetPose(AutoConstants.RED_LEFT_INITIAL_POSE), swerve),
-                Commands.parallel(
-                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_J, PathLocation.Reef),
-                    autoL4Command())), 
+            oneCoralAuto(AutoConstants.BLUE_LEFT_INITIAL_POSE, PathSetpoints.BLUE_REEF_J),
+            oneCoralAuto(AutoConstants.RED_LEFT_INITIAL_POSE, PathSetpoints.RED_REEF_J),
             () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
     }
 
     private Command centerOneCoralAuto() {
         return Commands.either(
-            Commands.sequence(
-                Commands.runOnce(() -> swerve.resetPose(AutoConstants.BLUE_CENTER_INITIAL_POSE), swerve),
-                Commands.parallel(
-                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_E, PathLocation.Reef),
-                    autoL4Command())), 
-            Commands.sequence(
-                Commands.runOnce(() -> swerve.resetPose(AutoConstants.RED_CENTER_INITIAL_POSE), swerve),
-                Commands.parallel(
-                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_E, PathLocation.Reef),
-                    autoL4Command())), 
+            oneCoralAuto(AutoConstants.BLUE_CENTER_INITIAL_POSE, PathSetpoints.BLUE_REEF_G),
+            oneCoralAuto(AutoConstants.RED_CENTER_INITIAL_POSE, PathSetpoints.RED_REEF_G),
             () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
     }
 
     private Command rightOneCoralAuto() {
         return Commands.either(
-            Commands.sequence(
-                Commands.runOnce(() -> swerve.resetPose(AutoConstants.BLUE_RIGHT_INITIAL_POSE), swerve),
-                Commands.parallel(
-                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_G, PathLocation.Reef),
-                    autoL4Command())), 
-            Commands.sequence(
-                Commands.runOnce(() -> swerve.resetPose(AutoConstants.RED_RIGHT_INITIAL_POSE), swerve),
-                Commands.parallel(
-                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_G, PathLocation.Reef),
-                    autoL4Command())), 
+            oneCoralAuto(AutoConstants.BLUE_RIGHT_INITIAL_POSE, PathSetpoints.BLUE_REEF_E),
+            oneCoralAuto(AutoConstants.RED_RIGHT_INITIAL_POSE, PathSetpoints.RED_REEF_E),
             () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
     }
 
     private Command leftThreeCoralHumanPlayerAuto() {
         return Commands.either(
-            Commands.sequence(
-                Commands.runOnce(() -> swerve.resetPose(AutoConstants.BLUE_LEFT_INITIAL_POSE), swerve),
-                Commands.parallel(
-                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_J, PathLocation.Reef),
-                    autoL4Command()),
-                swerve.driveToHumanPlayerFromReefBacksideAuto(PathSetpoints.BLUE_LEFT_HUMAN_PLAYER)), 
-            Commands.sequence(
-                Commands.runOnce(() -> swerve.resetPose(AutoConstants.RED_LEFT_INITIAL_POSE), swerve),
-                Commands.parallel(
-                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_J, PathLocation.Reef),
-                    autoL4Command())), 
+            threeCoralHumanPlayerAuto(AutoConstants.BLUE_LEFT_INITIAL_POSE, PathSetpoints.BLUE_LEFT_HUMAN_PLAYER, 
+                PathSetpoints.BLUE_REEF_J, PathSetpoints.BLUE_REEF_K, PathSetpoints.BLUE_REEF_L),
+            threeCoralHumanPlayerAuto(AutoConstants.RED_LEFT_INITIAL_POSE, PathSetpoints.RED_LEFT_HUMAN_PLAYER, 
+                PathSetpoints.RED_REEF_J, PathSetpoints.RED_REEF_K, PathSetpoints.RED_REEF_L),
             () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
     }
 
@@ -179,17 +149,45 @@ public class Autonomous {
 
     private Command rightThreeCoralHumanPlayerAuto() {
         return Commands.either(
-            Commands.sequence(
-                Commands.runOnce(() -> swerve.resetPose(AutoConstants.BLUE_RIGHT_INITIAL_POSE), swerve),
-                Commands.parallel(
-                    swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_G, PathLocation.Reef),
-                    autoL4Command())), 
-            Commands.sequence(
-                Commands.runOnce(() -> swerve.resetPose(AutoConstants.RED_RIGHT_INITIAL_POSE), swerve),
-                Commands.parallel(
-                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_G, PathLocation.Reef),
-                    autoL4Command())), 
+            threeCoralHumanPlayerAuto(AutoConstants.BLUE_RIGHT_INITIAL_POSE, PathSetpoints.BLUE_RIGHT_HUMAN_PLAYER, 
+                PathSetpoints.BLUE_REEF_E, PathSetpoints.BLUE_REEF_D, PathSetpoints.BLUE_REEF_C),
+            threeCoralHumanPlayerAuto(AutoConstants.RED_RIGHT_INITIAL_POSE, PathSetpoints.RED_RIGHT_HUMAN_PLAYER, 
+                PathSetpoints.RED_REEF_E, PathSetpoints.RED_REEF_D, PathSetpoints.RED_REEF_C),
             () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
+    }
+
+    private Command oneCoralAuto(Pose2d initialPose, Pose2d branchPose) {
+        return Commands.sequence(
+            Commands.runOnce(() -> swerve.resetPose(initialPose), swerve),
+            Commands.parallel(
+                swerve.driveToPoseAuto(branchPose, PathLocation.Reef),
+                autoL4Command())
+        );
+    }
+
+    private Command threeCoralHumanPlayerAuto(Pose2d initialPose, Pose2d humanPlayerPose, 
+            Pose2d firstBranchPose, Pose2d secondBranchPose, Pose2d thirdBranchPose) {
+        return Commands.sequence(
+            Commands.runOnce(() -> swerve.resetPose(initialPose), swerve),
+            Commands.parallel(
+                swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef),
+                autoL4Command()),
+            Commands.parallel(
+                superstructure.intakeCoralHumanPlayerCommand(), 
+                swerve.driveToHumanPlayerFromReefBacksideAuto(humanPlayerPose)),
+            Commands.parallel(
+                swerve.driveToPoseAuto(secondBranchPose, PathLocation.Reef),
+                autoL4Command()),
+            Commands.parallel(
+                superstructure.intakeCoralHumanPlayerCommand(), 
+                swerve.driveToPoseAuto(humanPlayerPose, PathLocation.Reef)),
+            Commands.parallel(
+                swerve.driveToPoseAuto(thirdBranchPose, PathLocation.Reef),
+                autoL4Command()),
+            Commands.parallel(
+                superstructure.intakeCoralHumanPlayerCommand(), 
+                swerve.driveToPoseAuto(humanPlayerPose, PathLocation.Reef))
+        );
     }
         
 }

@@ -212,8 +212,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 debouncer.calculate(false);
                 setState(intakingState.get());
             }, elevator, arm, wrist, intake),
-            Commands.waitUntil(() -> debouncer.calculate(Math.abs(intake.getFilteredCurrentLeft()) > IntakeConstants.STALL_CURRENT
-                || Math.abs(intake.getFilteredCurrentRight()) > IntakeConstants.STALL_CURRENT)),
+            Commands.waitUntil(() -> (debouncer.calculate(Math.abs(intake.getFilteredCurrentLeft()) > IntakeConstants.STALL_CURRENT
+                || Math.abs(intake.getFilteredCurrentRight()) > IntakeConstants.STALL_CURRENT)) || Robot.isSimulation()),
             Commands.runOnce(() -> led.flashAllPixels(LedConstants.BLUE, 5), led)
         )
         .finallyDo(

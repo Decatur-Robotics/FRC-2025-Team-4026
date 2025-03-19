@@ -435,8 +435,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public Command driveToPoseAuto(Pose2d targetPose,
             PathLocation targetPoseLocation) {
-        return Commands.deadline(Commands.waitUntil(() -> isAligned()), Commands.run(() -> driveToPose(() -> new ChassisSpeeds(0, 0, 0), 
-                () -> targetPose, targetPoseLocation), this))
+        return Commands.deadline(Commands.waitUntil(() -> isAligned()), 
+                Commands.run(() -> driveToPose(() -> new ChassisSpeeds(0, 0, 0), 
+                    () -> targetPose, targetPoseLocation), this))
             .finallyDo(() -> {
                 this.targetPose = null;
                 this.targetPoseLocation = PathLocation.None;
@@ -453,16 +454,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
             if (offset > 5) offset = 5;
 
-            if (DriverStation.getAlliance().equals(Alliance.Blue)) {
-                return targetPose.plus(new Transform2d(new Translation2d(offset, 0), Rotation2d.k180deg)); 
+            if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+                return new Pose2d(targetPose.getX() + offset, targetPose.getY(), targetPose.getRotation()); 
             }
             else {
-                return targetPose.plus(new Transform2d(new Translation2d(offset, 0), Rotation2d.kZero));
+                return new Pose2d(targetPose.getX() - offset, targetPose.getY(), targetPose.getRotation());
             }
         };
 
-        return Commands.run(() -> driveToPose(() -> new ChassisSpeeds(0, 0, 0), 
-                humanPlayerPose, PathLocation.HumanPlayer), this)
+        return Commands.deadline(Commands.waitUntil(() -> isAligned()), 
+                Commands.run(() -> driveToPose(() -> new ChassisSpeeds(0, 0, 0), 
+                    humanPlayerPose, PathLocation.HumanPlayer), this))
             .finallyDo(() -> {
                 this.targetPose = null;
                 this.targetPoseLocation = PathLocation.None;
