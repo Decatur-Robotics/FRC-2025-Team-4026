@@ -27,7 +27,7 @@ public class VisionConstants {
         new Translation3d(0, 0, 0), 
         new Rotation3d(0, 0, 0));
 
-    public static final Matrix<N3, N1> SINGLE_TAG_STANDARD_DEVIATIONS = VecBuilder.fill(0, 0, 0);
-    public static final Matrix<N3, N1> MULTI_TAG_STANDARD_DEVIATIONS = VecBuilder.fill(0, 0, 0);
+    public static final Matrix<N3, N1> SINGLE_TAG_STANDARD_DEVIATIONS = VecBuilder.fill(2, 2, 4);
+    public static final Matrix<N3, N1> MULTI_TAG_STANDARD_DEVIATIONS = VecBuilder.fill(0.5, 0.5, 1);
 
 }
