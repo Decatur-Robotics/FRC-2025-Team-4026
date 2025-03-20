@@ -195,7 +195,7 @@ public class RobotContainer {
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
 
         Supplier<Boolean> overrideAtPose = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.b).getAsBoolean();
-        Supplier<Boolean> overrideNearPose = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.start).getAsBoolean();
+        Supplier<Boolean> overrideNearPose = () -> start.getAsBoolean();
         Supplier<Boolean> isNearAligned = () -> (swerve.isNearAligned() || Robot.isTestMode());
         Supplier<Boolean> isAligned = () -> (swerve.isAligned() || Robot.isTestMode());
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
@@ -209,12 +209,12 @@ public class RobotContainer {
 
         b.whileTrue(superstructure.intakeCoralGroundCommand());
         a.whileTrue(superstructure.intakeCoralHumanPlayerCommand());
-        x.whileTrue(superstructure.intakeAlgaeReefLowCommand());
-        y.whileTrue(superstructure.intakeAlgaeReefHighCommand());
+        x.whileTrue(superstructure.intakeAlgaeReefCommand(getTargetPose));
+        y.whileTrue(superstructure.intakeAlgaeGroundCommand());
 
         // bumperRight.whileTrue(climber.climbCommand());
-        // bumperLeft.whileTrue(climber.setVoltageCommand(-8));
-        // bumperRight.whileTrue(climber.setVoltageCommand(8));
+        bumperLeft.whileTrue(climber.setVoltageCommand(-8));
+        bumperRight.whileTrue(climber.setVoltageCommand(8));
 
         back.onTrue(superstructure.zeroSuperstructureCommand());
 
