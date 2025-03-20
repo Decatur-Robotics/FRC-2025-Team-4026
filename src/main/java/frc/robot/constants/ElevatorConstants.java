@@ -10,7 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public final class ElevatorConstants {
 
-    public static final double ZEROING_VOLTAGE = -0.8;
+    public static final double ZEROING_VOLTAGE = -1;
 
     public static final double STALL_DEBOUNCE_TIME = 0.2;
     public static final double STALL_CURRENT = 40;
@@ -22,8 +22,8 @@ public final class ElevatorConstants {
     public static final double CORAL_GROUND_INTAKING_POSITION = 0;
     public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 5.5;
     public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
-    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 20.47;
-    public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = 36.63;
+    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 16.47;
+    public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = 32.63;
 
     // Scoring positions
     public static final double L1_POSITION = 0;

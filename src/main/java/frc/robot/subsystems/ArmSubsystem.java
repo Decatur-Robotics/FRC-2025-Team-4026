@@ -110,9 +110,9 @@ public class ArmSubsystem extends SubsystemBase {
 			gravityFeedForward = angle.getCos() * ArmConstants.KG;
 
 			motor.setControl(positionRequest.withFeedForward(gravityFeedForward));
-
-			filteredCurrent = currentFilter.calculate(getCurrent());
 		}
+
+		filteredCurrent = currentFilter.calculate(getCurrent());
 	}
 
 	public void setPosition(double position) {
@@ -154,11 +154,11 @@ public class ArmSubsystem extends SubsystemBase {
             Commands.runOnce(() -> setVoltage(ArmConstants.ZEROING_VOLTAGE), this),
             Commands.waitUntil(() -> debouncer.calculate(Math.abs(filteredCurrent) > ArmConstants.STALL_CURRENT)),
             Commands.runOnce(() -> {
-				motor.setPosition(0);
+				motor.setPosition(1.5);
 			}, this)
         ).finallyDo(() -> {
-			zeroing = false;
             setPosition(ArmConstants.STOWED_POSITION);
+			zeroing = false;
         });
     }
 
