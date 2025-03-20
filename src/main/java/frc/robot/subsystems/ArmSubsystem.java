@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -46,6 +45,8 @@ public class ArmSubsystem extends SubsystemBase {
 	private LinearFilter currentFilter;
     private double filteredCurrent;
 
+	private Boolean zeroing;
+
 	public ArmSubsystem() {
 		motor = new TalonFX(Ports.ARM_MOTOR);
 
@@ -76,6 +77,8 @@ public class ArmSubsystem extends SubsystemBase {
 		currentFilter = LinearFilter.movingAverage(10);
 
 		voltage = 0;
+
+		zeroing = false;
 	}
 
 	private void configureShuffleboard() {
@@ -101,13 +104,15 @@ public class ArmSubsystem extends SubsystemBase {
 			motor.getPosition().setUpdateFrequency(20);
 		}
 
-		Rotation2d angle = Rotation2d.fromRotations(getThroughBoreEncoderPosition());
-		
-		gravityFeedForward = angle.getCos() * ArmConstants.KG;
+		if (!zeroing) {
+			Rotation2d angle = Rotation2d.fromRotations(getThroughBoreEncoderPosition());
+			
+			gravityFeedForward = angle.getCos() * ArmConstants.KG;
 
-		motor.setControl(positionRequest.withFeedForward(gravityFeedForward));
+			motor.setControl(positionRequest.withFeedForward(gravityFeedForward));
 
-		filteredCurrent = currentFilter.calculate(getCurrent());
+			filteredCurrent = currentFilter.calculate(getCurrent());
+		}
 	}
 
 	public void setPosition(double position) {
@@ -145,12 +150,14 @@ public class ArmSubsystem extends SubsystemBase {
         Debouncer debouncer = new Debouncer(ArmConstants.STALL_DEBOUNCE_TIME, DebounceType.kFalling);
 
         return Commands.sequence(
+			Commands.runOnce(() -> {zeroing = true;}),
             Commands.runOnce(() -> setVoltage(ArmConstants.ZEROING_VOLTAGE), this),
             Commands.waitUntil(() -> debouncer.calculate(Math.abs(filteredCurrent) > ArmConstants.STALL_CURRENT)),
             Commands.runOnce(() -> {
 				motor.setPosition(0);
 			}, this)
         ).finallyDo(() -> {
+			zeroing = false;
             setPosition(ArmConstants.STOWED_POSITION);
         });
     }
