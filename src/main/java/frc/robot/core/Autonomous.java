@@ -180,13 +180,13 @@ public class Autonomous {
                 autoL4Command()),
             Commands.parallel(
                 superstructure.intakeCoralHumanPlayerCommand(), 
-                swerve.driveToPoseAuto(humanPlayerPose, PathLocation.Reef)),
+                swerve.driveToPoseAuto(humanPlayerPose, PathLocation.HumanPlayer)),
             Commands.parallel(
                 swerve.driveToPoseAuto(thirdBranchPose, PathLocation.Reef),
                 autoL4Command()),
             Commands.parallel(
                 superstructure.intakeCoralHumanPlayerCommand(), 
-                swerve.driveToPoseAuto(humanPlayerPose, PathLocation.Reef))
+                swerve.driveToPoseAuto(humanPlayerPose, PathLocation.HumanPlayer))
         );
     }
         
