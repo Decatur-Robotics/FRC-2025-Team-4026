@@ -95,10 +95,29 @@ public class PathSetpoints {
     public final static Pose2d BLUE_NET = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
     public final static Pose2d RED_NET = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 
-    // Human player locations
-    public final static Pose2d BLUE_LEFT_HUMAN_PLAYER = new Pose2d(1.12, 7.03, Rotation2d.fromDegrees(306));
-    public final static Pose2d BLUE_RIGHT_HUMAN_PLAYER = new Pose2d(1.12, 1.02, Rotation2d.fromDegrees(54));
-    public final static Pose2d RED_LEFT_HUMAN_PLAYER = new Pose2d(16.43, 1.02, Rotation2d.fromDegrees(126));
-    public final static Pose2d RED_RIGHT_HUMAN_PLAYER = new Pose2d(16.43, 7.03, Rotation2d.fromDegrees(234));
+    // Human player locations relative to driver station
+    public final static double HUMAN_PLAYER_ROBOT_OFFSET = 0.45;
+    public final static double HUMAN_PLAYER_SIDE_OFFSET = 0.5;
+    // Blue left HP
+    public final static Pose2d BLUE_LEFT_HUMAN_PLAYER_LEFT = APRILTAG_13.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, HUMAN_PLAYER_SIDE_OFFSET, Rotation2d.kZero));
+    public final static Pose2d BLUE_LEFT_HUMAN_PLAYER_CENTER = APRILTAG_13.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, 0, Rotation2d.kZero));
+    public final static Pose2d BLUE_LEFT_HUMAN_PLAYER_RIGHT = APRILTAG_13.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, -HUMAN_PLAYER_SIDE_OFFSET, Rotation2d.kZero));
+    // Blue right HP
+    public final static Pose2d BLUE_RIGHT_HUMAN_PLAYER_LEFT = APRILTAG_12.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, HUMAN_PLAYER_SIDE_OFFSET, Rotation2d.kZero));
+    public final static Pose2d BLUE_RIGHT_HUMAN_PLAYER_CENTER = APRILTAG_12.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, 0, Rotation2d.kZero));
+    public final static Pose2d BLUE_RIGHT_HUMAN_PLAYER_RIGHT = APRILTAG_12.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, -HUMAN_PLAYER_SIDE_OFFSET, Rotation2d.kZero));
+    // Red left HP
+    public final static Pose2d RED_LEFT_HUMAN_PLAYER_LEFT = APRILTAG_1.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, HUMAN_PLAYER_SIDE_OFFSET, Rotation2d.kZero));
+    public final static Pose2d RED_LEFT_HUMAN_PLAYER_CENTER = APRILTAG_1.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, 0, Rotation2d.kZero));
+    public final static Pose2d RED_LEFT_HUMAN_PLAYER_RIGHT = APRILTAG_1.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, -HUMAN_PLAYER_SIDE_OFFSET, Rotation2d.kZero));
+    // Red right HP
+    public final static Pose2d RED_RIGHT_HUMAN_PLAYER_LEFT = APRILTAG_2.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, HUMAN_PLAYER_SIDE_OFFSET, Rotation2d.kZero));
+    public final static Pose2d RED_RIGHT_HUMAN_PLAYER_CENTER = APRILTAG_2.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, 0, Rotation2d.kZero));
+    public final static Pose2d RED_RIGHT_HUMAN_PLAYER_RIGHT = APRILTAG_2.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, -HUMAN_PLAYER_SIDE_OFFSET, Rotation2d.kZero));
+
+    public static final Pose2d[] HUMAN_PLAYER_POSES = {BLUE_LEFT_HUMAN_PLAYER_LEFT, BLUE_LEFT_HUMAN_PLAYER_CENTER, BLUE_LEFT_HUMAN_PLAYER_RIGHT,
+        BLUE_RIGHT_HUMAN_PLAYER_LEFT, BLUE_RIGHT_HUMAN_PLAYER_CENTER, BLUE_RIGHT_HUMAN_PLAYER_RIGHT,
+        RED_LEFT_HUMAN_PLAYER_LEFT, RED_LEFT_HUMAN_PLAYER_CENTER, RED_LEFT_HUMAN_PLAYER_RIGHT,
+        RED_RIGHT_HUMAN_PLAYER_LEFT, RED_RIGHT_HUMAN_PLAYER_CENTER, RED_RIGHT_HUMAN_PLAYER_RIGHT};
     
 }

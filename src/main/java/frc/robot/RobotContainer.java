@@ -138,7 +138,7 @@ public class RobotContainer {
             double velocityY = -joystick.getX() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
             double velocityAngular = -joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
 
-            if (a.getAsBoolean()) {
+            if (bumperLeft.getAsBoolean()) {
                 velocityX *= -SwerveConstants.PRECISION_MODE_SCALAR;
                 velocityY *= -SwerveConstants.PRECISION_MODE_SCALAR;
                 velocityAngular *= SwerveConstants.PRECISION_MODE_SCALAR;
@@ -148,7 +148,7 @@ public class RobotContainer {
             if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_DRIVER_DEADBAND) velocityY = 0;
             if (Math.abs(velocityAngular) < SwerveConstants.ROTATIONAL_DRIVER_DEADBAND) velocityAngular = 0;
 
-            if (a.getAsBoolean()) {
+            if (bumperLeft.getAsBoolean()) {
                 return new ChassisSpeeds(velocityX, velocityY, velocityAngular);
             }
             else {
@@ -163,6 +163,7 @@ public class RobotContainer {
 
         // Drive to pose commands
         // triggerLeft.whileTrue(swerve.driveToNet(desiredChassisSpeeds));
+        triggerLeft.whileTrue(swerve.driveToClosestHumanPlayer(desiredChassisSpeeds));
         triggerRight.whileTrue(swerve.driveToClosestBranch(desiredChassisSpeeds));
         // bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
         bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));

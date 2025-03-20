@@ -136,9 +136,9 @@ public class Autonomous {
 
     private Command leftThreeCoralHumanPlayerAuto() {
         return Commands.either(
-            threeCoralHumanPlayerAuto(AutoConstants.BLUE_LEFT_INITIAL_POSE, PathSetpoints.BLUE_LEFT_HUMAN_PLAYER, 
+            threeCoralHumanPlayerAuto(AutoConstants.BLUE_LEFT_INITIAL_POSE, PathSetpoints.BLUE_LEFT_HUMAN_PLAYER_LEFT, 
                 PathSetpoints.BLUE_REEF_J, PathSetpoints.BLUE_REEF_K, PathSetpoints.BLUE_REEF_L),
-            threeCoralHumanPlayerAuto(AutoConstants.RED_LEFT_INITIAL_POSE, PathSetpoints.RED_LEFT_HUMAN_PLAYER, 
+            threeCoralHumanPlayerAuto(AutoConstants.RED_LEFT_INITIAL_POSE, PathSetpoints.RED_LEFT_HUMAN_PLAYER_LEFT, 
                 PathSetpoints.RED_REEF_J, PathSetpoints.RED_REEF_K, PathSetpoints.RED_REEF_L),
             () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
     }
@@ -151,9 +151,9 @@ public class Autonomous {
 
     private Command rightThreeCoralHumanPlayerAuto() {
         return Commands.either(
-            threeCoralHumanPlayerAuto(AutoConstants.BLUE_RIGHT_INITIAL_POSE, PathSetpoints.BLUE_RIGHT_HUMAN_PLAYER, 
+            threeCoralHumanPlayerAuto(AutoConstants.BLUE_RIGHT_INITIAL_POSE, PathSetpoints.BLUE_RIGHT_HUMAN_PLAYER_RIGHT, 
                 PathSetpoints.BLUE_REEF_E, PathSetpoints.BLUE_REEF_D, PathSetpoints.BLUE_REEF_C),
-            threeCoralHumanPlayerAuto(AutoConstants.RED_RIGHT_INITIAL_POSE, PathSetpoints.RED_RIGHT_HUMAN_PLAYER, 
+            threeCoralHumanPlayerAuto(AutoConstants.RED_RIGHT_INITIAL_POSE, PathSetpoints.RED_RIGHT_HUMAN_PLAYER_RIGHT, 
                 PathSetpoints.RED_REEF_E, PathSetpoints.RED_REEF_D, PathSetpoints.RED_REEF_C),
             () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
     }
