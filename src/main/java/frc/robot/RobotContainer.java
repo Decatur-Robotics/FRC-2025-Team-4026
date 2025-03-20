@@ -235,16 +235,6 @@ public class RobotContainer {
          * Testing buttons
          */
 
-        GenericEntry testingVoltage = shuffleboardTab.add("Testing Voltage", 0)
-            .withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", 0, "max", 2))
-            .getEntry();
-            
-        // triggerLeft.whileTrue(elevator.tuneVoltageCommand(() -> testingVoltage.getDouble(0)));
-
-        // triggerLeft.whileTrue(arm.tuneVoltageCommand(() -> testingVoltage.getDouble(0)));
-        // triggerRight.whileTrue(arm.tuneVoltageCommand(() -> -testingVoltage.getDouble(0)));
-
         // triggerLeft.whileTrue(elevator.setVoltageCommand(1.5));
         // triggerRight.whileTrue(elevator.setVoltageCommand(-1));
         // bumperLeft.onTrue(elevator.setPositionCommand(10));
@@ -265,7 +255,6 @@ public class RobotContainer {
         // triggerRight.whileTrue(intake.setVoltageCommand(0.25));
         // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
-        // bumperLeft.whileTrue(intake.setVoltageCommand(testingVoltage.getDouble(0)));
 
         // triggerLeft.whileTrue(climber.setVoltageCommand(6));
         // triggerRight.whileTrue(climber.setVoltageCommand(-6));
