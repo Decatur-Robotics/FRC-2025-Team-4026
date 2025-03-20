@@ -74,9 +74,9 @@ public class PathSetpoints {
     public final static Pose2d RED_NET = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 
     // Human player locations
-    public final static Pose2d BLUE_LEFT_HUMAN_PLAYER = new Pose2d(0.851, 7.396, Rotation2d.fromDegrees(306));
-    public final static Pose2d BLUE_RIGHT_HUMAN_PLAYER = new Pose2d(0.851, 0.655, Rotation2d.fromDegrees(54));
-    public final static Pose2d RED_LEFT_HUMAN_PLAYER = new Pose2d(16.697, 0.655, Rotation2d.fromDegrees(126));
-    public final static Pose2d RED_RIGHT_HUMAN_PLAYER = new Pose2d(16.697, 7.396, Rotation2d.fromDegrees(234));
+    public final static Pose2d BLUE_LEFT_HUMAN_PLAYER = new Pose2d(1.12, 7.03, Rotation2d.fromDegrees(306));
+    public final static Pose2d BLUE_RIGHT_HUMAN_PLAYER = new Pose2d(1.12, 1.02, Rotation2d.fromDegrees(54));
+    public final static Pose2d RED_LEFT_HUMAN_PLAYER = new Pose2d(16.43, 1.02, Rotation2d.fromDegrees(126));
+    public final static Pose2d RED_RIGHT_HUMAN_PLAYER = new Pose2d(16.43, 7.03, Rotation2d.fromDegrees(234));
     
 }
