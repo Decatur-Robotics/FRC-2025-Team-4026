@@ -162,9 +162,9 @@ public class RobotContainer {
         swerve.setDefaultCommand(swerve.driveCommand(desiredChassisSpeeds));
 
         // Drive to pose commands
-        triggerLeft.whileTrue(swerve.driveToNet(desiredChassisSpeeds));
+        // triggerLeft.whileTrue(swerve.driveToNet(desiredChassisSpeeds));
         triggerRight.whileTrue(swerve.driveToClosestBranch(desiredChassisSpeeds));
-        bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
+        // bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
         bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
 
         // Reset heading

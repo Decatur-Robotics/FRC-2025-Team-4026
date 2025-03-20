@@ -19,6 +19,30 @@ public class PathSetpoints {
     // Field center
     public static final Translation2d FIELD_CENTER = new Translation2d(8.774176, 4.026281);
 
+    // Apriltag poses
+    public final static Pose2d APRILTAG_1 = new Pose2d(16.7, 0.66, Rotation2d.fromDegrees(126));
+    public final static Pose2d APRILTAG_2 = new Pose2d(16.7, 7.4, Rotation2d.fromDegrees(234));
+    public final static Pose2d APRILTAG_3 = new Pose2d(11.56, 8.06, Rotation2d.fromDegrees(270));
+    public final static Pose2d APRILTAG_4 = new Pose2d(9.28, 6.14, Rotation2d.fromDegrees(0));
+    public final static Pose2d APRILTAG_5 = new Pose2d(9.28, 1.91, Rotation2d.fromDegrees(0));
+    public final static Pose2d APRILTAG_6 = new Pose2d(13.47, 3.31, Rotation2d.fromDegrees(300));
+    public final static Pose2d APRILTAG_7 = new Pose2d(13.89, 4.03, Rotation2d.fromDegrees(0));
+    public final static Pose2d APRILTAG_8 = new Pose2d(13.47, 4.75, Rotation2d.fromDegrees(60));
+    public final static Pose2d APRILTAG_9 = new Pose2d(12.64, 4.75, Rotation2d.fromDegrees(120));
+    public final static Pose2d APRILTAG_10 = new Pose2d(12.23, 4.03, Rotation2d.fromDegrees(180));
+    public final static Pose2d APRILTAG_11 = new Pose2d(12.64, 3.31, Rotation2d.fromDegrees(240));
+    public final static Pose2d APRILTAG_12 = new Pose2d(0.85, 0.66, Rotation2d.fromDegrees(54));
+    public final static Pose2d APRILTAG_13 = new Pose2d(0.85, 7.4, Rotation2d.fromDegrees(306));
+    public final static Pose2d APRILTAG_14 = new Pose2d(8.27, 6.14, Rotation2d.fromDegrees(180));
+    public final static Pose2d APRILTAG_15 = new Pose2d(8.27, 1.91, Rotation2d.fromDegrees(180));
+    public final static Pose2d APRILTAG_16 = new Pose2d(5.99, 0, Rotation2d.fromDegrees(90));
+    public final static Pose2d APRILTAG_17 = new Pose2d(4.07, 3.31, Rotation2d.fromDegrees(240));
+    public final static Pose2d APRILTAG_18 = new Pose2d(3.66, 4.03, Rotation2d.fromDegrees(180));
+    public final static Pose2d APRILTAG_19 = new Pose2d(4.07, 4.75, Rotation2d.fromDegrees(120));
+    public final static Pose2d APRILTAG_20 = new Pose2d(4.9, 4.75, Rotation2d.fromDegrees(60));
+    public final static Pose2d APRILTAG_21 = new Pose2d(5.32, 4.03, Rotation2d.fromDegrees(0));
+    public final static Pose2d APRILTAG_22 = new Pose2d(4.9, 3.31, Rotation2d.fromDegrees(300));
+
     // Coral scoring locations
     public final static Pose2d BLUE_REEF_A = new Pose2d(3.2011, 4.1902, Rotation2d.fromDegrees(180));
     public final static Pose2d BLUE_REEF_B = new Pose2d(3.2011, 3.8616, Rotation2d.fromDegrees(180));
