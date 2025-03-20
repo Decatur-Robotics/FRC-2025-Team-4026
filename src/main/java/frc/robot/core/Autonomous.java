@@ -72,6 +72,8 @@ public class Autonomous {
 
         autoSideChooser.onChange((autoSide) -> updateAutoCommand());
         autoTypeChooser.onChange((autoSide) -> updateAutoCommand());
+
+        updateAutoCommand();
     }
 
     public Command getAutoCommand() {
