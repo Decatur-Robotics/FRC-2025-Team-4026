@@ -10,31 +10,31 @@ public class SuperstructureConstants {
         ElevatorConstants.CORAL_GROUND_INTAKING_POSITION, 
         ArmConstants.CORAL_GROUND_INTAKING_POSITION, 
         WristConstants.PERPENDICULAR_CURRENT, 
-        IntakeConstants.INTAKE_VELOCITY);
+        IntakeConstants.CORAL_INTAKE_VELOCITY);
 
     public static final SuperstructureState CORAL_HUMAN_PLAYER_INTAKING_STATE = new SuperstructureState(
         ElevatorConstants.CORAL_HUMAN_PLAYER_INTAKING_POSITION, 
         ArmConstants.CORAL_HUMAN_PLAYER_INTAKING_POSITION, 
         WristConstants.PERPENDICULAR_CURRENT, 
-        IntakeConstants.INTAKE_VELOCITY);
+        IntakeConstants.CORAL_INTAKE_VELOCITY);
 
     public static final SuperstructureState ALGAE_GROUND_INTAKING_STATE = new SuperstructureState(
         ElevatorConstants.ALGAE_GROUND_INTAKING_POSITION, 
         ArmConstants.ALGAE_GROUND_INTAKING_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
-        IntakeConstants.INTAKE_VELOCITY);
+        IntakeConstants.ALGAE_INTAKE_VELOCITY);
 
     public static final SuperstructureState ALGAE_LOW_REEF_INTAKING_STATE = new SuperstructureState(
         ElevatorConstants.ALGAE_LOW_REEF_INTAKING_POSITION, 
         ArmConstants.ALGAE_LOW_REEF_INTAKING_POSITION, 
         WristConstants.PERPENDICULAR_CURRENT, 
-        IntakeConstants.INTAKE_VELOCITY);
+        IntakeConstants.ALGAE_REMOVE_VELOCITY);
 
     public static final SuperstructureState ALGAE_HIGH_REEF_INTAKING_STATE = new SuperstructureState(
         ElevatorConstants.ALGAE_HIGH_REEF_INTAKING_POSITION, 
         ArmConstants.ALGAE_HIGH_REEF_INTAKING_POSITION, 
         WristConstants.PERPENDICULAR_CURRENT, 
-        IntakeConstants.INTAKE_VELOCITY);
+        IntakeConstants.ALGAE_REMOVE_VELOCITY);
 
     // Stowed states
 
