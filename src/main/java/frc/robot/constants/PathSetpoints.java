@@ -97,7 +97,7 @@ public class PathSetpoints {
 
     // Human player locations relative to driver station
     public final static double HUMAN_PLAYER_ROBOT_OFFSET = 0.45;
-    public final static double HUMAN_PLAYER_SIDE_OFFSET = 0.5;
+    public final static double HUMAN_PLAYER_SIDE_OFFSET = 0.45;
     // Blue left HP
     public final static Pose2d BLUE_LEFT_HUMAN_PLAYER_LEFT = APRILTAG_13.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, HUMAN_PLAYER_SIDE_OFFSET, Rotation2d.kZero));
     public final static Pose2d BLUE_LEFT_HUMAN_PLAYER_CENTER = APRILTAG_13.transformBy(new Transform2d(HUMAN_PLAYER_ROBOT_OFFSET, 0, Rotation2d.kZero));
