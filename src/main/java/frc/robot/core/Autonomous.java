@@ -161,9 +161,9 @@ public class Autonomous {
     private Command oneCoralAuto(Pose2d initialPose, Pose2d branchPose) {
         return Commands.sequence(
             Commands.runOnce(() -> swerve.resetPose(initialPose), swerve),
-            Commands.parallel(
-                swerve.driveToPoseAuto(branchPose, PathLocation.Reef),
-                autoL4Command())
+            Commands.deadline(
+                autoL4Command(),
+                swerve.driveToPoseAuto(branchPose, PathLocation.Reef))
         );
     }
 
@@ -171,22 +171,25 @@ public class Autonomous {
             Pose2d firstBranchPose, Pose2d secondBranchPose, Pose2d thirdBranchPose) {
         return Commands.sequence(
             Commands.runOnce(() -> swerve.resetPose(initialPose), swerve),
-            Commands.parallel(
-                swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef),
-                autoL4Command()),
-            Commands.parallel(
+            Commands.deadline(
+                autoL4Command(),
+                swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef)
+                ),
+            Commands.deadline(
                 superstructure.intakeCoralHumanPlayerCommand(), 
                 swerve.driveToHumanPlayerFromReefBacksideAuto(humanPlayerPose)),
-            Commands.parallel(
-                swerve.driveToPoseAuto(secondBranchPose, PathLocation.Reef),
-                autoL4Command()),
-            Commands.parallel(
+            Commands.deadline(
+                autoL4Command(),
+                swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef)
+                ),
+            Commands.deadline(
                 superstructure.intakeCoralHumanPlayerCommand(), 
                 swerve.driveToPoseAuto(humanPlayerPose, PathLocation.HumanPlayer)),
-            Commands.parallel(
-                swerve.driveToPoseAuto(thirdBranchPose, PathLocation.Reef),
-                autoL4Command()),
-            Commands.parallel(
+            Commands.deadline(
+                autoL4Command(),
+                swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef)
+                ),
+            Commands.deadline(
                 superstructure.intakeCoralHumanPlayerCommand(), 
                 swerve.driveToPoseAuto(humanPlayerPose, PathLocation.HumanPlayer))
         );

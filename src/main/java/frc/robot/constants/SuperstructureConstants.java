@@ -27,13 +27,13 @@ public class SuperstructureConstants {
     public static final SuperstructureState ALGAE_LOW_REEF_INTAKING_STATE = new SuperstructureState(
         ElevatorConstants.ALGAE_LOW_REEF_INTAKING_POSITION, 
         ArmConstants.ALGAE_LOW_REEF_INTAKING_POSITION, 
-        WristConstants.PERPENDICULAR_CURRENT, 
+        WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.ALGAE_REMOVE_VELOCITY);
 
     public static final SuperstructureState ALGAE_HIGH_REEF_INTAKING_STATE = new SuperstructureState(
         ElevatorConstants.ALGAE_HIGH_REEF_INTAKING_POSITION, 
         ArmConstants.ALGAE_HIGH_REEF_INTAKING_POSITION, 
-        WristConstants.PERPENDICULAR_CURRENT, 
+        WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.ALGAE_REMOVE_VELOCITY);
 
     // Stowed states

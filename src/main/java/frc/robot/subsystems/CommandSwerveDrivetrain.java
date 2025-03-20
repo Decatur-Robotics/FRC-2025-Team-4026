@@ -449,9 +449,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public Command driveToPoseAuto(Pose2d targetPose,
             PathLocation targetPoseLocation) {
-        return Commands.deadline(Commands.waitUntil(() -> isAligned()), 
-                Commands.run(() -> driveToPose(() -> new ChassisSpeeds(0, 0, 0), 
-                    () -> targetPose, targetPoseLocation), this))
+        return Commands.run(() -> driveToPose(() -> new ChassisSpeeds(0, 0, 0), 
+                    () -> targetPose, targetPoseLocation), this)
             .finallyDo(() -> {
                 this.targetPose = null;
                 this.targetPoseLocation = PathLocation.None;
