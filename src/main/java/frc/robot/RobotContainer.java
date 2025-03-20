@@ -168,7 +168,7 @@ public class RobotContainer {
         bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
 
         // Reset heading
-        y.onTrue(swerve.runOnce(() -> swerve.resetRotation(swerve.getOperatorForwardDirection())));
+        y.onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));
 
         swerve.configureShuffleboard(desiredChassisSpeeds);
 
