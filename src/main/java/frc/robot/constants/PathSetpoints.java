@@ -2,19 +2,17 @@ package frc.robot.constants;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class PathSetpoints {
 
-    // 0.6858 + 0.375
-    // id 7: 13.890, 4.026
-    // robot: 14.96, 4.026
+    // Robot center should be 0.57 meters from reef face for scoring
 
-    // Robot chassis edge to center 0.752475 meters
+    // 0.164338 meters from apriltag to reef branch on parallel plane    
 
-    // Robot center should be 0.456475 meters from reef face for scoring
-
-    // 0.164338 meters from apriltag to reef branch on parallel plane
+    public static final Transform2d LEFT_BRANCH_OFFSET = new Transform2d(new Translation2d(0.57, -0.164), Rotation2d.kZero);
+    public static final Transform2d RIGHT_BRANCH_OFFSET = new Transform2d(new Translation2d(0.57, 0.164), Rotation2d.kZero);
 
     // Field center
     public static final Translation2d FIELD_CENTER = new Translation2d(8.774176, 4.026281);
@@ -44,31 +42,31 @@ public class PathSetpoints {
     public final static Pose2d APRILTAG_22 = new Pose2d(4.9, 3.31, Rotation2d.fromDegrees(300));
 
     // Coral scoring locations
-    public final static Pose2d BLUE_REEF_A = new Pose2d(3.2011, 4.1902, Rotation2d.fromDegrees(180));
-    public final static Pose2d BLUE_REEF_B = new Pose2d(3.2011, 3.8616, Rotation2d.fromDegrees(180));
-    public final static Pose2d BLUE_REEF_C = new Pose2d(3.7034, 2.9932, Rotation2d.fromDegrees(240));
-    public final static Pose2d BLUE_REEF_D = new Pose2d(3.9880, 2.8288, Rotation2d.fromDegrees(240));
-    public final static Pose2d BLUE_REEF_E = new Pose2d(4.9907, 2.8288, Rotation2d.fromDegrees(300));
-    public final static Pose2d BLUE_REEF_F = new Pose2d(5.2753, 2.9932, Rotation2d.fromDegrees(300));
-    public final static Pose2d BLUE_REEF_G = new Pose2d(5.7775, 3.8616, Rotation2d.fromDegrees(0));
-    public final static Pose2d BLUE_REEF_H = new Pose2d(5.7775, 4.1902, Rotation2d.fromDegrees(0));
-    public final static Pose2d BLUE_REEF_I = new Pose2d(5.2753, 5.0586, Rotation2d.fromDegrees(60));
-    public final static Pose2d BLUE_REEF_J = new Pose2d(4.9907, 5.2230, Rotation2d.fromDegrees(60));
-    public final static Pose2d BLUE_REEF_K = new Pose2d(3.9880, 5.2230, Rotation2d.fromDegrees(120));
-    public final static Pose2d BLUE_REEF_L = new Pose2d(3.7034, 5.0586, Rotation2d.fromDegrees(120));
+    public final static Pose2d BLUE_REEF_A = APRILTAG_18.transformBy(LEFT_BRANCH_OFFSET);
+    public final static Pose2d BLUE_REEF_B = APRILTAG_18.transformBy(RIGHT_BRANCH_OFFSET);
+    public final static Pose2d BLUE_REEF_C = APRILTAG_17.transformBy(LEFT_BRANCH_OFFSET);
+    public final static Pose2d BLUE_REEF_D = APRILTAG_17.transformBy(RIGHT_BRANCH_OFFSET);
+    public final static Pose2d BLUE_REEF_E = APRILTAG_22.transformBy(LEFT_BRANCH_OFFSET);
+    public final static Pose2d BLUE_REEF_F = APRILTAG_22.transformBy(RIGHT_BRANCH_OFFSET);
+    public final static Pose2d BLUE_REEF_G = APRILTAG_21.transformBy(LEFT_BRANCH_OFFSET);
+    public final static Pose2d BLUE_REEF_H = APRILTAG_21.transformBy(RIGHT_BRANCH_OFFSET);
+    public final static Pose2d BLUE_REEF_I = APRILTAG_20.transformBy(LEFT_BRANCH_OFFSET);
+    public final static Pose2d BLUE_REEF_J = APRILTAG_20.transformBy(RIGHT_BRANCH_OFFSET);
+    public final static Pose2d BLUE_REEF_K = APRILTAG_19.transformBy(LEFT_BRANCH_OFFSET);
+    public final static Pose2d BLUE_REEF_L = APRILTAG_19.transformBy(RIGHT_BRANCH_OFFSET);
 
-    public final static Pose2d RED_REEF_A = new Pose2d(14.46, 3.86, Rotation2d.fromDegrees(0)); // x: 14.46
-    public final static Pose2d RED_REEF_B = new Pose2d(14.46, 4.19, Rotation2d.fromDegrees(0));
-    public final static Pose2d RED_REEF_C = new Pose2d(13.8450, 5.0586, Rotation2d.fromDegrees(60));
-    public final static Pose2d RED_REEF_D = new Pose2d(13.5604, 5.2230, Rotation2d.fromDegrees(60));
-    public final static Pose2d RED_REEF_E = new Pose2d(12.5575, 5.2230, Rotation2d.fromDegrees(120));
-    public final static Pose2d RED_REEF_F = new Pose2d(12.2728, 5.0586, Rotation2d.fromDegrees(120));
-    public final static Pose2d RED_REEF_G = new Pose2d(11.7709, 4.1902, Rotation2d.fromDegrees(180));
-    public final static Pose2d RED_REEF_H = new Pose2d(11.7709, 3.8616, Rotation2d.fromDegrees(180));
-    public final static Pose2d RED_REEF_I = new Pose2d(12.2728, 2.9932, Rotation2d.fromDegrees(240));
-    public final static Pose2d RED_REEF_J = new Pose2d(12.5575, 2.8288, Rotation2d.fromDegrees(240));
-    public final static Pose2d RED_REEF_K = new Pose2d(13.5604, 2.8288, Rotation2d.fromDegrees(300));
-    public final static Pose2d RED_REEF_L = new Pose2d(13.8450, 2.9932, Rotation2d.fromDegrees(300));
+    public final static Pose2d RED_REEF_A = APRILTAG_7.transformBy(LEFT_BRANCH_OFFSET);
+    public final static Pose2d RED_REEF_B = APRILTAG_7.transformBy(RIGHT_BRANCH_OFFSET);
+    public final static Pose2d RED_REEF_C = APRILTAG_8.transformBy(LEFT_BRANCH_OFFSET);
+    public final static Pose2d RED_REEF_D = APRILTAG_8.transformBy(RIGHT_BRANCH_OFFSET);
+    public final static Pose2d RED_REEF_E = APRILTAG_9.transformBy(LEFT_BRANCH_OFFSET);
+    public final static Pose2d RED_REEF_F = APRILTAG_9.transformBy(RIGHT_BRANCH_OFFSET);
+    public final static Pose2d RED_REEF_G = APRILTAG_10.transformBy(LEFT_BRANCH_OFFSET);
+    public final static Pose2d RED_REEF_H = APRILTAG_10.transformBy(RIGHT_BRANCH_OFFSET);
+    public final static Pose2d RED_REEF_I = APRILTAG_11.transformBy(LEFT_BRANCH_OFFSET);
+    public final static Pose2d RED_REEF_J = APRILTAG_11.transformBy(RIGHT_BRANCH_OFFSET);
+    public final static Pose2d RED_REEF_K = APRILTAG_6.transformBy(LEFT_BRANCH_OFFSET);
+    public final static Pose2d RED_REEF_L = APRILTAG_6.transformBy(RIGHT_BRANCH_OFFSET);
 
     public final static Pose2d[] CORAL_SCORING_POSES = {BLUE_REEF_A, BLUE_REEF_B, BLUE_REEF_C, BLUE_REEF_D, BLUE_REEF_E, BLUE_REEF_F, BLUE_REEF_G, BLUE_REEF_H, BLUE_REEF_I, BLUE_REEF_J, BLUE_REEF_K, BLUE_REEF_L,
         RED_REEF_A, RED_REEF_B, RED_REEF_C, RED_REEF_D, RED_REEF_E, RED_REEF_F, RED_REEF_G, RED_REEF_H, RED_REEF_I, RED_REEF_J, RED_REEF_K, RED_REEF_L};
