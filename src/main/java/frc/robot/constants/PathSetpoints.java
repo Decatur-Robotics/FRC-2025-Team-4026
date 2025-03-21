@@ -119,5 +119,36 @@ public class PathSetpoints {
         BLUE_RIGHT_HUMAN_PLAYER_LEFT, BLUE_RIGHT_HUMAN_PLAYER_CENTER, BLUE_RIGHT_HUMAN_PLAYER_RIGHT,
         RED_LEFT_HUMAN_PLAYER_LEFT, RED_LEFT_HUMAN_PLAYER_CENTER, RED_LEFT_HUMAN_PLAYER_RIGHT,
         RED_RIGHT_HUMAN_PLAYER_LEFT, RED_RIGHT_HUMAN_PLAYER_CENTER, RED_RIGHT_HUMAN_PLAYER_RIGHT};
+
+    // Climb poses
+    public static final Pose2d BLUE_LEFT_CAGE = new Pose2d(8.79, 7.26, Rotation2d.kZero);
+    public static final Pose2d BLUE_CENTER_CAGE = new Pose2d(8.79, 6.16, Rotation2d.kZero);
+    public static final Pose2d BLUE_RIGHT_CAGE = new Pose2d(8.79, 5.06, Rotation2d.kZero);
+    public static final Pose2d RED_LEFT_CAGE = new Pose2d(8.79, 0.79, Rotation2d.k180deg);
+    public static final Pose2d RED_CENTER_CAGE = new Pose2d(8.79, 1.89, Rotation2d.k180deg);
+    public static final Pose2d RED_RIGHT_CAGE = new Pose2d(8.79, 2.99, Rotation2d.k180deg);
+
+    public static final Transform2d CLIMB_STAGING_OFFSET = new Transform2d(new Translation2d(-0.5, 0), Rotation2d.kZero);
+    public static final Transform2d CLIMB_ALIGNING_OFFSET = new Transform2d(new Translation2d(0.2, 0), Rotation2d.kZero);
+
+    public final static Pose2d BLUE_LEFT_CAGE_STAGE = BLUE_LEFT_CAGE.transformBy(CLIMB_STAGING_OFFSET);
+    public final static Pose2d BLUE_CENTER_CAGE_STAGE = BLUE_CENTER_CAGE.transformBy(CLIMB_STAGING_OFFSET);
+    public final static Pose2d BLUE_RIGHT_CAGE_STAGE = BLUE_RIGHT_CAGE.transformBy(CLIMB_STAGING_OFFSET);
+    public final static Pose2d RED_LEFT_CAGE_STAGE = RED_LEFT_CAGE.transformBy(CLIMB_STAGING_OFFSET);
+    public final static Pose2d RED_CENTER_CAGE_STAGE = RED_CENTER_CAGE.transformBy(CLIMB_STAGING_OFFSET);
+    public final static Pose2d RED_RIGHT_CAGE_STAGE = RED_RIGHT_CAGE.transformBy(CLIMB_STAGING_OFFSET);
+
+    public static final Pose2d[] CAGE_STAGE_POSES = {BLUE_LEFT_CAGE_STAGE, BLUE_CENTER_CAGE_STAGE, BLUE_RIGHT_CAGE_STAGE,
+        RED_LEFT_CAGE_STAGE, RED_CENTER_CAGE_STAGE, RED_RIGHT_CAGE_STAGE};
+
+    public final static Pose2d BLUE_LEFT_CAGE_ALIGN = BLUE_LEFT_CAGE.transformBy(CLIMB_ALIGNING_OFFSET);
+    public final static Pose2d BLUE_CENTER_CAGE_ALIGN = BLUE_CENTER_CAGE.transformBy(CLIMB_ALIGNING_OFFSET);
+    public final static Pose2d BLUE_RIGHT_CAGE_ALIGN = BLUE_RIGHT_CAGE.transformBy(CLIMB_ALIGNING_OFFSET);
+    public final static Pose2d RED_LEFT_CAGE_ALIGN = RED_LEFT_CAGE.transformBy(CLIMB_ALIGNING_OFFSET);
+    public final static Pose2d RED_CENTER_CAGE_ALIGN = RED_CENTER_CAGE.transformBy(CLIMB_ALIGNING_OFFSET);
+    public final static Pose2d RED_RIGHT_CAGE_ALIGN = RED_RIGHT_CAGE.transformBy(CLIMB_ALIGNING_OFFSET);
+
+    public static final Pose2d[] CAGE_ALIGN_POSES = {BLUE_LEFT_CAGE_ALIGN, BLUE_CENTER_CAGE_ALIGN, BLUE_RIGHT_CAGE_ALIGN,
+        RED_LEFT_CAGE_ALIGN, RED_CENTER_CAGE_ALIGN, RED_RIGHT_CAGE_ALIGN};
     
 }

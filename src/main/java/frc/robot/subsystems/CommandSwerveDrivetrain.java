@@ -611,6 +611,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return Commands.runOnce(() -> targetPose = null, this);
     }
 
+    public Command alignClimb() {
+        return Commands.sequence(
+            Commands.runOnce(() -> this.targetPose = getClosestPoseFromArray(PathSetpoints.CAGE_STAGE_POSES)),
+            Commands.deadline(Commands.waitUntil(() -> isAligned()), 
+                driveToPoseTeleop(() -> new ChassisSpeeds(), () -> targetPose, PathLocation.None)),
+            Commands.runOnce(() -> this.targetPose = getClosestPoseFromArray(PathSetpoints.CAGE_ALIGN_POSES)),
+            driveToPoseTeleop(() -> new ChassisSpeeds(), () -> targetPose, PathLocation.None)
+        )
+        .finallyDo(() -> this.targetPose = null);
+    }
+
     // TODO: Some edits will need to be made to these methods in the future
     // I can explain these at some point, cant think of a good name
     // public void orbitWowCoolThing() {
