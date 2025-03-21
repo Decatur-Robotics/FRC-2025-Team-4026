@@ -138,7 +138,7 @@ public class RobotContainer {
             double velocityY = -joystick.getX() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
             double velocityAngular = -joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
 
-            if (bumperLeft.getAsBoolean()) {
+            if (a.getAsBoolean()) {
                 velocityX *= -SwerveConstants.PRECISION_MODE_SCALAR;
                 velocityY *= -SwerveConstants.PRECISION_MODE_SCALAR;
                 velocityAngular *= SwerveConstants.PRECISION_MODE_SCALAR;
@@ -148,7 +148,7 @@ public class RobotContainer {
             if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_DRIVER_DEADBAND) velocityY = 0;
             if (Math.abs(velocityAngular) < SwerveConstants.ROTATIONAL_DRIVER_DEADBAND) velocityAngular = 0;
 
-            if (bumperLeft.getAsBoolean()) {
+            if (a.getAsBoolean()) {
                 return new ChassisSpeeds(velocityX, velocityY, velocityAngular);
             }
             else {
@@ -200,7 +200,7 @@ public class RobotContainer {
         Supplier<Boolean> overrideAtPose = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.b).getAsBoolean();
         Supplier<Boolean> overrideNearPose = () -> start.getAsBoolean();
         Supplier<Boolean> isNearAligned = () -> (swerve.isNearAligned() || Robot.isTestMode());
-        Supplier<Boolean> isAligned = () -> (swerve.isAligned() || Robot.isTestMode());
+        Supplier<Boolean> isAligned = () -> (Robot.isTestMode()); // (swerve.isAligned() || Robot.isTestMode());
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
         down.whileTrue(superstructure.scoreCoralL1Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
