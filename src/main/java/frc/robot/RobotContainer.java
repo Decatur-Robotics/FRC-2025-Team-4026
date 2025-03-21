@@ -294,6 +294,10 @@ public class RobotContainer {
         return vision;
     }
 
+    public static RobotContainer getInstance() {
+        return instance;
+    }
+
     // TODO: make autos
     public Command getAutoCommand() {
         return auto.getAutoCommand();

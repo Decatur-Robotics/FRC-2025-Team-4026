@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.LedConstants;
@@ -211,8 +212,11 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 debouncer.calculate(false);
                 setState(intakingState.get());
             }, elevator, arm, wrist, intake),
-            Commands.waitUntil(() -> (debouncer.calculate(Math.abs(intake.getFilteredCurrentLeft()) > IntakeConstants.STALL_CURRENT
-                || Math.abs(intake.getFilteredCurrentRight()) > IntakeConstants.STALL_CURRENT)) || Robot.isSimulation()),
+            Commands.waitUntil(() -> (debouncer.calculate((
+                (Math.abs(intake.getFilteredCurrentLeft()) > IntakeConstants.STALL_CURRENT)
+                || (Math.abs(intake.getFilteredCurrentRight()) > IntakeConstants.STALL_CURRENT))
+                && !Robot.isSimulation()) 
+                || Robot.isSimulation() && RobotContainer.getInstance().getSwerve().isAligned())),
             Commands.runOnce(() -> led.flashAllPixels(LedConstants.BLUE, 5), led)
         )
         .finallyDo(

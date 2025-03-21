@@ -106,7 +106,9 @@ public class Autonomous {
     }
 
     private Command autoL4Command() {
-        return superstructure.scoreCoralL4Command(() -> swerve.isNearAligned(), () -> swerve.isAligned(), () -> Robot.isSimulation(), () -> Robot.isSimulation());
+        return superstructure.scoreCoralL4Command(() -> swerve.isNearAligned(), () -> swerve.isAligned(), 
+            () -> (Robot.isSimulation() && swerve.isNearAligned()), 
+            () -> (Robot.isSimulation() && swerve.isAligned()));
     }
 
     //
@@ -173,22 +175,19 @@ public class Autonomous {
             Commands.runOnce(() -> swerve.resetPose(initialPose), swerve),
             Commands.deadline(
                 autoL4Command(),
-                swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef)
-                ),
+                swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef)),
             Commands.deadline(
                 superstructure.intakeCoralHumanPlayerCommand(), 
                 swerve.driveToHumanPlayerFromReefBacksideAuto(humanPlayerPose)),
             Commands.deadline(
                 autoL4Command(),
-                swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef)
-                ),
+                swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef)),
             Commands.deadline(
                 superstructure.intakeCoralHumanPlayerCommand(), 
                 swerve.driveToPoseAuto(humanPlayerPose, PathLocation.HumanPlayer)),
             Commands.deadline(
                 autoL4Command(),
-                swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef)
-                ),
+                swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef)),
             Commands.deadline(
                 superstructure.intakeCoralHumanPlayerCommand(), 
                 swerve.driveToPoseAuto(humanPlayerPose, PathLocation.HumanPlayer))
