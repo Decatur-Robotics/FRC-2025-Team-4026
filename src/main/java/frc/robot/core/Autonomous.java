@@ -181,13 +181,13 @@ public class Autonomous {
                 swerve.driveToHumanPlayerFromReefBacksideAuto(humanPlayerPose)),
             Commands.deadline(
                 autoL4Command(),
-                swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef)),
+                swerve.driveToPoseAuto(secondBranchPose, PathLocation.Reef)),
             Commands.deadline(
                 superstructure.intakeCoralHumanPlayerCommand(), 
                 swerve.driveToPoseAuto(humanPlayerPose, PathLocation.HumanPlayer)),
             Commands.deadline(
                 autoL4Command(),
-                swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef)),
+                swerve.driveToPoseAuto(thirdBranchPose, PathLocation.Reef)),
             Commands.deadline(
                 superstructure.intakeCoralHumanPlayerCommand(), 
                 swerve.driveToPoseAuto(humanPlayerPose, PathLocation.HumanPlayer))
