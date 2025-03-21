@@ -138,7 +138,7 @@ public class RobotContainer {
             double velocityY = -joystick.getX() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
             double velocityAngular = -joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
 
-            if (a.getAsBoolean()) {
+            if (bumperRight.getAsBoolean()) {
                 velocityX *= -SwerveConstants.PRECISION_MODE_SCALAR;
                 velocityY *= -SwerveConstants.PRECISION_MODE_SCALAR;
                 velocityAngular *= SwerveConstants.PRECISION_MODE_SCALAR;
@@ -148,14 +148,9 @@ public class RobotContainer {
             if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_DRIVER_DEADBAND) velocityY = 0;
             if (Math.abs(velocityAngular) < SwerveConstants.ROTATIONAL_DRIVER_DEADBAND) velocityAngular = 0;
 
-            if (a.getAsBoolean()) {
-                return new ChassisSpeeds(velocityX, velocityY, velocityAngular);
-            }
-            else {
-                return ChassisSpeeds.fromFieldRelativeSpeeds(
-                    new ChassisSpeeds(velocityX, velocityY, velocityAngular), 
-                    swerve.getState().Pose.getRotation().plus(swerve.getOperatorForwardDirection()));
-            }
+            return ChassisSpeeds.fromFieldRelativeSpeeds(
+                new ChassisSpeeds(velocityX, velocityY, velocityAngular), 
+                swerve.getState().Pose.getRotation().plus(swerve.getOperatorForwardDirection()));
         };
 
         // Default field relative drive command
@@ -166,10 +161,10 @@ public class RobotContainer {
         triggerLeft.whileTrue(swerve.driveToClosestHumanPlayer(desiredChassisSpeeds));
         triggerRight.whileTrue(swerve.driveToClosestBranch(desiredChassisSpeeds));
         // bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
-        bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
+        // bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
         
         // Climb alignment
-        bumperLeft.whileTrue(swerve.alignClimb());
+        bumperLeft.whileTrue(Commands.run(() -> swerve.driveRobotRelative(new ChassisSpeeds(1, 0, 0)), swerve));
 
         // Reset heading
         y.onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));

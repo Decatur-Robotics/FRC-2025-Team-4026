@@ -50,8 +50,8 @@ public class SwerveConstants {
     public static final double VELOCITY_ALIGNED_ERROR_MARGIN = 0.1;
 
     
-    public static final double TRANSLATIONAL_NEAR_ALIGNED_ERROR_MARGIN = 0.1;
-    public static final double ROTATIONAL_NEAR_ALIGNED_ERROR_MARGIN = 0.125;
+    public static final double TRANSLATIONAL_NEAR_ALIGNED_ERROR_MARGIN = 0.3;
+    public static final double ROTATIONAL_NEAR_ALIGNED_ERROR_MARGIN = 0.25;
     public static final double VELOCITY_NEAR_ALIGNED_ERROR_MARGIN = 0.5;
 
     public static final double PRECISION_MODE_SCALAR = 0.25;
