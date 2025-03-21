@@ -167,6 +167,9 @@ public class RobotContainer {
         triggerRight.whileTrue(swerve.driveToClosestBranch(desiredChassisSpeeds));
         // bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
         bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
+        
+        // Climb alignment
+        bumperLeft.whileTrue(swerve.alignClimb());
 
         // Reset heading
         y.onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));
