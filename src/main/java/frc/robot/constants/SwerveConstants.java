@@ -56,4 +56,6 @@ public class SwerveConstants {
 
     public static final double PRECISION_MODE_SCALAR = 0.25;
 
+    public static final double MAX_DRIVE_TO_POSE_SPEED = 6;
+
 }

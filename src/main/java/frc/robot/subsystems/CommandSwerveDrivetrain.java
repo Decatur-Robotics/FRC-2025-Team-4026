@@ -440,7 +440,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public Command driveToPoseTeleop(Supplier<ChassisSpeeds> speeds, Supplier<Pose2d> targetPose,
             PathLocation targetPoseLocation) {
-        return Commands.run(() -> driveToPose(speeds, targetPose, targetPoseLocation, 8), this)
+        return Commands.run(() -> driveToPose(speeds, targetPose, targetPoseLocation, SwerveConstants.MAX_DRIVE_TO_POSE_SPEED), this)
             .finallyDo(() -> {
                 this.targetPose = null;
                 this.targetPoseLocation = PathLocation.None;
@@ -450,7 +450,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Command driveToPoseAuto(Pose2d targetPose,
             PathLocation targetPoseLocation) {
         return Commands.run(() -> driveToPose(() -> new ChassisSpeeds(0, 0, 0), 
-                    () -> targetPose, targetPoseLocation, 8), this)
+                    () -> targetPose, targetPoseLocation, SwerveConstants.MAX_DRIVE_TO_POSE_SPEED), this)
             .finallyDo(() -> {
                 this.targetPose = null;
                 this.targetPoseLocation = PathLocation.None;
@@ -477,7 +477,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         return Commands.deadline(Commands.waitUntil(() -> isAligned()), 
                 Commands.run(() -> driveToPose(() -> new ChassisSpeeds(0, 0, 0), 
-                    humanPlayerPose, PathLocation.HumanPlayer, 8), this))
+                    humanPlayerPose, PathLocation.HumanPlayer, SwerveConstants.MAX_DRIVE_TO_POSE_SPEED), this))
             .finallyDo(() -> {
                 this.targetPose = null;
                 this.targetPoseLocation = PathLocation.None;
