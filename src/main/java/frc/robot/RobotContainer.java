@@ -139,8 +139,8 @@ public class RobotContainer {
             double velocityAngular = -joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
 
             if (bumperRight.getAsBoolean()) {
-                velocityX *= -SwerveConstants.PRECISION_MODE_SCALAR;
-                velocityY *= -SwerveConstants.PRECISION_MODE_SCALAR;
+                velocityX *= SwerveConstants.PRECISION_MODE_SCALAR;
+                velocityY *= SwerveConstants.PRECISION_MODE_SCALAR;
                 velocityAngular *= SwerveConstants.PRECISION_MODE_SCALAR;
             }
 

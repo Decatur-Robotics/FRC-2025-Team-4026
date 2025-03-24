@@ -35,9 +35,9 @@ public class SwerveConstants {
         0); // Radians
 
     /* Translation velocity from SDS, not tuned to robot */
-    public static final double MAX_TRANSLATIONAL_VELOCITY = 15.5;
+    public static final double MAX_TRANSLATIONAL_VELOCITY = 4.73;
     /* Not tuned */
-    public static final double MAX_ROTATIONAL_VELOCITY = 10;
+    public static final double MAX_ROTATIONAL_VELOCITY = 10.76;
 
     public static final double TRANSLATIONAL_DRIVER_DEADBAND = MAX_TRANSLATIONAL_VELOCITY * 0.05;
     public static final double ROTATIONAL_DRIVER_DEADBAND = MAX_ROTATIONAL_VELOCITY * 0.05;
