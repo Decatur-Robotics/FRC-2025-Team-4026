@@ -39,7 +39,7 @@ public class WristSubsystem extends SubsystemBase {
         motor.getRotorVelocity().setUpdateFrequency(20);
         motor.getStatorCurrent().setUpdateFrequency(20);
 
-        current = 0; 
+        current = WristConstants.PERPENDICULAR_CURRENT;
 
         controlRequest = new TorqueCurrentFOC(current);
         motor.setControl(controlRequest.withOutput(current));
