@@ -217,19 +217,6 @@ public class RobotContainer {
         back.onTrue(superstructure.zeroSuperstructureCommand());
 
         /*
-         * Homing buttons
-         */
-
-        // triggerLeft.whileTrue(elevator.setVoltageCommand(1.5));
-        // triggerRight.whileTrue(elevator.setVoltageCommand(-1));
-
-        // home.onTrue(arm.setZeroPositionCommand());
-        // home.onTrue(elevator.setZeroPositionCommand());
-
-        // bumperLeft.whileTrue(arm.setVoltageCommand(1.5));
-        // bumperRight.whileTrue(arm.setVoltageCommand(-1));
-
-        /*
          * Testing buttons
          */
 
