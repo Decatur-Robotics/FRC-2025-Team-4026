@@ -16,6 +16,6 @@ public class Ports {
 
     public static final int ADDRESSABLE_LED = 0;
 
-    public static final int ARM_ENCODER = 9;
+    public static final int ARM_ENCODER = 40;
 
 }
