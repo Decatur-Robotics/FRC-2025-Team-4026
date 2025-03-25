@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.filter.Debouncer;
@@ -36,7 +37,7 @@ public class ArmSubsystem extends SubsystemBase {
 
 	private VoltageOut voltageRequest;
 
-	private DutyCycleEncoder throughBoreEncoder;
+	private CANcoder throughBoreEncoder;
 
 	private double voltage;
 
@@ -67,10 +68,9 @@ public class ArmSubsystem extends SubsystemBase {
 
 		voltageRequest = new VoltageOut(0).withEnableFOC(true);
 
-		// k4X is quadrature encoding
-		throughBoreEncoder = new DutyCycleEncoder(Ports.ARM_ENCODER);
-
-		// resetTalonEncoder();
+		// CANcoder uses custom configs for offset and direction
+		throughBoreEncoder = new CANcoder(Ports.ARM_ENCODER);
+		throughBoreEncoder.getConfigurator().apply(ArmConstants.ENCODER_CONFIG);
 
 		configureShuffleboard();
 
@@ -138,7 +138,7 @@ public class ArmSubsystem extends SubsystemBase {
 	 * @return through bore encoder position in rotations
 	 */
 	public double getThroughBoreEncoderPosition() {
-		return (throughBoreEncoder.get()) - ArmConstants.THROUGH_BORE_ENCODER_ZERO_OFFSET;
+		return throughBoreEncoder.getPosition().getValueAsDouble();
 	}
 
 	// public void resetTalonEncoder() {

@@ -1,12 +1,16 @@
 package frc.robot.constants;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 public class ArmConstants {
 
@@ -40,8 +44,12 @@ public class ArmConstants {
 	public static final double LEVEL_POSITION = 0;
 
     /** The encoder value when the arm is parallel to the floor */
-    public static final double THROUGH_BORE_ENCODER_ZERO_OFFSET = 0.192;
-
+    public static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration()
+        .withMagnetSensor(new MagnetSensorConfigs()
+            .withMagnetOffset(0)
+            .withSensorDirection(SensorDirectionValue.Clockwise_Positive));
+        
+            
     public static final double TALON_ENCODER_TO_ROTATIONS_RATIO = 0.015625; // how many motor encoder rotations it takes to complete one rotation of the mechanism
 
     public static final double KG = 0.475; // 0.375
@@ -62,11 +70,14 @@ public class ArmConstants {
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()
         .withNeutralMode(NeutralModeValue.Brake)
         .withInverted(InvertedValue.Clockwise_Positive);
-
+    public static final FeedbackConfigs FEEDBACK_CONFIGS = new FeedbackConfigs()
+        .withFeedbackRemoteSensorID(Ports.ARM_ENCODER);
+        
     public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(CURRENT_LIMITS_CONFIGS)
         .withSlot0(SLOT_0_CONFIGS)
         .withMotionMagic(MOTION_MAGIC_CONFIGS)
+        .withFeedback(FEEDBACK_CONFIGS)
         .withMotorOutput(MOTOR_OUTPUT_CONFIGS);
 
 }
