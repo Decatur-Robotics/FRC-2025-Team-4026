@@ -46,7 +46,7 @@ public class ArmConstants {
     /** The encoder value when the arm is parallel to the floor */
     public static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration()
         .withMagnetSensor(new MagnetSensorConfigs()
-            .withMagnetOffset(0));
+            .withMagnetOffset(0.69));
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)
