@@ -40,12 +40,8 @@ public class ArmSubsystem extends SubsystemBase {
 
 	private double voltage;
 
-	private double gravityFeedForward;
-
 	private LinearFilter currentFilter;
     private double filteredCurrent;
-
-	private Boolean zeroing;
 
 	public ArmSubsystem() {
 		motor = new TalonFX(Ports.ARM_MOTOR);
@@ -76,22 +72,16 @@ public class ArmSubsystem extends SubsystemBase {
 		currentFilter = LinearFilter.movingAverage(10);
 
 		voltage = 0;
-
-		zeroing = false;
 	}
 
 	private void configureShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.SHUFFLEBOARD_SUPERSTRUCTURE_TAB);
 
 		tab.addDouble("Target Arm Position", () -> position);
-		tab.addDouble("Actual Arm Position", () -> getTalonPosition());
-		tab.addDouble("Actual Arm Velocity", () -> motor.getVelocity().getValueAsDouble());
-		tab.addDouble("Actual Arm Acceleration", () -> motor.getAcceleration().getValueAsDouble());
-		tab.addDouble("Arm Through Bore Encoder Position", () -> getThroughBoreEncoderPosition());
-		tab.addDouble("Arm Test Ratio", () -> (getTalonPosition()/getThroughBoreEncoderPosition()));
+		tab.addDouble("Actual Arm Position", () -> getPosition());
+		tab.addDouble("Actual Arm Velocity", () -> throughBoreEncoder.getVelocity().getValueAsDouble());
 		tab.addDouble("Target Arm Voltage", () -> voltage);
 		tab.addDouble("Actual Arm Voltage", () -> motor.getMotorVoltage().getValueAsDouble());
-		tab.addDouble("Gravity Feed Forward", () -> gravityFeedForward);
 		tab.addDouble("Filtered Arm Current", () -> filteredCurrent);
 	}
 	
@@ -116,10 +106,6 @@ public class ArmSubsystem extends SubsystemBase {
 		motor.setControl(voltageRequest.withOutput(voltage));
 	}
 
-    public double getTalonPosition() {
-        return motor.getPosition().getValueAsDouble();
-    }
-
 	public double getCurrent() {
 		return motor.getStatorCurrent().getValueAsDouble();
 	}
@@ -127,25 +113,9 @@ public class ArmSubsystem extends SubsystemBase {
 	/**
 	 * @return through bore encoder position in rotations
 	 */
-	public double getThroughBoreEncoderPosition() {
+	public double getPosition() {
 		return throughBoreEncoder.getPosition().getValueAsDouble();
 	}
-
-	public Command zeroCommand() {
-        Debouncer debouncer = new Debouncer(ArmConstants.STALL_DEBOUNCE_TIME, DebounceType.kFalling);
-
-        return Commands.sequence(
-			Commands.runOnce(() -> {zeroing = true;}),
-            Commands.runOnce(() -> setVoltage(ArmConstants.ZEROING_VOLTAGE), this),
-            Commands.waitUntil(() -> debouncer.calculate(Math.abs(filteredCurrent) > ArmConstants.STALL_CURRENT)),
-            Commands.runOnce(() -> {
-				motor.setPosition(1.5);
-			}, this)
-        ).finallyDo(() -> {
-            setPosition(ArmConstants.STOWED_POSITION);
-			zeroing = false;
-        });
-    }
 
 	public Command setPositionCommand(double position) {
 		return Commands.runOnce(() -> setPosition(position));
@@ -162,14 +132,6 @@ public class ArmSubsystem extends SubsystemBase {
         return Commands.run(() -> setVoltage(voltage.get()), this)
             .finallyDo(() -> setVoltage(0));
     }
-
-	public Command setZeroPositionCommand() {
-		return Commands.runOnce(() -> motor.setPosition(0), this);
-	}
-
-	// public Command resetTalonEncoderCommand() {
-	// 	return Commands.runOnce(() -> resetTalonEncoder());
-	// }
 
 	/*
 	 * SysId

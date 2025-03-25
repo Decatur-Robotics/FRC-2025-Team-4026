@@ -109,7 +109,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
 
     public double getActualArmPosition() {
-        return arm.getTalonPosition();
+        return arm.getPosition();
     }
 
     public double getActualWristCurrent() {
@@ -156,9 +156,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
         return Commands.sequence(
             Commands.runOnce(() -> setState(SuperstructureConstants.CORAL_STOWED_STATE), 
                 elevator, arm, wrist, intake),
-            Commands.parallel(
-                elevator.zeroCommand(),
-                arm.zeroCommand()))
+            elevator.zeroCommand())
             .finallyDo(() -> setState(SuperstructureConstants.CORAL_STOWED_STATE));
     }
 
