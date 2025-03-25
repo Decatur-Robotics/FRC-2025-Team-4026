@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -16,7 +16,7 @@ import frc.robot.constants.Ports;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-    private TalonFXS motorLeft, motorRight;
+    private TalonFX motorLeft, motorRight;
 
     private double velocity;
     private VelocityVoltage velocityRequest;
@@ -30,8 +30,8 @@ public class IntakeSubsystem extends SubsystemBase {
     private double voltage;
     
     public IntakeSubsystem() {
-        motorLeft = new TalonFXS(Ports.INTAKE_MOTOR_LEFT);
-        motorRight = new TalonFXS(Ports.INTAKE_MOTOR_RIGHT);
+        motorLeft = new TalonFX(Ports.INTAKE_MOTOR_LEFT);
+        motorRight = new TalonFX(Ports.INTAKE_MOTOR_RIGHT);
         
         motorLeft.getConfigurator().apply(IntakeConstants.MOTOR_LEFT_CONFIG);
 
