@@ -4,7 +4,7 @@ import com.ctre.phoenix6.configs.CommutationConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.TalonFXSConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -43,15 +43,13 @@ public class IntakeConstants {
         .withNeutralMode(NeutralModeValue.Brake)
         .withInverted(InvertedValue.CounterClockwise_Positive);
 
-    public static final TalonFXSConfiguration MOTOR_LEFT_CONFIG = new TalonFXSConfiguration()
+    public static final TalonFXConfiguration MOTOR_LEFT_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(CURRENT_LIMITS_CONFIGS)
         .withSlot0(SLOT_0_CONFIGS)
-        .withCommutation(COMMUTATION_CONFIGS)
         .withMotorOutput(LEFT_MOTOR_OUTPUT_CONFIGS);
-    public static final TalonFXSConfiguration MOTOR_RIGHT_CONFIG = new TalonFXSConfiguration()
+    public static final TalonFXConfiguration MOTOR_RIGHT_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(CURRENT_LIMITS_CONFIGS)
         .withSlot0(SLOT_0_CONFIGS)
-        .withCommutation(COMMUTATION_CONFIGS)
         .withMotorOutput(RIGHT_MOTOR_OUTPUT_CONFIGS);
 
 }
