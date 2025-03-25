@@ -8,9 +8,9 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 public class ArmConstants {
 
@@ -20,25 +20,25 @@ public class ArmConstants {
     public static final double STALL_CURRENT = 40;
 
     // Stowed position
-    public static final double STOWED_POSITION = -3; // -2 is pretty much all the way in
+    public static final double STOWED_POSITION = 0; // -2 is pretty much all the way in
 
     // Intaking positions
-    public static final double CORAL_GROUND_INTAKING_POSITION = -26;
-    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = -3;
-    public static final double ALGAE_GROUND_INTAKING_POSITION = -18.2;
-    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = -12.4;
+    public static final double CORAL_GROUND_INTAKING_POSITION = 0;
+    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 0;
+    public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
+    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 0;
     public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = ALGAE_LOW_REEF_INTAKING_POSITION;
 
     // Scoring positions
-    public static final double L1_SCORING_POSITION = -8.25;
-    public static final double L2_SCORING_POSITION = -11;
-    public static final double L2_STAGING_POSITION = -6.5;
-    public static final double L3_SCORING_POSITION = -11;
-    public static final double L3_STAGING_POSITION = -6.5;
-    public static final double L4_SCORING_POSITION = -10;
-    public static final double L4_STAGING_POSITION = -4.5;
-    public static final double PROCESSOR_POSITION = -13;
-    public static final double NET_POSITION = -4;
+    public static final double L1_SCORING_POSITION = 0;
+    public static final double L2_SCORING_POSITION = 0;
+    public static final double L2_STAGING_POSITION = 0;
+    public static final double L3_SCORING_POSITION = 0;
+    public static final double L3_STAGING_POSITION = 0;
+    public static final double L4_SCORING_POSITION = 0;
+    public static final double L4_STAGING_POSITION = 0;
+    public static final double PROCESSOR_POSITION = 0;
+    public static final double NET_POSITION = 0;
 
     /** The position when the arm is parallel to the floor */
 	public static final double LEVEL_POSITION = 0;
@@ -46,24 +46,20 @@ public class ArmConstants {
     /** The encoder value when the arm is parallel to the floor */
     public static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration()
         .withMagnetSensor(new MagnetSensorConfigs()
-            .withMagnetOffset(0)
-            .withSensorDirection(SensorDirectionValue.Clockwise_Positive));
-        
-            
-    public static final double TALON_ENCODER_TO_ROTATIONS_RATIO = 0.015625; // how many motor encoder rotations it takes to complete one rotation of the mechanism
-
-    public static final double KG = 0.475; // 0.375
+            .withMagnetOffset(0));
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)
         .withStatorCurrentLimit(60);
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-        .withKP(0.3) // 0.2
+        .withKP(0.0) // 0.3
         .withKI(0)
         .withKD(0)
-        .withKS(0.105) // 0.105
-        .withKV(0.1376) // 0.1376
-        .withKA(0.01); // 0.01
+        .withKS(0.0) // 0.105
+        .withKV(0.0) // 0.1376
+        .withKA(0.0) // 0.01
+        .withKG(0.0) // 0.475
+        .withGravityType(GravityTypeValue.Arm_Cosine);
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(50)
         .withMotionMagicAcceleration(100);

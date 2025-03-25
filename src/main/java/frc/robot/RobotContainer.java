@@ -162,9 +162,11 @@ public class RobotContainer {
         triggerRight.whileTrue(swerve.driveToClosestBranch(desiredChassisSpeeds));
         // bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
         // bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
+
+        bumperLeft.whileTrue(Commands.run(() -> swerve.driveRobotRelative(new ChassisSpeeds(-1, 0, 0)), swerve));
         
         // Climb alignment
-        bumperLeft.whileTrue(Commands.run(() -> swerve.driveRobotRelative(new ChassisSpeeds(1, 0, 0)), swerve));
+        x.whileTrue(Commands.run(() -> swerve.driveRobotRelative(new ChassisSpeeds(1, 0, 0)), swerve));
 
         // Reset heading
         y.onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));

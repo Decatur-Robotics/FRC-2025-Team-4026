@@ -16,7 +16,6 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -90,7 +89,6 @@ public class ArmSubsystem extends SubsystemBase {
 		tab.addDouble("Actual Arm Acceleration", () -> motor.getAcceleration().getValueAsDouble());
 		tab.addDouble("Arm Through Bore Encoder Position", () -> getThroughBoreEncoderPosition());
 		tab.addDouble("Arm Test Ratio", () -> (getTalonPosition()/getThroughBoreEncoderPosition()));
-		tab.addDouble("Arm Position Calc", () -> (getThroughBoreEncoderPosition() / ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO));
 		tab.addDouble("Target Arm Voltage", () -> voltage);
 		tab.addDouble("Actual Arm Voltage", () -> motor.getMotorVoltage().getValueAsDouble());
 		tab.addDouble("Gravity Feed Forward", () -> gravityFeedForward);
@@ -102,14 +100,6 @@ public class ArmSubsystem extends SubsystemBase {
         if(motor.hasResetOccurred()) {
 			motor.optimizeBusUtilization();
 			motor.getPosition().setUpdateFrequency(20);
-		}
-
-		if (!zeroing) {
-			Rotation2d angle = Rotation2d.fromRotations(getThroughBoreEncoderPosition());
-			
-			gravityFeedForward = angle.getCos() * ArmConstants.KG;
-
-			motor.setControl(positionRequest.withFeedForward(gravityFeedForward));
 		}
 
 		filteredCurrent = currentFilter.calculate(getCurrent());
@@ -140,11 +130,6 @@ public class ArmSubsystem extends SubsystemBase {
 	public double getThroughBoreEncoderPosition() {
 		return throughBoreEncoder.getPosition().getValueAsDouble();
 	}
-
-	// public void resetTalonEncoder() {
-    //     double rotations = getThroughBoreEncoderPosition() / ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO;
-	// 	motor.setPosition(rotations);
-    // }
 
 	public Command zeroCommand() {
         Debouncer debouncer = new Debouncer(ArmConstants.STALL_DEBOUNCE_TIME, DebounceType.kFalling);
