@@ -26,7 +26,7 @@ public class IntakeConstants {
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)
-        .withStatorCurrentLimit(30);
+        .withStatorCurrentLimit(60);
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
         .withKP(0.05) // 0.05
         .withKI(0)
@@ -34,8 +34,6 @@ public class IntakeConstants {
         .withKS(0.23) // 0.23
         .withKV(0.0658) // 0.0658
         .withKA(0.002); // 0.002
-    public static final CommutationConfigs COMMUTATION_CONFIGS = new CommutationConfigs()
-        .withMotorArrangement(MotorArrangementValue.NEO550_JST);
     public static final MotorOutputConfigs LEFT_MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()
         .withNeutralMode(NeutralModeValue.Brake)
         .withInverted(InvertedValue.Clockwise_Positive);

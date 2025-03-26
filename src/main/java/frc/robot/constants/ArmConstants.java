@@ -20,11 +20,11 @@ public class ArmConstants {
     public static final double STALL_CURRENT = 40;
 
     // Stowed position
-    public static final double STOWED_POSITION = 0; // -2 is pretty much all the way in
+    public static final double STOWED_POSITION = 0.26; // 0.27 is all the way in
 
     // Intaking positions
-    public static final double CORAL_GROUND_INTAKING_POSITION = 0;
-    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 0;
+    public static final double CORAL_GROUND_INTAKING_POSITION = -0.07;
+    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 0.26;
     public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
     public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 0;
     public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = ALGAE_LOW_REEF_INTAKING_POSITION;
