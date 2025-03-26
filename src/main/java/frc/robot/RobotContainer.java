@@ -63,8 +63,6 @@ import frc.robot.subsystems.CommandSwerveDrivetrain.PathLocation;
  */
 public class RobotContainer {
 
-    private boolean autoRan = false;
-
     private static RobotContainer instance;
 
     private final ClimberSubsystem climber;
