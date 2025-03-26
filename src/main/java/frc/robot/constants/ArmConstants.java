@@ -8,9 +8,11 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 public class ArmConstants {
 
@@ -20,11 +22,11 @@ public class ArmConstants {
     public static final double STALL_CURRENT = 40;
 
     // Stowed position
-    public static final double STOWED_POSITION = 0.26; // 0.27 is all the way in
+    public static final double STOWED_POSITION = 0.2; 
 
     // Intaking positions
-    public static final double CORAL_GROUND_INTAKING_POSITION = -0.07;
-    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 0.26;
+    public static final double CORAL_GROUND_INTAKING_POSITION = -0.1;
+    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 0.2;
     public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
     public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 0;
     public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = ALGAE_LOW_REEF_INTAKING_POSITION;
@@ -46,28 +48,30 @@ public class ArmConstants {
     /** The encoder value when the arm is parallel to the floor */
     public static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration()
         .withMagnetSensor(new MagnetSensorConfigs()
-            .withMagnetOffset(0.69));
+            .withMagnetOffset(0.67));
+            // .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)
         .withStatorCurrentLimit(60);
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-        .withKP(0.0) // 0.3
+        .withKP(3) // 3
         .withKI(0)
         .withKD(0)
-        .withKS(0.0) // 0.105
-        .withKV(0.0) // 0.1376
-        .withKA(0.0) // 0.01
-        .withKG(0.0) // 0.475
+        .withKS(0.092) // 0.092
+        .withKV(8.5) // 8.5
+        .withKA(0)
+        .withKG(0.477) // 0.477
         .withGravityType(GravityTypeValue.Arm_Cosine);
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
-        .withMotionMagicCruiseVelocity(50)
-        .withMotionMagicAcceleration(100);
+        .withMotionMagicCruiseVelocity(1) // 1?
+        .withMotionMagicAcceleration(2); // 2?
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()
         .withNeutralMode(NeutralModeValue.Brake)
         .withInverted(InvertedValue.Clockwise_Positive);
     public static final FeedbackConfigs FEEDBACK_CONFIGS = new FeedbackConfigs()
-        .withFeedbackRemoteSensorID(Ports.ARM_ENCODER);
+        .withFeedbackRemoteSensorID(Ports.ARM_ENCODER)
+        .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder);
         
     public static final TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
         .withCurrentLimits(CURRENT_LIMITS_CONFIGS)

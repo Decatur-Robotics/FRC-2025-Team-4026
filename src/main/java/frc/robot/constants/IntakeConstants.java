@@ -1,28 +1,26 @@
 package frc.robot.constants;
 
-import com.ctre.phoenix6.configs.CommutationConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorArrangementValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class IntakeConstants {
 
     public static final double CORAL_REST_VELOCITY = 0;
     public static final double ALGAE_REST_VELOCITY = 25;
-    public static final double CORAL_INTAKE_VELOCITY = 200;
-    public static final double ALGAE_INTAKE_VELOCITY = 200;
-    public static final double ALGAE_REMOVE_VELOCITY = -100;
-    public static final double L1_EJECT_VELOCITY = -40;
-    public static final double BRANCH_EJECT_VELOCITY = -40;
-    public static final double PROCESSOR_EJECT_VELOCITY = -200;
-    public static final double NET_EJECT_VELOCITY = -200;
+    public static final double CORAL_INTAKE_VELOCITY = 120;
+    public static final double ALGAE_INTAKE_VELOCITY = 120;
+    public static final double ALGAE_REMOVE_VELOCITY = -80;
+    public static final double L1_EJECT_VELOCITY = -30;
+    public static final double BRANCH_EJECT_VELOCITY = -30;
+    public static final double PROCESSOR_EJECT_VELOCITY = -120;
+    public static final double NET_EJECT_VELOCITY = -120;
 
-    public static final double STALL_DEBOUNCE_TIME = 0.3;
-    public static final int STALL_CURRENT = 8;
+    public static final double STALL_DEBOUNCE_TIME = 0.1;
+    public static final int STALL_CURRENT = 50;
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)
@@ -31,9 +29,9 @@ public class IntakeConstants {
         .withKP(0.05) // 0.05
         .withKI(0)
         .withKD(0)
-        .withKS(0.23) // 0.23
-        .withKV(0.0658) // 0.0658
-        .withKA(0.002); // 0.002
+        .withKS(0.349) // 0.349
+        .withKV(0.1) // 0.1
+        .withKA(0);
     public static final MotorOutputConfigs LEFT_MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()
         .withNeutralMode(NeutralModeValue.Brake)
         .withInverted(InvertedValue.Clockwise_Positive);

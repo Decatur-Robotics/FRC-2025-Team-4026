@@ -78,8 +78,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        filteredCurrentLeft = currentFilterLeft.calculate(getCurrent());
-        filteredCurrentRight = currentFilterRight.calculate(getCurrent());
+        filteredCurrentLeft = currentFilterLeft.calculate(getCurrentLeft());
+        filteredCurrentRight = currentFilterRight.calculate(getCurrentRight());
     }
 
     public void setVelocity(double velocity) {
@@ -89,11 +89,15 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return motorRight.getVelocity().getValueAsDouble();
+        return motorLeft.getVelocity().getValueAsDouble();
     }
 
-    public double getCurrent() {
+    public double getCurrentLeft() {
         return motorLeft.getStatorCurrent().getValueAsDouble();
+    }
+    
+    public double getCurrentRight() {
+        return motorRight.getStatorCurrent().getValueAsDouble();
     }
 
     public double getFilteredCurrentLeft() {
