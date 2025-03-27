@@ -215,7 +215,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 || (Math.abs(intake.getFilteredCurrentRight()) > IntakeConstants.CORAL_STALL_CURRENT))
                 && !Robot.isSimulation()) 
                 || Robot.isSimulation() && RobotContainer.getInstance().getSwerve().isAligned())),
-            Commands.runOnce(() -> led.flashAllPixels(LedConstants.BLUE, 5), led)
+            Commands.runOnce(() -> led.flashAllPixels(LedConstants.BLUE, 5), led),
+            Commands.waitSeconds(0.1)
         )
         .finallyDo(
             () -> setState(stowedState)
