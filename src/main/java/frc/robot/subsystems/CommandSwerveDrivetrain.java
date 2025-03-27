@@ -461,7 +461,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         Supplier<Pose2d> humanPlayerPose = () -> {
             double yError = Math.abs(getState().Pose.getY() - targetPose.getY());
 
-            double offset = 4 * (yError / 2.5);
+            double offset = 4.5 * (yError / 3.5);
 
             if (yError < AutoConstants.Y_TOLERANCE) offset = 0;
 
