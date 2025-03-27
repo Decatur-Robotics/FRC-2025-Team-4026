@@ -88,6 +88,7 @@ public class LedSubsystem extends SubsystemBase {
 				this.updateData();
 
 				off = false;
+				numFlashes--;
 			} 
 			// Toggle the LED strip off
 			else {
@@ -97,7 +98,6 @@ public class LedSubsystem extends SubsystemBase {
 				this.updateData();
 
 				off = true;
-				numFlashes--;
 			}
 		}
 
