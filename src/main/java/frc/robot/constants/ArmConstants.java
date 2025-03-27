@@ -25,7 +25,7 @@ public class ArmConstants {
     public static final double STOWED_POSITION = 0.2; 
 
     // Intaking positions
-    public static final double CORAL_GROUND_INTAKING_POSITION = -0.1;
+    public static final double CORAL_GROUND_INTAKING_POSITION = -0.09;
     public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 0.2;
     public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
     public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 0;
@@ -55,16 +55,16 @@ public class ArmConstants {
         .withStatorCurrentLimitEnable(true)
         .withStatorCurrentLimit(60);
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-        .withKP(3) // 3
+        .withKP(22) // 27
         .withKI(0)
         .withKD(0)
-        .withKS(0.092) // 0.092
-        .withKV(8.5) // 8.5
+        .withKS(0.081) // 0.081
+        .withKV(8.15) // 8.55
         .withKA(0)
-        .withKG(0.477) // 0.477
+        .withKG(0.428) // 0.428
         .withGravityType(GravityTypeValue.Arm_Cosine);
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
-        .withMotionMagicCruiseVelocity(1) // 1?
+        .withMotionMagicCruiseVelocity(0.6) // 0.6
         .withMotionMagicAcceleration(2); // 2?
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()
         .withNeutralMode(NeutralModeValue.Brake)
