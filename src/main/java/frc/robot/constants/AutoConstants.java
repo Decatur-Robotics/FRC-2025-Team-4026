@@ -13,6 +13,6 @@ public class AutoConstants {
     public static final Pose2d RED_CENTER_INITIAL_POSE = new Pose2d(10.31, 4.026, Rotation2d.k180deg);
     public static final Pose2d RED_RIGHT_INITIAL_POSE = new Pose2d(10.31, 7.53, Rotation2d.k180deg);
 
-    public static final double Y_TOLERANCE = 1;
+    public static final double Y_TOLERANCE = 1.5;
 
 }
