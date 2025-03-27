@@ -10,7 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 public class IntakeConstants {
 
     public static final double CORAL_REST_VELOCITY = 0;
-    public static final double ALGAE_REST_VELOCITY = 25;
+    public static final double ALGAE_REST_VELOCITY = 120;
     public static final double CORAL_INTAKE_VELOCITY = 120;
     public static final double ALGAE_INTAKE_VELOCITY = 120;
     public static final double ALGAE_REMOVE_VELOCITY = -80;
@@ -19,8 +19,11 @@ public class IntakeConstants {
     public static final double PROCESSOR_EJECT_VELOCITY = -120;
     public static final double NET_EJECT_VELOCITY = -120;
 
-    public static final double STALL_DEBOUNCE_TIME = 0.1;
-    public static final int STALL_CURRENT = 50;
+    public static final double CORAL_STALL_DEBOUNCE_TIME = 0.1;
+    public static final int CORAL_STALL_CURRENT = 50;
+    
+    public static final double ALGAE_STALL_DEBOUNCE_TIME = 0.5;
+    public static final int ALGAE_STALL_CURRENT = 55;
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)

@@ -148,7 +148,7 @@ public class SuperstructureConstants {
         ElevatorConstants.PROCESSOR_POSITION, 
         ArmConstants.PROCESSOR_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
-        IntakeConstants.CORAL_REST_VELOCITY);
+        IntakeConstants.ALGAE_REST_VELOCITY);
 
     public static final SuperstructureState EJECT_PROCESSOR_STATE = new SuperstructureState(
         ElevatorConstants.PROCESSOR_POSITION, 
@@ -162,7 +162,7 @@ public class SuperstructureConstants {
         ElevatorConstants.NET_POSITION, 
         ArmConstants.NET_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
-        IntakeConstants.CORAL_REST_VELOCITY);
+        IntakeConstants.ALGAE_REST_VELOCITY);
 
     public static final SuperstructureState EJECT_NET_STATE = new SuperstructureState(
         ElevatorConstants.NET_POSITION, 

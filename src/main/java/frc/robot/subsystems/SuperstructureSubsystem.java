@@ -163,27 +163,27 @@ public class SuperstructureSubsystem extends SubsystemBase {
     // Intaking commands
 
     public Command intakeCoralGroundCommand() {
-        return intakeCommand(() -> SuperstructureConstants.CORAL_GROUND_INTAKING_STATE, 
+        return intakeCoralCommand(() -> SuperstructureConstants.CORAL_GROUND_INTAKING_STATE, 
             SuperstructureConstants.CORAL_STOWED_STATE);
     }
 
     public Command intakeCoralHumanPlayerCommand() {
-        return intakeCommand(() -> SuperstructureConstants.CORAL_HUMAN_PLAYER_INTAKING_STATE, 
+        return intakeCoralCommand(() -> SuperstructureConstants.CORAL_HUMAN_PLAYER_INTAKING_STATE, 
             SuperstructureConstants.CORAL_STOWED_STATE);
     }
 
     public Command intakeAlgaeGroundCommand() {
-        return intakeCommand(() -> SuperstructureConstants.ALGAE_GROUND_INTAKING_STATE, 
+        return intakeAlgaeCommand(() -> SuperstructureConstants.ALGAE_GROUND_INTAKING_STATE, 
             SuperstructureConstants.ALGAE_STOWED_STATE);
     }
 
     public Command intakeAlgaeReefLowCommand() {
-        return intakeCommand(() -> SuperstructureConstants.ALGAE_LOW_REEF_INTAKING_STATE, 
+        return intakeAlgaeCommand(() -> SuperstructureConstants.ALGAE_LOW_REEF_INTAKING_STATE, 
             SuperstructureConstants.ALGAE_STOWED_STATE);
     }
 
     public Command intakeAlgaeReefHighCommand() {
-        return intakeCommand(() -> SuperstructureConstants.ALGAE_HIGH_REEF_INTAKING_STATE, 
+        return intakeAlgaeCommand(() -> SuperstructureConstants.ALGAE_HIGH_REEF_INTAKING_STATE, 
             SuperstructureConstants.ALGAE_STOWED_STATE);
     }
 
@@ -199,11 +199,11 @@ public class SuperstructureSubsystem extends SubsystemBase {
             else return SuperstructureConstants.ALGAE_LOW_REEF_INTAKING_STATE;
         };
 
-        return intakeCommand(intakingState, SuperstructureConstants.ALGAE_STOWED_STATE);
+        return intakeAlgaeCommand(intakingState, SuperstructureConstants.ALGAE_STOWED_STATE);
     }
 
-    public Command intakeCommand(Supplier<SuperstructureState> intakingState, SuperstructureState stowedState) {
-        Debouncer debouncer = new Debouncer(IntakeConstants.STALL_DEBOUNCE_TIME, DebounceType.kRising);
+    public Command intakeCoralCommand(Supplier<SuperstructureState> intakingState, SuperstructureState stowedState) {
+        Debouncer debouncer = new Debouncer(IntakeConstants.CORAL_STALL_DEBOUNCE_TIME, DebounceType.kRising);
 
         return Commands.sequence(
             Commands.runOnce(() -> {
@@ -211,8 +211,28 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 setState(intakingState.get());
             }, elevator, arm, wrist, intake),
             Commands.waitUntil(() -> (debouncer.calculate((
-                (Math.abs(intake.getFilteredCurrentLeft()) > IntakeConstants.STALL_CURRENT)
-                || (Math.abs(intake.getFilteredCurrentRight()) > IntakeConstants.STALL_CURRENT))
+                (Math.abs(intake.getFilteredCurrentLeft()) > IntakeConstants.CORAL_STALL_CURRENT)
+                || (Math.abs(intake.getFilteredCurrentRight()) > IntakeConstants.CORAL_STALL_CURRENT))
+                && !Robot.isSimulation()) 
+                || Robot.isSimulation() && RobotContainer.getInstance().getSwerve().isAligned())),
+            Commands.runOnce(() -> led.flashAllPixels(LedConstants.BLUE, 5), led)
+        )
+        .finallyDo(
+            () -> setState(stowedState)
+        );
+    }
+
+    public Command intakeAlgaeCommand(Supplier<SuperstructureState> intakingState, SuperstructureState stowedState) {
+        Debouncer debouncer = new Debouncer(IntakeConstants.ALGAE_STALL_DEBOUNCE_TIME, DebounceType.kRising);
+
+        return Commands.sequence(
+            Commands.runOnce(() -> {
+                debouncer.calculate(false);
+                setState(intakingState.get());
+            }, elevator, arm, wrist, intake),
+            Commands.waitUntil(() -> (debouncer.calculate((
+                (Math.abs(intake.getFilteredCurrentLeft()) > IntakeConstants.ALGAE_STALL_CURRENT)
+                || (Math.abs(intake.getFilteredCurrentRight()) > IntakeConstants.ALGAE_STALL_CURRENT))
                 && !Robot.isSimulation()) 
                 || Robot.isSimulation() && RobotContainer.getInstance().getSwerve().isAligned())),
             Commands.runOnce(() -> led.flashAllPixels(LedConstants.BLUE, 5), led)
