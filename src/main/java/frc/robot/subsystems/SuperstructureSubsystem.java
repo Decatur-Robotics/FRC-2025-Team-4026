@@ -255,6 +255,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     public Command scoreCoralL2Command(Supplier<Boolean> isNearTargetPose, Supplier<Boolean> isAtTargetPose, 
             Supplier<Boolean> overrideNearPose, Supplier<Boolean> overrideAtPose) {
         return scorePlaceCommand(SuperstructureConstants.TRAVEL_L2_STATE, SuperstructureConstants.STAGE_L2_STATE, 
+            SuperstructureConstants.SECOND_STAGE_L2_STATE,
             SuperstructureConstants.PLACE_L2_STATE, SuperstructureConstants.RETRACT_L2_STATE, SuperstructureConstants.CORAL_STOWED_STATE, 
             isNearTargetPose, isAtTargetPose, 
             overrideNearPose, overrideAtPose);
@@ -263,6 +264,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     public Command scoreCoralL3Command(Supplier<Boolean> isNearTargetPose, Supplier<Boolean> isAtTargetPose, 
             Supplier<Boolean> overrideNearPose, Supplier<Boolean> overrideAtPose) {
         return scorePlaceCommand(SuperstructureConstants.TRAVEL_L3_STATE, SuperstructureConstants.STAGE_L3_STATE, 
+            SuperstructureConstants.SECOND_STAGE_L3_STATE,
             SuperstructureConstants.PLACE_L3_STATE, SuperstructureConstants.RETRACT_L3_STATE, SuperstructureConstants.CORAL_STOWED_STATE, 
             isNearTargetPose, isAtTargetPose, 
             overrideNearPose, overrideAtPose);
@@ -271,6 +273,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     public Command scoreCoralL4Command(Supplier<Boolean> isNearTargetPose, Supplier<Boolean> isAtTargetPose, 
             Supplier<Boolean> overrideNearPose, Supplier<Boolean> overrideAtPose) {
         return scorePlaceCommand(SuperstructureConstants.TRAVEL_L4_STATE, SuperstructureConstants.STAGE_L4_STATE, 
+            SuperstructureConstants.SECOND_STAGE_L4_STATE,
             SuperstructureConstants.PLACE_L4_STATE, SuperstructureConstants.RETRACT_L4_STATE, SuperstructureConstants.CORAL_STOWED_STATE, 
             isNearTargetPose, isAtTargetPose, 
             overrideNearPose, overrideAtPose);
@@ -291,6 +294,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     }
 
     public Command scorePlaceCommand(SuperstructureState travelState, SuperstructureState stagingState, 
+            SuperstructureState secondStagingState,
             SuperstructureState placingState, SuperstructureState retractingState, SuperstructureState stowedState, 
             Supplier<Boolean> isNearTargetPose, Supplier<Boolean> isAtTargetPose, 
             Supplier<Boolean> overrideNearPose, Supplier<Boolean> overrideAtPose) {
@@ -300,6 +304,9 @@ public class SuperstructureSubsystem extends SubsystemBase {
                 elevator, arm, wrist, intake),
             Commands.waitUntil(() -> ((isElevatorAtTargetPosition()) || overrideAtPose.get())),
             Commands.runOnce(() -> setState(stagingState),
+                elevator, arm, wrist, intake),
+            Commands.waitUntil(() -> ((isAtTargetState() && isAtTargetPose.get()) || overrideAtPose.get())),
+            Commands.runOnce(() -> setState(secondStagingState),
                 elevator, arm, wrist, intake),
             Commands.waitUntil(() -> ((isAtTargetState() && isAtTargetPose.get()) || overrideAtPose.get())),
             Commands.runOnce(() -> setState(placingState),

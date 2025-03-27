@@ -78,8 +78,14 @@ public class SuperstructureConstants {
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
+    public static final SuperstructureState SECOND_STAGE_L2_STATE = new SuperstructureState(
+        ElevatorConstants.STAGE_L2_POSITION, 
+        ArmConstants.L2_SCORING_POSITION, 
+        WristConstants.PARALLEL_CURRENT, 
+        IntakeConstants.CORAL_REST_VELOCITY);
+
     public static final SuperstructureState PLACE_L2_STATE = new SuperstructureState(
-        ElevatorConstants.SCORE_L2_POSITION, 
+        ElevatorConstants.RETRACT_L2_POSITION, 
         ArmConstants.L2_SCORING_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
@@ -104,8 +110,14 @@ public class SuperstructureConstants {
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
+    public static final SuperstructureState SECOND_STAGE_L3_STATE = new SuperstructureState(
+        ElevatorConstants.STAGE_L3_POSITION, 
+        ArmConstants.L3_SCORING_POSITION, 
+        WristConstants.PARALLEL_CURRENT, 
+        IntakeConstants.CORAL_REST_VELOCITY);
+
     public static final SuperstructureState PLACE_L3_STATE = new SuperstructureState(
-        ElevatorConstants.SCORE_L3_POSITION, 
+        ElevatorConstants.RETRACT_L3_POSITION, 
         ArmConstants.L3_SCORING_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
@@ -130,8 +142,14 @@ public class SuperstructureConstants {
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
+    public static final SuperstructureState SECOND_STAGE_L4_STATE = new SuperstructureState(
+        ElevatorConstants.STAGE_L4_POSITION, 
+        ArmConstants.L4_SCORING_POSITION, 
+        WristConstants.PARALLEL_CURRENT, 
+        IntakeConstants.CORAL_REST_VELOCITY);
+
     public static final SuperstructureState PLACE_L4_STATE = new SuperstructureState(
-        ElevatorConstants.SCORE_L4_POSITION, 
+        ElevatorConstants.RETRACT_L4_POSITION, 
         ArmConstants.L4_SCORING_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);

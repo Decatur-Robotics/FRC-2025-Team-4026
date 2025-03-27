@@ -35,7 +35,7 @@ public final class ElevatorConstants {
     public static final double RETRACT_L3_POSITION = 20.68;
     public static final double STAGE_L4_POSITION = 54.5;
     public static final double SCORE_L4_POSITION = 51.5;
-    public static final double RETRACT_L4_POSITION = 47.5;
+    public static final double RETRACT_L4_POSITION = 42;
     public static final double PROCESSOR_POSITION = 0;
     public static final double NET_POSITION = 54;
 
@@ -53,7 +53,7 @@ public final class ElevatorConstants {
         .withGravityType(GravityTypeValue.Elevator_Static);
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(90) 
-        .withMotionMagicAcceleration(300); 
+        .withMotionMagicAcceleration(200); 
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()
         .withNeutralMode(NeutralModeValue.Brake);
 
