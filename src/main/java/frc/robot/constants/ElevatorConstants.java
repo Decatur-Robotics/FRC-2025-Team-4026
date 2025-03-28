@@ -28,14 +28,11 @@ public final class ElevatorConstants {
     // Scoring positions
     public static final double L1_POSITION = 0;
     public static final double STAGE_L2_POSITION = 12.52;
-    public static final double SCORE_L2_POSITION = 5.52;
-    public static final double RETRACT_L2_POSITION = 2.52;
-    public static final double STAGE_L3_POSITION = 30.68;
-    public static final double SCORE_L3_POSITION = 23.68;
-    public static final double RETRACT_L3_POSITION = 20.68;
+    public static final double SCORE_L2_POSITION = 0.02;
+    public static final double STAGE_L3_POSITION = 30.18;
+    public static final double SCORE_L3_POSITION = 17.68;
     public static final double STAGE_L4_POSITION = 54.5;
-    public static final double SCORE_L4_POSITION = 51.5;
-    public static final double RETRACT_L4_POSITION = 42;
+    public static final double SCORE_L4_POSITION = 43.5;
     public static final double PROCESSOR_POSITION = 0;
     public static final double NET_POSITION = 54;
 

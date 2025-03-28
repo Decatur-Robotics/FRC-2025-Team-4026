@@ -85,13 +85,13 @@ public class SuperstructureConstants {
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState PLACE_L2_STATE = new SuperstructureState(
-        ElevatorConstants.RETRACT_L2_POSITION, 
+        ElevatorConstants.SCORE_L2_POSITION, 
         ArmConstants.L2_SCORING_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState RETRACT_L2_STATE = new SuperstructureState(
-        ElevatorConstants.RETRACT_L2_POSITION, 
+        ElevatorConstants.SCORE_L2_POSITION, 
         ArmConstants.STOWED_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.BRANCH_EJECT_VELOCITY);
@@ -117,13 +117,13 @@ public class SuperstructureConstants {
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState PLACE_L3_STATE = new SuperstructureState(
-        ElevatorConstants.RETRACT_L3_POSITION, 
+        ElevatorConstants.SCORE_L3_POSITION, 
         ArmConstants.L3_SCORING_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState RETRACT_L3_STATE = new SuperstructureState(
-        ElevatorConstants.RETRACT_L3_POSITION, 
+        ElevatorConstants.SCORE_L3_POSITION, 
         ArmConstants.STOWED_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.BRANCH_EJECT_VELOCITY);
@@ -149,13 +149,13 @@ public class SuperstructureConstants {
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState PLACE_L4_STATE = new SuperstructureState(
-        ElevatorConstants.RETRACT_L4_POSITION, 
+        ElevatorConstants.SCORE_L4_POSITION, 
         ArmConstants.L4_SCORING_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.CORAL_REST_VELOCITY);
 
     public static final SuperstructureState RETRACT_L4_STATE = new SuperstructureState(
-        ElevatorConstants.RETRACT_L4_POSITION, 
+        ElevatorConstants.SCORE_L4_POSITION, 
         ArmConstants.STOWED_POSITION, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.BRANCH_EJECT_VELOCITY);
