@@ -31,7 +31,7 @@ public class ArmConstants {
     public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = ALGAE_LOW_REEF_INTAKING_POSITION;
 
     // Scoring positions
-    public static final double L1_SCORING_POSITION = 0.15;
+    public static final double L1_SCORING_POSITION = 0.13;
     public static final double L2_STAGING_POSITION = STOWED_POSITION;
     public static final double L2_SCORING_POSITION = 0.14;
     public static final double L3_STAGING_POSITION = L2_STAGING_POSITION;
