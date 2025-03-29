@@ -249,7 +249,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Supplier<Boolean> overrideNearPose, Supplier<Boolean> overrideAtPose) {
         return scoreEjectCommand(SuperstructureConstants.STAGE_L1_STATE, SuperstructureConstants.EJECT_L1_STATE,
             SuperstructureConstants.CORAL_STOWED_STATE, 
-            isNearTargetPose, isAtTargetPose, overrideNearPose, overrideAtPose);
+            isNearTargetPose, isAtTargetPose, () -> true, overrideAtPose);
     }
 
     public Command scoreCoralL2Command(Supplier<Boolean> isNearTargetPose, Supplier<Boolean> isAtTargetPose, 
