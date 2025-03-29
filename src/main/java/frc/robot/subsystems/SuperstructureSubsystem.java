@@ -308,7 +308,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Commands.waitUntil(() -> ((isAtTargetState() && isAtTargetPose.get()) || overrideAtPose.get())),
             Commands.runOnce(() -> setState(secondStagingState),
                 elevator, arm, wrist, intake),
-            Commands.waitUntil(() -> ((isAtTargetState() && isAtTargetPose.get()) || overrideAtPose.get())),
+            Commands.waitUntil(() -> isAtTargetState()),
             Commands.runOnce(() -> setState(placingState),
                 elevator, arm, wrist, intake),
             Commands.waitUntil(() -> isAtTargetState()),
