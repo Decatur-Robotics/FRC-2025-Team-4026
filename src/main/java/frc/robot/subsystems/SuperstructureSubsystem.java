@@ -39,6 +39,8 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
         targetState = SuperstructureConstants.CORAL_STOWED_STATE.copyInstance();
 
+        led.setAllPixels(LedConstants.BLUE);
+
         configureShuffleboard();
     }
 

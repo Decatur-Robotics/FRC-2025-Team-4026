@@ -122,6 +122,10 @@ public class RobotContainer {
     private void configurePrimaryBindings() {
         Joystick joystick = new Joystick(0);
 
+        POVButton down = new POVButton(joystick, LogitechControllerButtons.down);
+        POVButton up = new POVButton(joystick, LogitechControllerButtons.up);
+        POVButton left = new POVButton(joystick, LogitechControllerButtons.left);
+        POVButton right = new POVButton(joystick, LogitechControllerButtons.right);
         JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a); 
         JoystickButton b = new JoystickButton(joystick, LogitechControllerButtons.b); // scoring at pose override
         JoystickButton x = new JoystickButton(joystick, LogitechControllerButtons.x);
@@ -162,9 +166,9 @@ public class RobotContainer {
         // bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
 
         bumperLeft.whileTrue(Commands.run(() -> swerve.driveRobotRelative(new ChassisSpeeds(-1, 0, 0)), swerve));
-        
-        // Climb alignment
         x.whileTrue(Commands.run(() -> swerve.driveRobotRelative(new ChassisSpeeds(1, 0, 0)), swerve));
+        left.whileTrue(Commands.run(() -> swerve.driveRobotRelative(new ChassisSpeeds(0, -1, 0)), swerve));
+        right.whileTrue(Commands.run(() -> swerve.driveRobotRelative(new ChassisSpeeds(0, 1, 0)), swerve));
 
         // Reset heading
         y.onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));
