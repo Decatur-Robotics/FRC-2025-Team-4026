@@ -140,7 +140,8 @@ public class RobotContainer {
             double velocityY = -joystick.getX() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
             double velocityAngular = -joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
 
-            if (bumperRight.getAsBoolean()) {
+            if (bumperRight.getAsBoolean() || bumperLeft.getAsBoolean()
+                || x.getAsBoolean() || down.getAsBoolean() || up.getAsBoolean()) {
                 velocityX *= SwerveConstants.PRECISION_MODE_SCALAR;
                 velocityY *= SwerveConstants.PRECISION_MODE_SCALAR;
                 velocityAngular *= SwerveConstants.PRECISION_MODE_SCALAR;
@@ -165,10 +166,18 @@ public class RobotContainer {
         // bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
         // bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
 
-        bumperLeft.whileTrue(Commands.run(() -> swerve.driveRobotRelative(new ChassisSpeeds(-1, 0, 0)), swerve));
-        x.whileTrue(Commands.run(() -> swerve.driveRobotRelative(new ChassisSpeeds(1, 0, 0)), swerve));
-        left.whileTrue(Commands.run(() -> swerve.driveRobotRelative(new ChassisSpeeds(0, -1, 0)), swerve));
-        right.whileTrue(Commands.run(() -> swerve.driveRobotRelative(new ChassisSpeeds(0, 1, 0)), swerve));
+        bumperLeft.whileTrue(Commands.run(() -> swerve.driveRobotRelative(
+            new ChassisSpeeds(-1, 0, 
+            desiredChassisSpeeds.get().omegaRadiansPerSecond)), swerve));
+        x.whileTrue(Commands.run(() -> swerve.driveRobotRelative(
+            new ChassisSpeeds(1, 0, 
+            desiredChassisSpeeds.get().omegaRadiansPerSecond)), swerve));
+        left.whileTrue(Commands.run(() -> swerve.driveRobotRelative(
+            new ChassisSpeeds(0, -1, 
+            desiredChassisSpeeds.get().omegaRadiansPerSecond)), swerve));
+        right.whileTrue(Commands.run(() -> swerve.driveRobotRelative(
+            new ChassisSpeeds(0, 1, 
+            desiredChassisSpeeds.get().omegaRadiansPerSecond)), swerve));
 
         // Reset heading
         y.onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));
