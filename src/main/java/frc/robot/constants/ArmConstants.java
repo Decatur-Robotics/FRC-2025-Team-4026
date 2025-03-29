@@ -12,7 +12,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 public class ArmConstants {
 
@@ -25,7 +24,7 @@ public class ArmConstants {
     public static final double STOWED_POSITION = 0.24; 
 
     // Intaking positions
-    public static final double CORAL_GROUND_INTAKING_POSITION = -0.09;
+    public static final double CORAL_GROUND_INTAKING_POSITION = -0.096;
     public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 0.245;
     public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
     public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 0;
