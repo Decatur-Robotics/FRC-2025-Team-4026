@@ -1,6 +1,8 @@
 package frc.robot.core;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -122,21 +124,19 @@ public class Autonomous {
     }
 
     public Command getAutoCommand() {
-        // return autoCommand;
-
-        return new PathPlannerAuto("Right Side 3 Coral");
+        return autoCommand;
     }
 
     public void updateAutoCommand() {
         if (autoTypeChooser.getSelected().equals(AutoType.ThreeCoralHumanPlayer)) {
             if (autoSideChooser.getSelected().equals(AutoSide.Left)) {
-                autoCommand = leftThreeCoralHumanPlayerAuto();
+                autoCommand = new PathPlannerAuto("Left Side 3 Coral");
             }
             else if (autoSideChooser.getSelected().equals(AutoSide.Right)) {
-                autoCommand = rightThreeCoralHumanPlayerAuto();
+                autoCommand = new PathPlannerAuto("Right Side 3 Coral");
             }
             else {
-                autoCommand = centerThreeCoralHumanPlayerAuto();
+                autoCommand = centerOneCoralAuto();
             }
         }
         else {
@@ -150,6 +150,8 @@ public class Autonomous {
                 autoCommand = centerOneCoralAuto();
             }
         }
+
+        FollowPathCommand.warmupCommand().schedule();
     }
 
     private Command autoL4Command() {
