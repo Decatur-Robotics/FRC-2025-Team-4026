@@ -306,13 +306,13 @@ public class SuperstructureSubsystem extends SubsystemBase {
             Commands.waitUntil(() -> isElevatorAtTargetPosition()),
             Commands.runOnce(() -> setState(stagingState),
                 elevator, arm, wrist, intake),
-            Commands.waitUntil(() -> isAtTargetState()),
+            Commands.waitUntil(() -> (isAtTargetState() && (isAtTargetPose.get() || overrideAtPose.get()))),
             Commands.runOnce(() -> setState(secondStagingState),
                 elevator, arm, wrist, intake),
             Commands.waitUntil(() -> (isAtTargetState() && (isAtTargetPose.get() || overrideAtPose.get()))),
             Commands.runOnce(() -> setState(placingState),
                 elevator, arm, wrist, intake),
-            Commands.waitUntil(() -> isAtTargetState()),
+            Commands.race(Commands.waitUntil(() -> isAtTargetState()), Commands.waitSeconds(0.5)),
             Commands.runOnce(() -> {
                 setState(retractingState);
                 led.flashAllPixels(LedConstants.YELLOW, 5);

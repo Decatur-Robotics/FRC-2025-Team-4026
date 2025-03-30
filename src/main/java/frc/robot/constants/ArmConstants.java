@@ -25,9 +25,9 @@ public class ArmConstants {
 
     // Intaking positions
     public static final double CORAL_GROUND_INTAKING_POSITION = -0.096;
-    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 0.245;
+    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 0.231;
     public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
-    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 0;
+    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 0.08;
     public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = ALGAE_LOW_REEF_INTAKING_POSITION;
 
     // Scoring positions

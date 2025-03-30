@@ -14,6 +14,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
@@ -79,9 +80,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         .getStructTopic("Robot Pose", Pose2d.struct).publish();
 
     private PIDController translationalController = new PIDController(
-        5.25, 0, 0.3); 
+        5.5, 0, 0.25);
+        // 5.25, 0, 0.3); 
     private PIDController rotationalController = new PIDController(
-        6, 0, 0.3);
+        6.25, 0, 0.3);
 
     public enum PathLocation {
         None(List.of()),
@@ -225,9 +227,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         try {
             RobotConfig config = RobotConfig.fromGUISettings(); // SwerveConstants.CONFIG;
             AutoBuilder.configure(
-                () -> getState().Pose,   // Supplier of current robot pose
+                () -> this.getState().Pose,   // Supplier of current robot pose
                 this::resetPose,         // Consumer for seeding pose against auto
-                () -> getState().Speeds, // Supplier of current robot speeds
+                () -> this.getState().Speeds, // Supplier of current robot speeds
                 // Consumer of ChassisSpeeds and feedforwards to drive the robot
                 (speeds, feedforwards) -> driveAuto(() -> speeds, () -> feedforwards),
                 // setControl(
@@ -392,17 +394,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     public Command driveAuto(Supplier<ChassisSpeeds> speeds, Supplier<DriveFeedforwards> feedforwards) {
         return run(() -> {
-            // Note: it is important to not discretize speeds before or after
-            // using the setpoint generator, as it will discretize them for you
-            previousSetpoint = setpointGenerator.generateSetpoint(
-                previousSetpoint, // The previous setpoint
-                speeds.get(), // The desired target speeds
-                0.02 // The loop time of the robot code, in seconds
-            );
+            // // Note: it is important to not discretize speeds before or after
+            // // using the setpoint generator, as it will discretize them for you
+            // previousSetpoint = setpointGenerator.generateSetpoint(
+            //     previousSetpoint, // The previous setpoint
+            //     speeds.get(), // The desired target speeds
+            //     0.02 // The loop time of the robot code, in seconds
+            // );
 
-            setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds())
-                .withWheelForceFeedforwardsX(feedforwards.get().robotRelativeForcesXNewtons())
-                .withWheelForceFeedforwardsY(feedforwards.get().robotRelativeForcesYNewtons()));
+            // setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds())
+            //     .withWheelForceFeedforwardsX(feedforwards.get().robotRelativeForcesXNewtons())
+            //     .withWheelForceFeedforwardsY(feedforwards.get().robotRelativeForcesYNewtons()));
+
+            System.out.println("driving auto"); 
+
+            driveRobotRelative(speeds.get());
         });
     }
 

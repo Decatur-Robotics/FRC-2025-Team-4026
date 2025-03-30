@@ -20,7 +20,7 @@ public final class ElevatorConstants {
 
     // Intaking positions
     public static final double CORAL_GROUND_INTAKING_POSITION = 0;
-    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 5.25;
+    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 4.25;
     public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
     public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 19.47;
     public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = 34.63;

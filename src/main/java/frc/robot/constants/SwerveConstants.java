@@ -1,5 +1,7 @@
 package frc.robot.constants;
 
+import static edu.wpi.first.units.Units.Kilograms;
+
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -16,7 +18,7 @@ public class SwerveConstants {
 
     public static final RobotConfig CONFIG = new RobotConfig(63.136, 
         5.8082, 
-        new ModuleConfig(0.0508, 4.67, 1.2, DCMotor.getKrakenX60(1), 120, 1), 
+        new ModuleConfig(0.05, 4.67, 1.2, DCMotor.getKrakenX60(1).withReduction(6.75), 68, 1), 
         0.74295);
 
     public static final PathConstraints CONSTRAINTS = new PathConstraints(0, 0, 
