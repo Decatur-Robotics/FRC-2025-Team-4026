@@ -67,15 +67,14 @@ public class SuperstructureSubsystem extends SubsystemBase {
     // Is at targets
 
     public boolean isAtTargetState() {
-        return (isElevatorAtTargetPosition() &&
+        return isElevatorAtTargetPosition() &&
                 isArmAtTargetPosition() &&
-                isWristAtTargetPosition()) 
-                || Robot.isSimulation();
+                isWristAtTargetPosition();
     }
 
     public boolean isElevatorAtTargetPosition() {
         if (Math.abs(getActualElevatorPosition() - targetState.elevatorPosition) > SuperstructureConstants.ELEVATOR_ERROR_MARGIN) {
-            return false;
+            return false || Robot.isSimulation();
         }
 
         return true;
@@ -83,14 +82,14 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     public boolean isArmAtTargetPosition() {
         if (Math.abs(getActualArmPosition() - targetState.armPosition) > SuperstructureConstants.ARM_ERROR_MARGIN) {
-            return false;
+            return false || Robot.isSimulation();
         }
 
         return true;
     }
 
     public boolean isWristAtTargetPosition() {
-        return wrist.isSlammed();
+        return wrist.isSlammed() || Robot.isSimulation();
     }
 
     // Get goal states
