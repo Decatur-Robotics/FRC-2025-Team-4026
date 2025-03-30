@@ -1,5 +1,7 @@
 package frc.robot.core;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -53,6 +55,8 @@ public class Autonomous {
 
         swerve = robotContainer.getSwerve();
         superstructure = robotContainer.getSuperstructure();
+
+        registerNamedCommands();
         
         autoSideChooser = new SendableChooser<>();
         autoSideChooser.setDefaultOption(AutoSide.Center.autoName, AutoSide.Center);
@@ -74,6 +78,46 @@ public class Autonomous {
         autoTypeChooser.onChange((autoSide) -> updateAutoCommand());
 
         updateAutoCommand();
+    }
+
+    public void registerNamedCommands() {
+        NamedCommands.registerCommand("Score C", 
+            Commands.deadline(autoL4Command(), 
+                Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_C, PathLocation.Reef), 
+                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_C, PathLocation.Reef), 
+                    () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
+
+        NamedCommands.registerCommand("Score D", 
+            Commands.deadline(autoL4Command(), 
+                Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_D, PathLocation.Reef), 
+                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_D, PathLocation.Reef), 
+                    () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
+
+        NamedCommands.registerCommand("Score E", 
+            Commands.deadline(autoL4Command(), 
+                Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_E, PathLocation.Reef), 
+                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_E, PathLocation.Reef), 
+                    () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
+
+        NamedCommands.registerCommand("Score J", 
+            Commands.deadline(autoL4Command(), 
+                Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_J, PathLocation.Reef), 
+                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_J, PathLocation.Reef), 
+                    () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
+
+        NamedCommands.registerCommand("Score K", 
+            Commands.deadline(autoL4Command(), 
+                Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_K, PathLocation.Reef), 
+                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_K, PathLocation.Reef), 
+                    () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
+
+        NamedCommands.registerCommand("Score L", 
+            Commands.deadline(autoL4Command(), 
+                Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_L, PathLocation.Reef), 
+                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_L, PathLocation.Reef), 
+                    () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
+
+        NamedCommands.registerCommand("Intake", superstructure.intakeCoralHumanPlayerCommand());
     }
 
     public Command getAutoCommand() {
