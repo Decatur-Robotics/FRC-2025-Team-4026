@@ -1,6 +1,7 @@
 package frc.robot.core;
 
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -121,7 +122,9 @@ public class Autonomous {
     }
 
     public Command getAutoCommand() {
-        return autoCommand;
+        // return autoCommand;
+
+        return new PathPlannerAuto("Right Side 3 Coral");
     }
 
     public void updateAutoCommand() {
