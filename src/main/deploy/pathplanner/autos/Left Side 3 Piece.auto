@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Initial to J"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "J to Left Source"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Source to L"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L to Left Source"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Source to K"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "K to Left Source"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
