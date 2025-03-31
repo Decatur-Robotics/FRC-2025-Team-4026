@@ -32,6 +32,9 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -59,14 +62,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
 
-    private Double coralPose;
-    private Double coralShift;
-    private Double coralRotation;
-    private Double algaePose;
-    private Double coralDistance;
-    private Double algaeDistance;
-    private Double robotRotationCoral;
-    private Double activeShift;
+    private DoubleSubscriber coralRotationSubscriber;
+    private double coralRotation;
 
     private SwerveSetpointGenerator setpointGenerator;
     private SwerveSetpoint previousSetpoint;
@@ -198,6 +195,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveDrivetrainConstants drivetrainConstants,
         SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
+
+        DoubleTopic coralTopic = NetworkTableInstance.getDefault().getDoubleTopic("CoralRotation");
+
+        coralRotationSubscriber = coralTopic.subscribe(0.0);
+
 
         if (Utils.isSimulation()) {
             startSimThread();
@@ -331,6 +333,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
+        coralRotation = coralRotationSubscriber.get();
 
         if (!(targetPose == null)) targetPosePublisher.set(targetPose);
         posePublisher.set(getState().Pose);
@@ -662,4 +666,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return m_sysIdRoutineToApply.dynamic(direction);
     }
 
+    public Command driveToCoral(Supplier<ChassisSpeeds> speeds){
+        return Commands.run(() -> 
+        {
+            double targetRotation = speeds.get().omegaRadiansPerSecond;
+            double targetX = speeds.get().vxMetersPerSecond;
+            double targetY = speeds.get().vyMetersPerSecond;
+
+            if(speeds.get().omegaRadiansPerSecond == 0) {
+                targetRotation = rotationalController.calculate(getState().Pose.getRotation().getRadians(), coralRotation);
+            }
+            if(speeds.get().vxMetersPerSecond == 0 && speeds.get().vyMetersPerSecond == 0) {
+                targetX = -1;
+            }
+
+            driveRobotRelative(new ChassisSpeeds(targetX, targetY, targetRotation));
+        });
+    }
 }
