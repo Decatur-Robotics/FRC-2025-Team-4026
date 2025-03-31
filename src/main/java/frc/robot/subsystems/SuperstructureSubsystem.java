@@ -345,20 +345,27 @@ public class SuperstructureSubsystem extends SubsystemBase {
         });
     }
 
-    // Temporary values
-    public Command autoScoreCommand() {
+    // Dealgify
+
+    public Command dealgifyLowCommand(Supplier<Boolean> override) {
+        return dealgifyCommand(SuperstructureConstants.STAGE_LOW_DEALGIFY_STATE, SuperstructureConstants.REMOVE_LOW_DEALGIFY_STATE,
+            SuperstructureConstants.CORAL_STOWED_STATE, override);
+    }
+
+    public Command dealgifyHighCommand(Supplier<Boolean> override) {
+        return dealgifyCommand(SuperstructureConstants.STAGE_HIGH_DEALGIFY_STATE, SuperstructureConstants.REMOVE_HIGH_DEALGIFY_STATE,
+            SuperstructureConstants.CORAL_STOWED_STATE, override);
+    }
+
+    public Command dealgifyCommand(SuperstructureState stagingState, SuperstructureState removingState,
+            SuperstructureState stowedState, Supplier<Boolean> override) {
         return Commands.sequence(
-            Commands.runOnce(() -> setState(SuperstructureConstants.STAGE_L1_STATE),
-                elevator, arm, wrist, intake),
-            Commands.waitUntil(() -> isAtTargetState()),
-            Commands.run(() -> {
-                setState(SuperstructureConstants.EJECT_L1_STATE);
-                led.flashAllPixels(LedConstants.YELLOW, 5);
-            },
-                elevator, arm, wrist, intake, led)
+            Commands.runOnce(() -> setState(stagingState), elevator, arm, wrist, intake),
+            Commands.waitUntil(() -> override.get()),
+            Commands.run(() -> setState(removingState), elevator, arm, wrist, intake)
         )
         .finallyDo(() -> {
-            setState(SuperstructureConstants.CORAL_STOWED_STATE);
+            setState(stowedState);
         });
     }
 

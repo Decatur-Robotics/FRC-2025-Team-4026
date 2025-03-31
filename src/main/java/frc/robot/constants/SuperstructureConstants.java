@@ -188,6 +188,32 @@ public class SuperstructureConstants {
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.NET_EJECT_VELOCITY);
 
+    // Dealgify states
+
+    public static final SuperstructureState STAGE_LOW_DEALGIFY_STATE = new SuperstructureState(
+        ElevatorConstants.ALGAE_LOW_REEF_INTAKING_POSITION, 
+        ArmConstants.ALGAE_LOW_REEF_INTAKING_POSITION, 
+        WristConstants.PERPENDICULAR_CURRENT, 
+        IntakeConstants.DEALGIFY_VELOCITY);
+
+    public static final SuperstructureState REMOVE_LOW_DEALGIFY_STATE = new SuperstructureState(
+        ElevatorConstants.ALGAE_LOW_REEF_INTAKING_POSITION, 
+        ArmConstants.ALGAE_LOW_REEF_INTAKING_POSITION, 
+        WristConstants.PERPENDICULAR_CURRENT, 
+        IntakeConstants.DEALGIFY_VELOCITY);
+
+    public static final SuperstructureState STAGE_HIGH_DEALGIFY_STATE = new SuperstructureState(
+        ElevatorConstants.ALGAE_HIGH_REEF_INTAKING_POSITION, 
+        ArmConstants.ALGAE_HIGH_REEF_INTAKING_POSITION, 
+        WristConstants.PERPENDICULAR_CURRENT, 
+        IntakeConstants.DEALGIFY_VELOCITY);
+
+    public static final SuperstructureState REMOVE_HIGH_DEALGIFY_STATE = new SuperstructureState(
+        ElevatorConstants.ALGAE_HIGH_REEF_INTAKING_POSITION, 
+        ArmConstants.ALGAE_HIGH_REEF_INTAKING_POSITION, 
+        WristConstants.PERPENDICULAR_CURRENT, 
+        IntakeConstants.DEALGIFY_VELOCITY);
+
     // Error margins
     public static final double ELEVATOR_ERROR_MARGIN = 1;
     public static final double ARM_ERROR_MARGIN = 0.075;
