@@ -368,6 +368,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         setControl(driveRequest.withSpeeds(previousSetpoint.robotRelativeSpeeds()));
     }
 
+    public void driveFieldRelative(ChassisSpeeds speeds) {
+        driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getState().Pose.getRotation().plus(getOperatorForwardDirection())));
+    }
+
+    public void resetPreviousSetpoint() {
+        ChassisSpeeds currentSpeeds = getState().Speeds;
+        SwerveModuleState[] currentStates = getState().ModuleStates; // Method to get the current swerve module states
+        previousSetpoint = new SwerveSetpoint(currentSpeeds, currentStates, DriveFeedforwards.zeros(4));
+    }
+
     /**
      * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate
      * while still accounting for measurement noise.

@@ -1,11 +1,7 @@
 package frc.robot.core;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.FollowPathCommand;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -43,8 +39,19 @@ public class Autonomous {
         }
     }
 
+    private enum AutoPush {
+        Push("Push"), NoPush("No Push");
+
+        private final String autoName;
+
+        private AutoPush(String autoName) {
+            this.autoName = autoName;
+        }
+    }
+
     private SendableChooser<AutoSide> autoSideChooser;
     private SendableChooser<AutoType> autoTypeChooser;
+    private SendableChooser<AutoPush> autoPushChooser;
 
     private Command autoCommand;
 
@@ -59,7 +66,7 @@ public class Autonomous {
         swerve = robotContainer.getSwerve();
         superstructure = robotContainer.getSuperstructure();
 
-        registerNamedCommands();
+        // registerNamedCommands();
         
         autoSideChooser = new SendableChooser<>();
         autoSideChooser.setDefaultOption(AutoSide.Center.autoName, AutoSide.Center);
@@ -72,56 +79,63 @@ public class Autonomous {
         autoTypeChooser.addOption(AutoType.ThreeCoralHumanPlayer.autoName, AutoType.ThreeCoralHumanPlayer);
         autoTypeChooser.addOption(AutoType.OneCoral.autoName, AutoType.OneCoral);
 
+        autoPushChooser = new SendableChooser<>();
+        autoPushChooser.setDefaultOption(AutoPush.NoPush.autoName, AutoPush.NoPush);
+        autoPushChooser.addOption(AutoPush.NoPush.autoName, AutoPush.NoPush);
+        autoPushChooser.addOption(AutoPush.Push.autoName, AutoPush.Push);
+
         ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
 
         autoTab.add(autoSideChooser);
         autoTab.add(autoTypeChooser);
+        autoTab.add(autoPushChooser);
 
         autoSideChooser.onChange((autoSide) -> updateAutoCommand());
-        autoTypeChooser.onChange((autoSide) -> updateAutoCommand());
+        autoTypeChooser.onChange((autoType) -> updateAutoCommand());
+        autoPushChooser.onChange((autoPush) -> updateAutoCommand());
 
         updateAutoCommand();
     }
 
-    public void registerNamedCommands() {
-        NamedCommands.registerCommand("Score C", 
-            Commands.deadline(autoL4Command(), 
-                Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_C, PathLocation.Reef), 
-                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_C, PathLocation.Reef), 
-                    () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
+    // public void registerNamedCommands() {
+    //     NamedCommands.registerCommand("Score C", 
+    //         Commands.deadline(autoL4Command(), 
+    //             Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_C, PathLocation.Reef), 
+    //                 swerve.driveToPoseAuto(PathSetpoints.RED_REEF_C, PathLocation.Reef), 
+    //                 () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
 
-        NamedCommands.registerCommand("Score D", 
-            Commands.deadline(autoL4Command(), 
-                Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_D, PathLocation.Reef), 
-                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_D, PathLocation.Reef), 
-                    () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
+    //     NamedCommands.registerCommand("Score D", 
+    //         Commands.deadline(autoL4Command(), 
+    //             Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_D, PathLocation.Reef), 
+    //                 swerve.driveToPoseAuto(PathSetpoints.RED_REEF_D, PathLocation.Reef), 
+    //                 () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
 
-        NamedCommands.registerCommand("Score E", 
-            Commands.deadline(autoL4Command(), 
-                Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_E, PathLocation.Reef), 
-                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_E, PathLocation.Reef), 
-                    () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
+    //     NamedCommands.registerCommand("Score E", 
+    //         Commands.deadline(autoL4Command(), 
+    //             Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_E, PathLocation.Reef), 
+    //                 swerve.driveToPoseAuto(PathSetpoints.RED_REEF_E, PathLocation.Reef), 
+    //                 () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
 
-        NamedCommands.registerCommand("Score J", 
-            Commands.deadline(autoL4Command(), 
-                Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_J, PathLocation.Reef), 
-                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_J, PathLocation.Reef), 
-                    () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
+    //     NamedCommands.registerCommand("Score J", 
+    //         Commands.deadline(autoL4Command(), 
+    //             Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_J, PathLocation.Reef), 
+    //                 swerve.driveToPoseAuto(PathSetpoints.RED_REEF_J, PathLocation.Reef), 
+    //                 () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
 
-        NamedCommands.registerCommand("Score K", 
-            Commands.deadline(autoL4Command(), 
-                Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_K, PathLocation.Reef), 
-                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_K, PathLocation.Reef), 
-                    () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
+    //     NamedCommands.registerCommand("Score K", 
+    //         Commands.deadline(autoL4Command(), 
+    //             Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_K, PathLocation.Reef), 
+    //                 swerve.driveToPoseAuto(PathSetpoints.RED_REEF_K, PathLocation.Reef), 
+    //                 () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
 
-        NamedCommands.registerCommand("Score L", 
-            Commands.deadline(autoL4Command(), 
-                Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_L, PathLocation.Reef), 
-                    swerve.driveToPoseAuto(PathSetpoints.RED_REEF_L, PathLocation.Reef), 
-                    () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
+    //     NamedCommands.registerCommand("Score L", 
+    //         Commands.deadline(autoL4Command(), 
+    //             Commands.either(swerve.driveToPoseAuto(PathSetpoints.BLUE_REEF_L, PathLocation.Reef), 
+    //                 swerve.driveToPoseAuto(PathSetpoints.RED_REEF_L, PathLocation.Reef), 
+    //                 () -> DriverStation.getAlliance().get().equals(Alliance.Blue))));
 
-        NamedCommands.registerCommand("Intake", superstructure.intakeCoralHumanPlayerCommand());
-    }
+    //     NamedCommands.registerCommand("Intake", superstructure.intakeCoralHumanPlayerCommand());
+    // }
 
     public Command getAutoCommand() {
         return autoCommand;
@@ -129,32 +143,57 @@ public class Autonomous {
     }
 
     public void updateAutoCommand() {
-        if (autoTypeChooser.getSelected().equals(AutoType.ThreeCoralHumanPlayer)) {
-            if (autoSideChooser.getSelected().equals(AutoSide.Left)) {
-                // autoCommand = new PathPlannerAuto("Left Side 3 Coral");
-                autoCommand = leftThreeCoralHumanPlayerAuto();
-            }
-            else if (autoSideChooser.getSelected().equals(AutoSide.Right)) {
-                // autoCommand = new PathPlannerAuto("Right Side 3 Coral");
-                autoCommand = rightThreeCoralHumanPlayerAuto();
+        Command mainAutoCommand;
+
+        if (autoSideChooser.getSelected().equals(AutoSide.Left)) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) swerve.resetPose(AutoConstants.BLUE_LEFT_INITIAL_POSE);
+            else swerve.resetPose(AutoConstants.RED_LEFT_INITIAL_POSE);
+
+            if (autoTypeChooser.getSelected().equals(AutoType.ThreeCoralHumanPlayer)) {
+                mainAutoCommand = leftThreeCoralHumanPlayerAuto();
             }
             else {
-                autoCommand = centerOneCoralAuto();
+                mainAutoCommand = leftOneCoralAuto();
+            }
+        }
+        else if (autoSideChooser.getSelected().equals(AutoSide.Right)) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) swerve.resetPose(AutoConstants.BLUE_RIGHT_INITIAL_POSE);
+            else swerve.resetPose(AutoConstants.RED_RIGHT_INITIAL_POSE);
+
+            if (autoTypeChooser.getSelected().equals(AutoType.ThreeCoralHumanPlayer)) {
+                mainAutoCommand = rightThreeCoralHumanPlayerAuto();
+            }
+            else {
+                mainAutoCommand = rightOneCoralAuto();
             }
         }
         else {
-            if (autoSideChooser.getSelected().equals(AutoSide.Left)) {
-                autoCommand = leftOneCoralAuto();
-            }
-            else if (autoSideChooser.getSelected().equals(AutoSide.Right)) {
-                autoCommand = rightOneCoralAuto();
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) swerve.resetPose(AutoConstants.BLUE_CENTER_INITIAL_POSE);
+            else swerve.resetPose(AutoConstants.RED_CENTER_INITIAL_POSE);
+
+            if (autoTypeChooser.getSelected().equals(AutoType.ThreeCoralHumanPlayer)) {
+                mainAutoCommand = centerThreeCoralHumanPlayerAuto();
             }
             else {
-                autoCommand = centerOneCoralAuto();
+                mainAutoCommand = centerOneCoralAuto();
             }
         }
 
-        FollowPathCommand.warmupCommand().schedule();
+        if (autoPushChooser.getSelected().equals(AutoPush.Push)) {
+            autoCommand = Commands.sequence(
+                autoPushCommand(),
+                mainAutoCommand);
+        }
+        else {
+            autoCommand = mainAutoCommand;
+        }
+    }
+
+    private Command autoPushCommand() {
+        return Commands.either(
+            Commands.deadline(Commands.waitSeconds(1), Commands.run(() -> swerve.driveFieldRelative(new ChassisSpeeds(-0.5, 0, 0)))), 
+            Commands.deadline(Commands.waitSeconds(1), Commands.run(() -> swerve.driveFieldRelative(new ChassisSpeeds(0.5, 0, 0)))), 
+            () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
     }
 
     private Command autoL4Command() {
@@ -169,30 +208,30 @@ public class Autonomous {
 
     private Command leftOneCoralAuto() {
         return Commands.either(
-            oneCoralAuto(AutoConstants.BLUE_LEFT_INITIAL_POSE, PathSetpoints.BLUE_REEF_J),
-            oneCoralAuto(AutoConstants.RED_LEFT_INITIAL_POSE, PathSetpoints.RED_REEF_J),
+            oneCoralAuto(PathSetpoints.BLUE_REEF_J),
+            oneCoralAuto(PathSetpoints.RED_REEF_J),
             () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
     }
 
     private Command centerOneCoralAuto() {
         return Commands.either(
-            oneCoralAuto(AutoConstants.BLUE_CENTER_INITIAL_POSE, PathSetpoints.BLUE_REEF_G),
-            oneCoralAuto(AutoConstants.RED_CENTER_INITIAL_POSE, PathSetpoints.RED_REEF_G),
+            oneCoralAuto(PathSetpoints.BLUE_REEF_G),
+            oneCoralAuto(PathSetpoints.RED_REEF_G),
             () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
     }
 
     private Command rightOneCoralAuto() {
         return Commands.either(
-            oneCoralAuto(AutoConstants.BLUE_RIGHT_INITIAL_POSE, PathSetpoints.BLUE_REEF_E),
-            oneCoralAuto(AutoConstants.RED_RIGHT_INITIAL_POSE, PathSetpoints.RED_REEF_E),
+            oneCoralAuto(PathSetpoints.BLUE_REEF_E),
+            oneCoralAuto(PathSetpoints.RED_REEF_E),
             () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
     }
 
     private Command leftThreeCoralHumanPlayerAuto() {
         return Commands.either(
-            threeCoralHumanPlayerAuto(AutoConstants.BLUE_LEFT_INITIAL_POSE, PathSetpoints.BLUE_LEFT_HUMAN_PLAYER_LEFT, 
+            threeCoralHumanPlayerAuto(PathSetpoints.BLUE_LEFT_HUMAN_PLAYER_LEFT, 
                 PathSetpoints.BLUE_REEF_J, PathSetpoints.BLUE_REEF_L, PathSetpoints.BLUE_REEF_K),
-            threeCoralHumanPlayerAuto(AutoConstants.RED_LEFT_INITIAL_POSE, PathSetpoints.RED_LEFT_HUMAN_PLAYER_LEFT, 
+            threeCoralHumanPlayerAuto(PathSetpoints.RED_LEFT_HUMAN_PLAYER_LEFT, 
                 PathSetpoints.RED_REEF_J, PathSetpoints.RED_REEF_L, PathSetpoints.RED_REEF_K),
             () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
     }
@@ -205,26 +244,24 @@ public class Autonomous {
 
     private Command rightThreeCoralHumanPlayerAuto() {
         return Commands.either(
-            threeCoralHumanPlayerAuto(AutoConstants.BLUE_RIGHT_INITIAL_POSE, PathSetpoints.BLUE_RIGHT_HUMAN_PLAYER_RIGHT, 
+            threeCoralHumanPlayerAuto(PathSetpoints.BLUE_RIGHT_HUMAN_PLAYER_RIGHT, 
                 PathSetpoints.BLUE_REEF_E, PathSetpoints.BLUE_REEF_C, PathSetpoints.BLUE_REEF_D),
-            threeCoralHumanPlayerAuto(AutoConstants.RED_RIGHT_INITIAL_POSE, PathSetpoints.RED_RIGHT_HUMAN_PLAYER_RIGHT, 
+            threeCoralHumanPlayerAuto(PathSetpoints.RED_RIGHT_HUMAN_PLAYER_RIGHT, 
                 PathSetpoints.RED_REEF_E, PathSetpoints.RED_REEF_C, PathSetpoints.RED_REEF_D),
             () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
     }
 
-    private Command oneCoralAuto(Pose2d initialPose, Pose2d branchPose) {
+    private Command oneCoralAuto(Pose2d branchPose) {
         return Commands.sequence(
-            Commands.runOnce(() -> swerve.resetPose(initialPose), swerve),
             Commands.deadline(
                 autoL4Command(),
                 swerve.driveToPoseAuto(branchPose, PathLocation.Reef))
         );
     }
 
-    private Command threeCoralHumanPlayerAuto(Pose2d initialPose, Pose2d humanPlayerPose, 
+    private Command threeCoralHumanPlayerAuto(Pose2d humanPlayerPose, 
             Pose2d firstBranchPose, Pose2d secondBranchPose, Pose2d thirdBranchPose) {
         return Commands.sequence(
-            Commands.runOnce(() -> swerve.resetPose(initialPose), swerve),
             Commands.deadline(
                 autoL4Command(),
                 swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef)),
