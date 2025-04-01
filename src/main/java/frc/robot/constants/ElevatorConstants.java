@@ -24,6 +24,8 @@ public final class ElevatorConstants {
     public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
     public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 19.47;
     public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = 34.63;
+    public static final double ALGAE_LOW_REEF_REMOVING_POSITION = 9.47;
+    public static final double ALGAE_HIGH_REEF_REMOVING_POSITION = 26.63;
 
     // Scoring positions
     public static final double L1_POSITION = 0;

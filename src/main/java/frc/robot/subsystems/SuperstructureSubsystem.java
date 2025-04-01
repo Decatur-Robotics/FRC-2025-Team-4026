@@ -361,7 +361,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
             SuperstructureState stowedState, Supplier<Boolean> override) {
         return Commands.sequence(
             Commands.runOnce(() -> setState(stagingState), elevator, arm, wrist, intake),
-            Commands.waitUntil(() -> override.get()),
+            Commands.waitUntil(() -> (override.get() || Robot.isTestMode())),
             Commands.run(() -> setState(removingState), elevator, arm, wrist, intake)
         )
         .finallyDo(() -> {

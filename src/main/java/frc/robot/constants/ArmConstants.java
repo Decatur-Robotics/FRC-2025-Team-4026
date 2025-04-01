@@ -21,33 +21,33 @@ public class ArmConstants {
     public static final double STALL_CURRENT = 40;
 
     // Stowed position
-    public static final double STOWED_POSITION = 0.24; 
+    public static final double STOWED_POSITION = -0.76; 
 
     // Intaking positions
-    public static final double CORAL_GROUND_INTAKING_POSITION = -0.096;
-    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = 0.231;
-    public static final double ALGAE_GROUND_INTAKING_POSITION = 0;
-    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = 0.08;
+    public static final double CORAL_GROUND_INTAKING_POSITION = -1.096;
+    public static final double CORAL_HUMAN_PLAYER_INTAKING_POSITION = -0.769;
+    public static final double ALGAE_GROUND_INTAKING_POSITION = -1;
+    public static final double ALGAE_LOW_REEF_INTAKING_POSITION = -0.92;
     public static final double ALGAE_HIGH_REEF_INTAKING_POSITION = ALGAE_LOW_REEF_INTAKING_POSITION;
 
     // Scoring positions
-    public static final double L1_SCORING_POSITION = 0.13;
+    public static final double L1_SCORING_POSITION = -0.87;
     public static final double L2_STAGING_POSITION = STOWED_POSITION;
-    public static final double L2_SCORING_POSITION = 0.14;
+    public static final double L2_SCORING_POSITION = -0.86;
     public static final double L3_STAGING_POSITION = L2_STAGING_POSITION;
     public static final double L3_SCORING_POSITION = L2_SCORING_POSITION;
     public static final double L4_STAGING_POSITION = STOWED_POSITION;
-    public static final double L4_SCORING_POSITION = 0.12;
-    public static final double PROCESSOR_POSITION = 0.15;
-    public static final double NET_POSITION = 0.15;
+    public static final double L4_SCORING_POSITION = -0.88;
+    public static final double PROCESSOR_POSITION = -0.85;
+    public static final double NET_POSITION = -0.85;
 
     /** The position when the arm is parallel to the floor */
-	public static final double LEVEL_POSITION = 0;
+	public static final double LEVEL_POSITION = -1;
 
     /** The encoder value when the arm is parallel to the floor */
     public static final CANcoderConfiguration ENCODER_CONFIG = new CANcoderConfiguration()
         .withMagnetSensor(new MagnetSensorConfigs()
-            .withMagnetOffset(0.67));
+            .withMagnetOffset(0.008)); //0.008
             // .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()

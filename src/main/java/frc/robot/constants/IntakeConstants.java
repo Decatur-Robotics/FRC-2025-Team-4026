@@ -18,7 +18,7 @@ public class IntakeConstants {
     public static final double BRANCH_EJECT_VELOCITY = -15;
     public static final double PROCESSOR_EJECT_VELOCITY = -120;
     public static final double NET_EJECT_VELOCITY = -120;
-    public static final double DEALGIFY_VELOCITY = -120;
+    public static final double DEALGIFY_VELOCITY = -60;
 
     public static final double CORAL_STALL_DEBOUNCE_TIME = 0.1;
     public static final int CORAL_STALL_CURRENT = 50;

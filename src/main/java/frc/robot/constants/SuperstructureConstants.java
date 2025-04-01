@@ -191,25 +191,25 @@ public class SuperstructureConstants {
     // Dealgify states
 
     public static final SuperstructureState STAGE_LOW_DEALGIFY_STATE = new SuperstructureState(
-        ElevatorConstants.ALGAE_LOW_REEF_INTAKING_POSITION, 
+        ElevatorConstants.ALGAE_LOW_REEF_REMOVING_POSITION, 
         ArmConstants.ALGAE_LOW_REEF_INTAKING_POSITION, 
         WristConstants.PERPENDICULAR_CURRENT, 
         IntakeConstants.DEALGIFY_VELOCITY);
 
     public static final SuperstructureState REMOVE_LOW_DEALGIFY_STATE = new SuperstructureState(
-        ElevatorConstants.ALGAE_LOW_REEF_INTAKING_POSITION, 
+        ElevatorConstants.ALGAE_LOW_REEF_REMOVING_POSITION, 
         ArmConstants.ALGAE_LOW_REEF_INTAKING_POSITION, 
         WristConstants.PERPENDICULAR_CURRENT, 
         IntakeConstants.DEALGIFY_VELOCITY);
 
     public static final SuperstructureState STAGE_HIGH_DEALGIFY_STATE = new SuperstructureState(
-        ElevatorConstants.ALGAE_HIGH_REEF_INTAKING_POSITION, 
+        ElevatorConstants.ALGAE_HIGH_REEF_REMOVING_POSITION, 
         ArmConstants.ALGAE_HIGH_REEF_INTAKING_POSITION, 
         WristConstants.PERPENDICULAR_CURRENT, 
         IntakeConstants.DEALGIFY_VELOCITY);
 
     public static final SuperstructureState REMOVE_HIGH_DEALGIFY_STATE = new SuperstructureState(
-        ElevatorConstants.ALGAE_HIGH_REEF_INTAKING_POSITION, 
+        ElevatorConstants.ALGAE_HIGH_REEF_REMOVING_POSITION, 
         ArmConstants.ALGAE_HIGH_REEF_INTAKING_POSITION, 
         WristConstants.PERPENDICULAR_CURRENT, 
         IntakeConstants.DEALGIFY_VELOCITY);
