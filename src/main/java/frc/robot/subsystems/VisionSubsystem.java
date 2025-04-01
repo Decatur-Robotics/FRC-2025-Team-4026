@@ -10,19 +10,14 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.cscore.OpenCvLoader;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -38,8 +33,6 @@ public class VisionSubsystem extends SubsystemBase {
     private final PhotonCamera cameraFrontLeft, cameraFrontRight; // , cameraBack;
 
     private final PhotonPoseEstimator poseEstimatorFrontLeft, poseEstimatorFrontRight; // , poseEstimatorBack;
-
-   private DoublePublisher coralEstimator;
 
     private StructPublisher<Pose3d> publisherFrontLeft = NetworkTableInstance.getDefault()
         .getStructTopic("CameraFrontLeft", Pose3d.struct).publish();
