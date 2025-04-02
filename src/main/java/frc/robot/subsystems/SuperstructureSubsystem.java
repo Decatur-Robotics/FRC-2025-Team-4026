@@ -347,22 +347,20 @@ public class SuperstructureSubsystem extends SubsystemBase {
 
     // Dealgify
 
-    public Command dealgifyLowCommand(Supplier<Boolean> override) {
-        return dealgifyCommand(SuperstructureConstants.STAGE_LOW_DEALGIFY_STATE, SuperstructureConstants.REMOVE_LOW_DEALGIFY_STATE,
-            SuperstructureConstants.CORAL_STOWED_STATE, override);
+    public Command dealgifyLowCommand() {
+        return dealgifyCommand(SuperstructureConstants.LOW_DEALGIFY_STATE,
+            SuperstructureConstants.CORAL_STOWED_STATE);
     }
 
-    public Command dealgifyHighCommand(Supplier<Boolean> override) {
-        return dealgifyCommand(SuperstructureConstants.STAGE_HIGH_DEALGIFY_STATE, SuperstructureConstants.REMOVE_HIGH_DEALGIFY_STATE,
-            SuperstructureConstants.CORAL_STOWED_STATE, override);
+    public Command dealgifyHighCommand() {
+        return dealgifyCommand(SuperstructureConstants.HIGH_DEALGIFY_STATE,
+            SuperstructureConstants.CORAL_STOWED_STATE);
     }
 
-    public Command dealgifyCommand(SuperstructureState stagingState, SuperstructureState removingState,
-            SuperstructureState stowedState, Supplier<Boolean> override) {
+    public Command dealgifyCommand(SuperstructureState stagingState,
+            SuperstructureState stowedState) {
         return Commands.sequence(
-            Commands.runOnce(() -> setState(stagingState), elevator, arm, wrist, intake),
-            Commands.waitUntil(() -> (override.get() || Robot.isTestMode())),
-            Commands.run(() -> setState(removingState), elevator, arm, wrist, intake)
+            Commands.runOnce(() -> setState(stagingState), elevator, arm, wrist, intake)
         )
         .finallyDo(() -> {
             setState(stowedState);

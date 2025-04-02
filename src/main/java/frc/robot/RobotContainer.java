@@ -220,8 +220,8 @@ public class RobotContainer {
 
         b.whileTrue(superstructure.intakeCoralGroundCommand());
         a.whileTrue(superstructure.intakeCoralHumanPlayerCommand());
-        x.whileTrue(superstructure.dealgifyLowCommand(overrideAtPose));
-        y.whileTrue(superstructure.dealgifyHighCommand(overrideAtPose));
+        x.whileTrue(superstructure.dealgifyLowCommand());
+        y.whileTrue(superstructure.dealgifyHighCommand());
 
         // bumperRight.whileTrue(climber.climbCommand());
         bumperLeft.whileTrue(climber.setVoltageCommand(-12));
