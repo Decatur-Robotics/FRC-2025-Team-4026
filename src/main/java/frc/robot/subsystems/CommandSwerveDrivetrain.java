@@ -61,6 +61,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    
+    private Pose2d initialPose;
+    private boolean hasAppliedInitialPose;
 
     private DoubleSubscriber coralRotationSubscriber;
     private double coralRotation;
@@ -208,6 +211,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         configureAutoBuilder();
 
         rotationalController.enableContinuousInput(0, 2*Math.PI);
+
+        hasAppliedInitialPose = false;
+        initialPose = Pose2d.kZero;
     }
 
     private void startSimThread() {
@@ -304,6 +310,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         });
     }
 
+    public void setInitialPose(Pose2d initialPose) {
+        hasAppliedInitialPose = false;
+        this.initialPose = initialPose;
+    }
+
     /**
      * Returns a command that applies the specified control request to this swerve drivetrain.
      *
@@ -332,6 +343,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 );
                 m_hasAppliedOperatorPerspective = true;
             });
+        }
+
+        if (!hasAppliedInitialPose) {
+            resetPose(initialPose);
+            hasAppliedInitialPose = true;
         }
 
         coralRotation = coralRotationSubscriber.get();
@@ -467,21 +483,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
     }
 
-    public Command driveToHumanPlayerFromReefBacksideAuto(Pose2d targetPose) {
+    public Command driveToHumanPlayerFromReefBacksideAuto(Pose2d targetPose, Pose2d startingPose) {
         Supplier<Pose2d> humanPlayerPose = () -> {
             double yError = Math.abs(getState().Pose.getY() - targetPose.getY());
 
-            double offset = 4.5 * (yError / 3.5);
+            double offset = 0.5;
 
-            if (yError < AutoConstants.Y_TOLERANCE) offset = 0;
+            Rotation2d rotation = startingPose.getRotation();
 
-            if (offset > 5) offset = 5;
+            if (yError < AutoConstants.Y_TOLERANCE) {
+                offset = 0;
+                rotation = targetPose.getRotation();
+            }
 
             if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
-                return new Pose2d(targetPose.getX() + offset, targetPose.getY(), targetPose.getRotation()); 
+                return new Pose2d(targetPose.getX() + offset, targetPose.getY(), rotation); 
             }
             else {
-                return new Pose2d(targetPose.getX() - offset, targetPose.getY(), targetPose.getRotation());
+                return new Pose2d(targetPose.getX() - offset, targetPose.getY(), rotation);
             }
         };
 
@@ -518,7 +537,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             double targetTranslation = translationalController.calculate(
                 0, getState().Pose.getTranslation().getDistance(this.targetPose.getTranslation()));
 
-            if (targetTranslation > maxSpeed) targetTranslation = maxSpeed;
+            // if (targetTranslation > maxSpeed) targetTranslation = maxSpeed;
 
             ChassisSpeeds newSpeeds = new ChassisSpeeds(
                 isAligned() ? 0 : targetTranslation, 

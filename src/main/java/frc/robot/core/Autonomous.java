@@ -146,8 +146,8 @@ public class Autonomous {
         Command mainAutoCommand;
 
         if (autoSideChooser.getSelected().equals(AutoSide.Left)) {
-            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) swerve.resetPose(AutoConstants.BLUE_LEFT_INITIAL_POSE);
-            else swerve.resetPose(AutoConstants.RED_LEFT_INITIAL_POSE);
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) swerve.setInitialPose(AutoConstants.BLUE_LEFT_INITIAL_POSE);
+            else swerve.setInitialPose(AutoConstants.RED_LEFT_INITIAL_POSE);
 
             if (autoTypeChooser.getSelected().equals(AutoType.ThreeCoralHumanPlayer)) {
                 mainAutoCommand = leftThreeCoralHumanPlayerAuto();
@@ -157,8 +157,8 @@ public class Autonomous {
             }
         }
         else if (autoSideChooser.getSelected().equals(AutoSide.Right)) {
-            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) swerve.resetPose(AutoConstants.BLUE_RIGHT_INITIAL_POSE);
-            else swerve.resetPose(AutoConstants.RED_RIGHT_INITIAL_POSE);
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) swerve.setInitialPose(AutoConstants.BLUE_RIGHT_INITIAL_POSE);
+            else swerve.setInitialPose(AutoConstants.RED_RIGHT_INITIAL_POSE);
 
             if (autoTypeChooser.getSelected().equals(AutoType.ThreeCoralHumanPlayer)) {
                 mainAutoCommand = rightThreeCoralHumanPlayerAuto();
@@ -168,8 +168,8 @@ public class Autonomous {
             }
         }
         else {
-            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) swerve.resetPose(AutoConstants.BLUE_CENTER_INITIAL_POSE);
-            else swerve.resetPose(AutoConstants.RED_CENTER_INITIAL_POSE);
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue)) swerve.setInitialPose(AutoConstants.BLUE_CENTER_INITIAL_POSE);
+            else swerve.setInitialPose(AutoConstants.RED_CENTER_INITIAL_POSE);
 
             if (autoTypeChooser.getSelected().equals(AutoType.ThreeCoralHumanPlayer)) {
                 mainAutoCommand = centerThreeCoralHumanPlayerAuto();
@@ -267,7 +267,7 @@ public class Autonomous {
                 swerve.driveToPoseAuto(firstBranchPose, PathLocation.Reef)),
             Commands.deadline(
                 superstructure.intakeCoralHumanPlayerCommand(), 
-                swerve.driveToHumanPlayerFromReefBacksideAuto(humanPlayerPose)),
+                swerve.driveToHumanPlayerFromReefBacksideAuto(humanPlayerPose, firstBranchPose)),
             Commands.deadline(
                 autoL4Command(),
                 swerve.driveToPoseAuto(secondBranchPose, PathLocation.Reef)),
