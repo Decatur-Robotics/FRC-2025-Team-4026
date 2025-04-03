@@ -360,7 +360,7 @@ public class SuperstructureSubsystem extends SubsystemBase {
     public Command dealgifyCommand(SuperstructureState stagingState,
             SuperstructureState stowedState) {
         return Commands.sequence(
-            Commands.runOnce(() -> setState(stagingState), elevator, arm, wrist, intake)
+            Commands.run(() -> setState(stagingState), elevator, arm, wrist, intake)
         )
         .finallyDo(() -> {
             setState(stowedState);
