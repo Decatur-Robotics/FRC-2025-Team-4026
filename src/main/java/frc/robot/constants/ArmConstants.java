@@ -54,17 +54,17 @@ public class ArmConstants {
         .withStatorCurrentLimitEnable(true)
         .withStatorCurrentLimit(60);
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-        .withKP(22) // 22
+        .withKP(8) // 22
         .withKI(0)
         .withKD(0)
         .withKS(0.081) // 0.081
-        .withKV(8.15) // 8.15
+        .withKV(7.8) // 8.15
         .withKA(0)
-        .withKG(0.428) // 0.428
+        .withKG(0.518) // 0.428
         .withGravityType(GravityTypeValue.Arm_Cosine);
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(0.6) // 0.6
-        .withMotionMagicAcceleration(2); // 2?
+        .withMotionMagicAcceleration(0.9); // 2?
     public static final MotorOutputConfigs MOTOR_OUTPUT_CONFIGS = new MotorOutputConfigs()
         .withNeutralMode(NeutralModeValue.Brake)
         .withInverted(InvertedValue.Clockwise_Positive);
