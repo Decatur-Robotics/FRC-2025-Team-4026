@@ -140,7 +140,7 @@ public class RobotContainer {
             double velocityY = -joystick.getX() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
             double velocityAngular = -joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
 
-            if (bumperRight.getAsBoolean() || bumperLeft.getAsBoolean()
+            if (bumperLeft.getAsBoolean()
                 || x.getAsBoolean() || down.getAsBoolean() || up.getAsBoolean()) {
                 velocityX *= SwerveConstants.PRECISION_MODE_SCALAR;
                 velocityY *= SwerveConstants.PRECISION_MODE_SCALAR;
@@ -164,7 +164,7 @@ public class RobotContainer {
         triggerLeft.whileTrue(swerve.driveToClosestHumanPlayer(desiredChassisSpeeds));
         triggerRight.whileTrue(swerve.driveToClosestBranch(desiredChassisSpeeds));
         // bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
-        // bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
+        bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
 
         bumperLeft.whileTrue(Commands.run(() -> swerve.driveRobotRelative(
             new ChassisSpeeds(-1, 0, 
