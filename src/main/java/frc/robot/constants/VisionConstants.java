@@ -1,7 +1,5 @@
 package frc.robot.constants;
 
-import static edu.wpi.first.units.Units.Radians;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;

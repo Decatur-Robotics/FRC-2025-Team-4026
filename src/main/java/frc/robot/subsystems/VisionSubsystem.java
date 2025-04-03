@@ -71,12 +71,12 @@ public class VisionSubsystem extends SubsystemBase {
         Matrix<N3, N1> standardDeviations = VisionConstants.SINGLE_TAG_STANDARD_DEVIATIONS;
 
         for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
-            if (!swerve.getTargetPoseLocation().equals(PathLocation.None)) {
+            if (true) {
                 List<PhotonTrackedTarget> targets = result.getTargets();
 
                 List<PhotonTrackedTarget> desiredTargets = new ArrayList<>();
 
-                List<Integer> apriltagIds = swerve.getTargetPoseLocation().getApriltagIds();
+                List<Integer> apriltagIds = PathLocation.Reef.getApriltagIds();
 
                 for (PhotonTrackedTarget target : targets) {
                     for (int i : apriltagIds) {
