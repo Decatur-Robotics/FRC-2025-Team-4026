@@ -193,13 +193,17 @@ public class Autonomous {
         return Commands.either(
             Commands.deadline(Commands.waitSeconds(1), Commands.run(() -> swerve.driveFieldRelative(new ChassisSpeeds(-0.5, 0, 0)))), 
             Commands.deadline(Commands.waitSeconds(1), Commands.run(() -> swerve.driveFieldRelative(new ChassisSpeeds(0.5, 0, 0)))), 
-            () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
+            () -> isBlueAlliance());
     }
 
     private Command autoL4Command() {
         return superstructure.scoreCoralL4Command(() -> swerve.isNearAligned(), () -> swerve.isAligned(), 
             () -> (Robot.isSimulation() && swerve.isNearAligned()), 
             () -> (Robot.isSimulation() && swerve.isAligned()));
+    }
+
+    public boolean isBlueAlliance() {
+        return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get().equals(Alliance.Blue);
     }
 
     //
@@ -210,21 +214,21 @@ public class Autonomous {
         return Commands.either(
             oneCoralAuto(PathSetpoints.BLUE_REEF_J),
             oneCoralAuto(PathSetpoints.RED_REEF_J),
-            () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
+            () -> isBlueAlliance());
     }
 
     private Command centerOneCoralAuto() {
         return Commands.either(
             oneCoralAuto(PathSetpoints.BLUE_REEF_G),
             oneCoralAuto(PathSetpoints.RED_REEF_G),
-            () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
+            () -> isBlueAlliance());
     }
 
     private Command rightOneCoralAuto() {
         return Commands.either(
             oneCoralAuto(PathSetpoints.BLUE_REEF_E),
             oneCoralAuto(PathSetpoints.RED_REEF_E),
-            () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
+            () -> isBlueAlliance());
     }
 
     private Command leftThreeCoralHumanPlayerAuto() {
@@ -233,7 +237,7 @@ public class Autonomous {
                 PathSetpoints.BLUE_REEF_J, PathSetpoints.BLUE_REEF_L, PathSetpoints.BLUE_REEF_K),
             threeCoralHumanPlayerAuto(PathSetpoints.RED_LEFT_HUMAN_PLAYER_LEFT, 
                 PathSetpoints.RED_REEF_J, PathSetpoints.RED_REEF_L, PathSetpoints.RED_REEF_K),
-            () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
+            () -> isBlueAlliance());
     }
 
     private Command centerThreeCoralHumanPlayerAuto() {
@@ -248,7 +252,7 @@ public class Autonomous {
                 PathSetpoints.BLUE_REEF_E, PathSetpoints.BLUE_REEF_C, PathSetpoints.BLUE_REEF_D),
             threeCoralHumanPlayerAuto(PathSetpoints.RED_RIGHT_HUMAN_PLAYER_RIGHT, 
                 PathSetpoints.RED_REEF_E, PathSetpoints.RED_REEF_C, PathSetpoints.RED_REEF_D),
-            () -> DriverStation.getAlliance().get().equals(Alliance.Blue));
+            () -> isBlueAlliance());
     }
 
     private Command oneCoralAuto(Pose2d branchPose) {
