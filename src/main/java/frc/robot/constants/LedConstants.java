@@ -4,7 +4,7 @@ import frc.robot.util.TeamColor;
 
 public class LedConstants {
     /** The length of the LED strip */
-    public static final int LENGTH = 100;
+    public static final int LENGTH = 79; // 39 on one strip 40 on the other
 
     /** The color of a pixel when it is off */
     public static final TeamColor OFF_COLOR = new TeamColor(0, 0, 0);

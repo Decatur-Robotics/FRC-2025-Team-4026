@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
@@ -13,36 +14,46 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.constants.ClawConstants;
+import frc.robot.constants.AutoConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.LedConstants;
 import frc.robot.constants.PathSetpoints;
+import frc.robot.constants.SuperstructureConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.constants.WristConstants;
+import frc.robot.core.Autonomous;
 import frc.robot.core.LogitechControllerButtons;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.SuperstructureSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.WristSubsystem;
+import frc.robot.subsystems.CommandSwerveDrivetrain.PathLocation;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -58,8 +69,8 @@ public class RobotContainer {
     private final ElevatorSubsystem elevator;
     private final ArmSubsystem arm;
     private final WristSubsystem wrist;
-    private final ClawSubsystem claw;
     private final IntakeSubsystem intake;
+    private final LedSubsystem led;
     private final SuperstructureSubsystem superstructure;
     private final CommandSwerveDrivetrain swerve;
     private final VisionSubsystem vision;
@@ -67,6 +78,8 @@ public class RobotContainer {
     private final ShuffleboardTab shuffleboardTab;
 
     private final Telemetry logger;
+
+    private Autonomous auto;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -83,15 +96,18 @@ public class RobotContainer {
         elevator = new ElevatorSubsystem();
         arm = new ArmSubsystem();
         wrist = new WristSubsystem();
-        claw = new ClawSubsystem();
         intake = new IntakeSubsystem();
-        superstructure = new SuperstructureSubsystem(elevator, arm, wrist, claw, intake);
+        led = new LedSubsystem();
+        superstructure = new SuperstructureSubsystem(elevator, arm, wrist, intake, led);
         swerve = TunerConstants.createDrivetrain();
         vision = new VisionSubsystem(swerve);
 
         // Configure button bindings
         configurePrimaryBindings();
         configureSecondaryBindings();
+
+        // Configure Auto
+        auto = new Autonomous(instance);
     }
 
     /**
@@ -106,8 +122,14 @@ public class RobotContainer {
     private void configurePrimaryBindings() {
         Joystick joystick = new Joystick(0);
 
-        JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a);
-        JoystickButton b = new JoystickButton(joystick, LogitechControllerButtons.b);
+        POVButton down = new POVButton(joystick, LogitechControllerButtons.down);
+        POVButton up = new POVButton(joystick, LogitechControllerButtons.up);
+        POVButton left = new POVButton(joystick, LogitechControllerButtons.left);
+        POVButton right = new POVButton(joystick, LogitechControllerButtons.right);
+        JoystickButton a = new JoystickButton(joystick, LogitechControllerButtons.a); 
+        JoystickButton b = new JoystickButton(joystick, LogitechControllerButtons.b); // scoring at pose override
+        JoystickButton x = new JoystickButton(joystick, LogitechControllerButtons.x);
+        JoystickButton y = new JoystickButton(joystick, LogitechControllerButtons.y);
         JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
         JoystickButton bumperLeft = new JoystickButton(joystick, LogitechControllerButtons.bumperLeft);
@@ -116,29 +138,49 @@ public class RobotContainer {
         Supplier<ChassisSpeeds> desiredChassisSpeeds = () -> { 
             double velocityX = -joystick.getY() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
             double velocityY = -joystick.getX() * SwerveConstants.MAX_TRANSLATIONAL_VELOCITY;
-            double velocityAngular = joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
+            double velocityAngular = -joystick.getTwist() * SwerveConstants.MAX_ROTATIONAL_VELOCITY;
 
-            if (Math.abs(velocityX) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityX = 0;
-            if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_DEADBAND) velocityY = 0;
-            if (Math.abs(velocityAngular) < SwerveConstants.ROTATIONAL_DEADBAND) velocityAngular = 0;
+            if (bumperLeft.getAsBoolean()
+                || x.getAsBoolean() || down.getAsBoolean() || up.getAsBoolean()) {
+                velocityX *= SwerveConstants.PRECISION_MODE_SCALAR;
+                velocityY *= SwerveConstants.PRECISION_MODE_SCALAR;
+                velocityAngular *= SwerveConstants.PRECISION_MODE_SCALAR;
+            }
 
-            return new ChassisSpeeds(velocityX, velocityY, velocityAngular);
+            if (Math.abs(velocityX) < SwerveConstants.TRANSLATIONAL_DRIVER_DEADBAND) velocityX = 0;
+            if (Math.abs(velocityY) < SwerveConstants.TRANSLATIONAL_DRIVER_DEADBAND) velocityY = 0;
+            if (Math.abs(velocityAngular) < SwerveConstants.ROTATIONAL_DRIVER_DEADBAND) velocityAngular = 0;
+
+            return ChassisSpeeds.fromFieldRelativeSpeeds(
+                new ChassisSpeeds(velocityX, velocityY, velocityAngular), 
+                swerve.getState().Pose.getRotation().plus(swerve.getOperatorForwardDirection()));
         };
 
-        swerve.setDefaultCommand(swerve.driveFieldRelative(desiredChassisSpeeds));
+        // Default field relative drive command
+        swerve.setDefaultCommand(swerve.driveCommand(desiredChassisSpeeds));
 
-        triggerLeft.whileTrue(swerve.driveToNet(desiredChassisSpeeds));
+        // Drive to pose commands
+        // triggerLeft.whileTrue(swerve.driveToNet(desiredChassisSpeeds));
+        triggerLeft.whileTrue(swerve.driveToClosestHumanPlayer(desiredChassisSpeeds));
         triggerRight.whileTrue(swerve.driveToClosestBranch(desiredChassisSpeeds));
-        bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
+        // bumperLeft.whileTrue(swerve.driveToProcessor(desiredChassisSpeeds));
         bumperRight.whileTrue(swerve.driveToClosestReefAlgae(desiredChassisSpeeds));
 
-        // triggerLeft.onFalse(swerve.nullTargetPose());
-        // triggerRight.onFalse(swerve.nullTargetPose());
-        // bumperLeft.onFalse(swerve.nullTargetPose());
-        // bumperRight.onFalse(swerve.nullTargetPose());
+        bumperLeft.whileTrue(Commands.run(() -> swerve.driveRobotRelative(
+            new ChassisSpeeds(-1, 0, 
+            desiredChassisSpeeds.get().omegaRadiansPerSecond)), swerve));
+        x.whileTrue(Commands.run(() -> swerve.driveRobotRelative(
+            new ChassisSpeeds(1, 0, 
+            desiredChassisSpeeds.get().omegaRadiansPerSecond)), swerve));
+        left.whileTrue(Commands.run(() -> swerve.driveRobotRelative(
+            new ChassisSpeeds(0, -1, 
+            desiredChassisSpeeds.get().omegaRadiansPerSecond)), swerve));
+        right.whileTrue(Commands.run(() -> swerve.driveRobotRelative(
+            new ChassisSpeeds(0, 1, 
+            desiredChassisSpeeds.get().omegaRadiansPerSecond)), swerve));
 
         // Reset heading
-        a.onTrue(swerve.runOnce(() -> swerve.resetRotation(swerve.getOperatorForwardDirection())));
+        y.onTrue(swerve.runOnce(() -> swerve.seedFieldCentric()));
 
         swerve.configureShuffleboard(desiredChassisSpeeds);
 
@@ -146,6 +188,9 @@ public class RobotContainer {
 
     private void configureSecondaryBindings() {
         Joystick joystick = new Joystick(1);
+
+        JoystickButton start = new JoystickButton(joystick, LogitechControllerButtons.start);
+        JoystickButton back = new JoystickButton(joystick, LogitechControllerButtons.back);
 
         POVButton down = new POVButton(joystick, LogitechControllerButtons.down);
         POVButton up = new POVButton(joystick, LogitechControllerButtons.up);
@@ -160,66 +205,54 @@ public class RobotContainer {
         JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
 
-        Supplier<Boolean> overrideLineUp = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.y).getAsBoolean();
-        Supplier<Boolean> isAtTargetPose = () -> swerve.isAtTargetPose();
+        Supplier<Boolean> overrideAtPose = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.b).getAsBoolean();
+        Supplier<Boolean> overrideNearPose = () -> start.getAsBoolean();
+        Supplier<Boolean> isNearAligned = () -> (swerve.isNearAligned() || Robot.isTestMode());
+        Supplier<Boolean> isAligned = () -> (Robot.isTestMode()); // (swerve.isAligned() || Robot.isTestMode());
         Supplier<Pose2d> getTargetPose = () -> swerve.getTargetPose();
 
-        up.whileTrue(superstructure.scoreCoralL1Command(isAtTargetPose, overrideLineUp));
-        left.whileTrue(superstructure.scoreCoralL2Command(isAtTargetPose, overrideLineUp));
-        right.whileTrue(superstructure.scoreCoralL3Command(isAtTargetPose, overrideLineUp));
-        down.whileTrue(superstructure.scoreCoralL4Command(isAtTargetPose, overrideLineUp));
-        triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isAtTargetPose, overrideLineUp));
-        triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isAtTargetPose, overrideLineUp));
+        down.whileTrue(superstructure.scoreCoralL1Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        right.whileTrue(superstructure.scoreCoralL2Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        left.whileTrue(superstructure.scoreCoralL3Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        up.whileTrue(superstructure.scoreCoralL4Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
 
         b.whileTrue(superstructure.intakeCoralGroundCommand());
-        y.whileTrue(superstructure.intakeCoralHumanPlayerCommand());
-        a.whileTrue(superstructure.intakeAlgaeGroundCommand());
-        x.whileTrue(superstructure.intakeAlgaeReefCommand(getTargetPose));
+        a.whileTrue(superstructure.intakeCoralHumanPlayerCommand());
+        x.whileTrue(superstructure.dealgifyLowCommand());
+        y.whileTrue(superstructure.dealgifyHighCommand());
 
         // bumperRight.whileTrue(climber.climbCommand());
+        bumperLeft.whileTrue(climber.setVoltageCommand(-12));
+        bumperRight.whileTrue(climber.setVoltageCommand(12));
 
-        // bumperLeft.onTrue(superstructure.zeroSuperstructureCommand());
+        back.onTrue(superstructure.zeroSuperstructureCommand());
 
         /*
          * Testing buttons
          */
 
-        GenericEntry elevatorVoltage = shuffleboardTab.add("Elevator Voltage", 0)
-            .withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", -1, "max", 1))
-            .getEntry();
-            
-        // triggerLeft.whileTrue(elevator.tuneVoltageCommand(() -> elevatorVoltage.getDouble(0)));
-
-        GenericEntry armVoltage = shuffleboardTab.add("Arm Voltage", 0)
-            .withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", 0, "max", 1.5))
-            .getEntry();
-
-        // triggerLeft.whileTrue(arm.tuneVoltageCommand(() -> armVoltage.getDouble(0)));
-        // triggerRight.whileTrue(arm.tuneVoltageCommand(() -> -armVoltage.getDouble(0)));
-
-        // triggerLeft.whileTrue(elevator.setVoltageCommand(2));
+        // triggerLeft.whileTrue(elevator.setVoltageCommand(1.5));
         // triggerRight.whileTrue(elevator.setVoltageCommand(-1));
-        // // bumperLeft.onTrue(elevator.setPositionCommand(10));
-        // // bumperRight.onTrue(elevator.setPositionCommand(40));
+        // bumperLeft.onTrue(elevator.setPositionCommand(10));
+        // bumperRight.onTrue(elevator.setPositionCommand(40));
 
-        // bumperLeft.whileTrue(arm.setVoltageCommand(2));
-        // bumperRight.whileTrue(arm.setVoltageCommand(-1));
+        // home.onTrue(arm.setZeroPositionCommand());
+        // home.onTrue(elevator.setZeroPositionCommand());
+
+        // a.whileTrue(arm.setVoltageCommand(1));
+        // b.whileTrue(arm.setVoltageCommand(-1));
         // triggerLeft.onTrue(arm.setPositionCommand(4.5));
         // triggerRight.onTrue(arm.setPositionCommand(20));
 
         // triggerLeft.whileTrue(wrist.setCurrentCommand(WristConstants.PARALLEL_CURRENT));
         // triggerRight.whileTrue(wrist.setCurrentCommand(WristConstants.PERPENDICULAR_CURRENT));
 
-        // a.whileTrue(claw.setCurrentCommand(ClawConstants.CLOSED_CURRENT));
-        // triggerRight.whileTrue(claw.setCurrentCommand(ClawConstants.OPEN_CURRENT));
-
-        // triggerLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.INTAKE_VELOCITY));
-        // triggerRight.whileTrue(intake.setVelocityCommand(IntakeConstants.L1_EJECT_VELOCITY));
+        // triggerLeft.whileTrue(intake.setVoltageCommand(0.3));
+        // triggerRight.whileTrue(intake.setVoltageCommand(0.25));
         // bumperLeft.whileTrue(intake.setVelocityCommand(IntakeConstants.NET_EJECT_VELOCITY));
         // bumperRight.whileTrue(intake.setVelocityCommand(IntakeConstants.PROCESSOR_EJECT_VELOCITY));
-        // triggerLeft.whileTrue(intake.setVoltageCommand(0.23));
 
         // triggerLeft.whileTrue(climber.setVoltageCommand(6));
         // triggerRight.whileTrue(climber.setVoltageCommand(-6));
@@ -241,5 +274,31 @@ public class RobotContainer {
         // a.onTrue(Commands.runOnce(() -> SignalLogger.start()));
         // b.onTrue(Commands.runOnce(() -> SignalLogger.stop()));
     }
-    
+
+
+    public static ShuffleboardTab getShuffleboardTab() {
+		return instance.shuffleboardTab;
+	}
+
+    public SuperstructureSubsystem getSuperstructure() {
+        return superstructure;
+    }
+
+    public CommandSwerveDrivetrain getSwerve() {
+        return swerve;
+    }
+
+    public VisionSubsystem GetVision() {
+        return vision;
+    }
+
+    public static RobotContainer getInstance() {
+        return instance;
+    }
+
+    // TODO: make autos
+    public Command getAutoCommand() {
+        return auto.getAutoCommand();
+    }
+
 }

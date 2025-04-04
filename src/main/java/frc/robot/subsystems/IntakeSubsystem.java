@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -16,20 +16,22 @@ import frc.robot.constants.Ports;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-    private TalonFXS motorLeft, motorRight;
+    private TalonFX motorLeft, motorRight;
 
     private double velocity;
     private VelocityVoltage velocityRequest;
     private VoltageOut voltageRequest;
 
-    private LinearFilter currentFilter;
-    private double filteredCurrent;
+    private LinearFilter currentFilterLeft;
+    private double filteredCurrentLeft;
+    private LinearFilter currentFilterRight;
+    private double filteredCurrentRight;
 
     private double voltage;
     
     public IntakeSubsystem() {
-        motorLeft = new TalonFXS(Ports.INTAKE_MOTOR_LEFT);
-        motorRight = new TalonFXS(Ports.INTAKE_MOTOR_RIGHT);
+        motorLeft = new TalonFX(Ports.INTAKE_MOTOR_LEFT);
+        motorRight = new TalonFX(Ports.INTAKE_MOTOR_RIGHT);
         
         motorLeft.getConfigurator().apply(IntakeConstants.MOTOR_LEFT_CONFIG);
 
@@ -57,7 +59,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
         voltageRequest = new VoltageOut(voltage);
 
-        currentFilter = LinearFilter.movingAverage(10);
+        currentFilterLeft = LinearFilter.movingAverage(10);
+        currentFilterRight = LinearFilter.movingAverage(10);
 
         configureShuffleboard();
     }
@@ -67,15 +70,16 @@ public class IntakeSubsystem extends SubsystemBase {
 
         tab.addDouble("Target Intake Velocity", () -> velocity);
         tab.addDouble("Actual Intake Velocity", () -> getVelocity());
-        tab.addDouble("Filtered Intake Current", () -> filteredCurrent);
+        tab.addDouble("Filtered Intake Current", () -> filteredCurrentLeft);
         tab.addDouble("Target Intake Voltage", () -> voltage);
-        tab.addDouble("Actual Intake Voltage", () -> motorRight.getMotorVoltage().getValueAsDouble());
-        tab.addDouble("Intake Current", () -> motorRight.getStatorCurrent().getValueAsDouble());
+        tab.addDouble("Actual Intake Voltage", () -> motorLeft.getMotorVoltage().getValueAsDouble());
+        tab.addDouble("Intake Current", () -> motorLeft.getStatorCurrent().getValueAsDouble());
     }
 
     @Override
     public void periodic() {
-        filteredCurrent = currentFilter.calculate(getCurrent());
+        filteredCurrentLeft = currentFilterLeft.calculate(getCurrentLeft());
+        filteredCurrentRight = currentFilterRight.calculate(getCurrentRight());
     }
 
     public void setVelocity(double velocity) {
@@ -85,15 +89,23 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return motorRight.getVelocity().getValueAsDouble();
+        return motorLeft.getVelocity().getValueAsDouble();
     }
 
-    public double getCurrent() {
+    public double getCurrentLeft() {
         return motorLeft.getStatorCurrent().getValueAsDouble();
     }
+    
+    public double getCurrentRight() {
+        return motorRight.getStatorCurrent().getValueAsDouble();
+    }
 
-    public double getFilteredCurrent() {
-        return filteredCurrent;
+    public double getFilteredCurrentLeft() {
+        return filteredCurrentLeft;
+    }
+
+    public double getFilteredCurrentRight() {
+        return filteredCurrentRight;
     }
 
     public void setVoltage(double voltage) {

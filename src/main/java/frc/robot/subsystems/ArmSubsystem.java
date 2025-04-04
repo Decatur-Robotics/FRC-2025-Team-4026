@@ -9,10 +9,13 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,11 +36,12 @@ public class ArmSubsystem extends SubsystemBase {
 
 	private VoltageOut voltageRequest;
 
-	private DutyCycleEncoder throughBoreEncoder;
+	private CANcoder throughBoreEncoder;
 
 	private double voltage;
 
-	private double gravityFeedForward;
+	private LinearFilter currentFilter;
+    private double filteredCurrent;
 
 	public ArmSubsystem() {
 		motor = new TalonFX(Ports.ARM_MOTOR);
@@ -49,6 +53,7 @@ public class ArmSubsystem extends SubsystemBase {
 		motor.getVelocity().setUpdateFrequency(20);
         motor.getAcceleration().setUpdateFrequency(20);
 		motor.getMotorVoltage().setUpdateFrequency(20);
+		motor.getStatorCurrent().setUpdateFrequency(20);
 
 		position = ArmConstants.STOWED_POSITION;
 
@@ -58,12 +63,13 @@ public class ArmSubsystem extends SubsystemBase {
 
 		voltageRequest = new VoltageOut(0).withEnableFOC(true);
 
-		// k4X is quadrature encoding
-		throughBoreEncoder = new DutyCycleEncoder(Ports.ARM_ENCODER);
-
-		// resetTalonEncoder();
+		// CANcoder uses custom configs for offset and direction
+		throughBoreEncoder = new CANcoder(Ports.ARM_ENCODER);
+		throughBoreEncoder.getConfigurator().apply(ArmConstants.ENCODER_CONFIG);
 
 		configureShuffleboard();
+
+		currentFilter = LinearFilter.movingAverage(10);
 
 		voltage = 0;
 	}
@@ -72,15 +78,11 @@ public class ArmSubsystem extends SubsystemBase {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.SHUFFLEBOARD_SUPERSTRUCTURE_TAB);
 
 		tab.addDouble("Target Arm Position", () -> position);
-		tab.addDouble("Actual Arm Position", () -> getTalonPosition());
-		tab.addDouble("Actual Arm Velocity", () -> motor.getVelocity().getValueAsDouble());
-		tab.addDouble("Actual Arm Acceleration", () -> motor.getAcceleration().getValueAsDouble());
-		tab.addDouble("Arm Through Bore Encoder Position", () -> getThroughBoreEncoderPosition());
-		tab.addDouble("Arm Test Ratio", () -> (getTalonPosition()/getThroughBoreEncoderPosition()));
-		tab.addDouble("Arm Position Calc", () -> (getThroughBoreEncoderPosition() / ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO));
+		tab.addDouble("Actual Arm Position", () -> getPosition());
+		tab.addDouble("Actual Arm Velocity", () -> throughBoreEncoder.getVelocity().getValueAsDouble());
 		tab.addDouble("Target Arm Voltage", () -> voltage);
 		tab.addDouble("Actual Arm Voltage", () -> motor.getMotorVoltage().getValueAsDouble());
-		tab.addDouble("Gravity Feed Forward", () -> gravityFeedForward);
+		tab.addDouble("Filtered Arm Current", () -> filteredCurrent);
 	}
 	
 	@Override
@@ -90,11 +92,7 @@ public class ArmSubsystem extends SubsystemBase {
 			motor.getPosition().setUpdateFrequency(20);
 		}
 
-		Rotation2d angle = Rotation2d.fromRotations(getThroughBoreEncoderPosition());
-
-		gravityFeedForward = Math.cos(angle.getRadians()) * ArmConstants.KG;
-
-		// motor.setControl(positionRequest.withFeedForward(gravityFeedForward));
+		filteredCurrent = currentFilter.calculate(getCurrent());
 	}
 
 	public void setPosition(double position) {
@@ -108,21 +106,16 @@ public class ArmSubsystem extends SubsystemBase {
 		motor.setControl(voltageRequest.withOutput(voltage));
 	}
 
-    public double getTalonPosition() {
-        return motor.getPosition().getValueAsDouble();
-    }
+	public double getCurrent() {
+		return motor.getStatorCurrent().getValueAsDouble();
+	}
 
 	/**
 	 * @return through bore encoder position in rotations
 	 */
-	public double getThroughBoreEncoderPosition() {
-		return (throughBoreEncoder.get()) - ArmConstants.THROUGH_BORE_ENCODER_ZERO_OFFSET;
+	public double getPosition() {
+		return throughBoreEncoder.getPosition().getValueAsDouble();
 	}
-
-	// public void resetTalonEncoder() {
-    //     double rotations = getThroughBoreEncoderPosition() / ArmConstants.TALON_ENCODER_TO_ROTATIONS_RATIO;
-	// 	motor.setPosition(rotations);
-    // }
 
 	public Command setPositionCommand(double position) {
 		return Commands.runOnce(() -> setPosition(position));
@@ -140,10 +133,6 @@ public class ArmSubsystem extends SubsystemBase {
             .finallyDo(() -> setVoltage(0));
     }
 
-	// public Command resetTalonEncoderCommand() {
-	// 	return Commands.runOnce(() -> resetTalonEncoder());
-	// }
-
 	/*
 	 * SysId
 	 */
@@ -151,9 +140,9 @@ public class ArmSubsystem extends SubsystemBase {
 	private final SysIdRoutine sysIdRoutine =
 		new SysIdRoutine(
 			new SysIdRoutine.Config(
-				Volts.of(1).per(Second), // Quasistatic
-				Volts.of(4), // Dynamic
-				Seconds.of(10), // Timeout
+				Volts.of(0.1).per(Second), // Quasistatic
+				Volts.of(0.5), // Dynamic
+				Seconds.of(20), // Timeout
 				(state) -> SignalLogger.writeString("state", state.toString())
 			),
 			new SysIdRoutine.Mechanism(

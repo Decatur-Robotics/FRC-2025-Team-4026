@@ -12,6 +12,7 @@ import frc.robot.constants.ClimberConstants;
 import frc.robot.constants.Constants;
 
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
+import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
 
 public class ClimberSubsystem extends SubsystemBase{
@@ -88,7 +89,7 @@ public class ClimberSubsystem extends SubsystemBase{
 
     public Command setVoltageCommand(double voltage) {
         return Commands.run(() -> setVoltage(voltage), this)
-            .finallyDo(() -> setVoltage(0));
+            .finallyDo(() -> climberMotor.setControl(new NeutralOut()));
     }
 
 }

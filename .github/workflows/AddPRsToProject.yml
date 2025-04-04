@@ -20,7 +20,7 @@ jobs:
         uses: actions/add-to-project@v0.5.0
         with:
           project-url: https://github.com/orgs/Decatur-Robotics/projects/1
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.WORKFLOWS_AUTH }}
   add-labels:
     name: Add labels to Issues/PRs
     runs-on: ubuntu-latest

@@ -75,6 +75,8 @@ public class Robot extends TimedRobot implements ILogSource, IModeChangeListener
 		{
 			modeChangeListener.disabledInit();
 		}
+
+		robotContainer.getSwerve().resetPreviousSetpoint();
 	}
 
 	@Override
@@ -93,6 +95,12 @@ public class Robot extends TimedRobot implements ILogSource, IModeChangeListener
 		{
 			modeChangeListener.autonomousInit();
 		}
+
+		CommandScheduler.getInstance().cancelAll();
+
+		robotContainer.getSwerve().resetPreviousSetpoint();
+
+		autonomousCommand = Optional.ofNullable(robotContainer.getAutoCommand());
 
 		logFine("Getting and running auto command...");
 		// schedule the autonomous command (example)
@@ -126,6 +134,8 @@ public class Robot extends TimedRobot implements ILogSource, IModeChangeListener
 		{
 			modeChangeListener.teleopInit();
 		}
+
+		robotContainer.getSwerve().resetPreviousSetpoint();
 	}
 
 	/** This function is called periodically during operator control. */
@@ -163,5 +173,9 @@ public class Robot extends TimedRobot implements ILogSource, IModeChangeListener
 	public static void addSubsystem(IModeChangeListener modeChangeListener)
 	{
 		instance.modeChangeListeners.add(modeChangeListener);
+	}
+
+	public static boolean isTestMode() {
+		return instance.isTest();
 	}
 }
