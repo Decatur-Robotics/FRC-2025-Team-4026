@@ -80,7 +80,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         .getStructTopic("Robot Pose", Pose2d.struct).publish();
 
     private PIDController translationalController = new PIDController(
-        5.5, 0, 0.25);
+        5.75, 0, 0.2);
         // 5.25, 0, 0.3); 
     private PIDController rotationalController = new PIDController(
         6.25, 0, 0.3);
