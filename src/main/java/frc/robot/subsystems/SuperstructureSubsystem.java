@@ -188,21 +188,6 @@ public class SuperstructureSubsystem extends SubsystemBase {
             SuperstructureConstants.ALGAE_STOWED_STATE);
     }
 
-    public Command intakeAlgaeReefCommand(Supplier<Pose2d> targetPose) {
-        Supplier<SuperstructureState> intakingState = () -> {
-            if (!(targetPose == null) && (targetPose.get().equals(PathSetpoints.BLUE_REEF_AB) || targetPose.get().equals(PathSetpoints.BLUE_REEF_EF) 
-                    || targetPose.get().equals(PathSetpoints.BLUE_REEF_IJ) || targetPose.get().equals(PathSetpoints.RED_REEF_AB)
-                    || targetPose.get().equals(PathSetpoints.RED_REEF_EF) || targetPose.get().equals(PathSetpoints.RED_REEF_IJ)))
-                return SuperstructureConstants.ALGAE_HIGH_REEF_INTAKING_STATE;
-            // else if (targetPose.get().equals(PathSetpoints.REEF_CD) || targetPose.get().equals(PathSetpoints.REEF_GH) 
-            //         || targetPose.get().equals(PathSetpoints.REEF_KL)) 
-            //     return SuperstructureConstants.ALGAE_LOW_REEF_INTAKING_STATE;
-            else return SuperstructureConstants.ALGAE_LOW_REEF_INTAKING_STATE;
-        };
-
-        return intakeAlgaeCommand(intakingState, SuperstructureConstants.ALGAE_STOWED_STATE);
-    }
-
     public Command intakeCoralCommand(Supplier<SuperstructureState> intakingState, SuperstructureState stowedState) {
         Debouncer debouncer = new Debouncer(IntakeConstants.CORAL_STALL_DEBOUNCE_TIME, DebounceType.kRising);
 
