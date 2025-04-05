@@ -537,7 +537,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             double targetTranslation = translationalController.calculate(
                 0, getState().Pose.getTranslation().getDistance(this.targetPose.getTranslation()));
 
-            // if (targetTranslation > maxSpeed) targetTranslation = maxSpeed;
+            if (targetTranslation > maxSpeed) targetTranslation = maxSpeed;
 
             ChassisSpeeds newSpeeds = new ChassisSpeeds(
                 isAligned() ? 0 : targetTranslation, 
