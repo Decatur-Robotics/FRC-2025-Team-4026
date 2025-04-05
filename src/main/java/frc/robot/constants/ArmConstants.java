@@ -33,7 +33,7 @@ public class ArmConstants {
     // Scoring positions
     public static final double L1_SCORING_POSITION = 0.11;
     public static final double L2_STAGING_POSITION = STOWED_POSITION;
-    public static final double L2_SCORING_POSITION = 0.14;
+    public static final double L2_SCORING_POSITION = 0.12;
     public static final double L3_STAGING_POSITION = L2_STAGING_POSITION;
     public static final double L3_SCORING_POSITION = L2_SCORING_POSITION;
     public static final double L4_STAGING_POSITION = STOWED_POSITION;

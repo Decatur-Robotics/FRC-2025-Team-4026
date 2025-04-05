@@ -11,8 +11,8 @@ public class PathSetpoints {
 
     // 0.164338 meters from apriltag to reef branch on parallel plane    
 
-    public static final Transform2d LEFT_BRANCH_OFFSET = new Transform2d(new Translation2d(0.57, -0.164), Rotation2d.kZero);
-    public static final Transform2d RIGHT_BRANCH_OFFSET = new Transform2d(new Translation2d(0.57, 0.164), Rotation2d.kZero);
+    public static final Transform2d LEFT_BRANCH_OFFSET = new Transform2d(new Translation2d(0.56, -0.164), Rotation2d.kZero);
+    public static final Transform2d RIGHT_BRANCH_OFFSET = new Transform2d(new Translation2d(0.56, 0.164), Rotation2d.kZero);
 
     // Field center
     public static final Translation2d FIELD_CENTER = new Translation2d(8.774176, 4.026281);
