@@ -9,14 +9,14 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class ClimberConstants {
 
-    public static final double INITIAL_POSITION = 0;
-    public static final double CLIMBED_POSITION = 0;
+    public static final double INITIAL_POSITION = 50;
+    public static final double CLIMBED_POSITION = 450;
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)
         .withStatorCurrentLimit(60);
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-        .withKP(0)
+        .withKP(10)
         .withKI(0)
         .withKD(0)
         .withKS(0)

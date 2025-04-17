@@ -223,9 +223,9 @@ public class RobotContainer {
         x.whileTrue(superstructure.dealgifyLowCommand());
         y.whileTrue(superstructure.dealgifyHighCommand());
 
-        // bumperRight.whileTrue(climber.climbCommand());
-        bumperLeft.whileTrue(climber.setVoltageCommand(-12));
-        bumperRight.whileTrue(climber.setVoltageCommand(12));
+         bumperRight.whileTrue(climber.climbCommand());
+       // bumperLeft.whileTrue(climber.setVoltageCommand(-12));
+       // bumperRight.whileTrue(climber.setVoltageCommand(12));
 
         back.onTrue(superstructure.zeroSuperstructureCommand());
 

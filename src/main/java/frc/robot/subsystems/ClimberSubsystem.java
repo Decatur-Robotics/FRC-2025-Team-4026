@@ -12,7 +12,9 @@ import frc.robot.constants.ClimberConstants;
 import frc.robot.constants.Constants;
 
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 
 public class ClimberSubsystem extends SubsystemBase{
@@ -20,7 +22,7 @@ public class ClimberSubsystem extends SubsystemBase{
     private TalonFX climberMotor;
     
     private double position;
-    private MotionMagicDutyCycle controlRequest;
+    private PositionVoltage controlRequest;
 
     private VoltageOut voltageRequest;
     
@@ -35,7 +37,7 @@ public class ClimberSubsystem extends SubsystemBase{
         
         position = ClimberConstants.INITIAL_POSITION;
 
-        controlRequest = new MotionMagicDutyCycle(position);
+        controlRequest = new PositionVoltage(position);
         climberMotor.setControl(controlRequest);
 
         voltageRequest = new VoltageOut(0);
@@ -48,6 +50,7 @@ public class ClimberSubsystem extends SubsystemBase{
 
         tab.addDouble("Target Climber Position", () -> position);
         tab.addDouble("Actual Climber Position", () -> getPosition());
+        tab.addDouble("Actual Climber Voltage", () -> getVoltage());
     }
     
     @Override
@@ -69,6 +72,10 @@ public class ClimberSubsystem extends SubsystemBase{
 
     public void setVoltage(double voltage) {
         climberMotor.setControl(voltageRequest.withOutput(voltage));
+    }
+
+    public double getVoltage() {
+        return climberMotor.getMotorVoltage().getValueAsDouble();
     }
 
     /**
