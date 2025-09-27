@@ -39,7 +39,8 @@ public class ArmConstants {
     public static final double L4_STAGING_POSITION = STOWED_POSITION;
     public static final double L4_SCORING_POSITION = 0.12;
     public static final double PROCESSOR_POSITION = 0.15;
-    public static final double NET_POSITION = 0.15;
+    public static final double NET_POSITION_START = 0.18;//0.15
+    public static final double NET_POSITION_END = 0.13;
 
     /** The position when the arm is parallel to the floor */
 	public static final double LEVEL_POSITION = 0;

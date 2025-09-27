@@ -178,13 +178,13 @@ public class SuperstructureConstants {
 
     public static final SuperstructureState STAGE_NET_STATE = new SuperstructureState(
         ElevatorConstants.NET_POSITION, 
-        ArmConstants.NET_POSITION, 
+        ArmConstants.NET_POSITION_START, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.ALGAE_REST_VELOCITY);
 
     public static final SuperstructureState EJECT_NET_STATE = new SuperstructureState(
         ElevatorConstants.NET_POSITION, 
-        ArmConstants.NET_POSITION, 
+        ArmConstants.NET_POSITION_END, 
         WristConstants.PARALLEL_CURRENT, 
         IntakeConstants.NET_EJECT_VELOCITY);
 

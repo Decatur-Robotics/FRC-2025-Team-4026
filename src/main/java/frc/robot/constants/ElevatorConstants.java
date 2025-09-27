@@ -36,7 +36,7 @@ public final class ElevatorConstants {
     public static final double STAGE_L4_POSITION = 54.5;
     public static final double SCORE_L4_POSITION = 43.5;
     public static final double PROCESSOR_POSITION = 0;
-    public static final double NET_POSITION = 54;
+    public static final double NET_POSITION = 54.5;
 
     public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withStatorCurrentLimitEnable(true)
