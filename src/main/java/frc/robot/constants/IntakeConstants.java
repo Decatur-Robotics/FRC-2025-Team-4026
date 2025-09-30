@@ -11,17 +11,17 @@ public class IntakeConstants {
 
     public static final double CORAL_REST_VELOCITY = 0;
     public static final double ALGAE_REST_VELOCITY = 120;
-    public static final double CORAL_INTAKE_VELOCITY = 120;
-    public static final double ALGAE_INTAKE_VELOCITY = 30;//120
-    public static final double ALGAE_REMOVE_VELOCITY = -80;
-    public static final double L1_EJECT_VELOCITY = -10;
-    public static final double BRANCH_EJECT_VELOCITY = -15;
+    public static final double CORAL_INTAKE_VELOCITY = 120;//120
+    public static final double ALGAE_INTAKE_VELOCITY = 120;//120
+    public static final double ALGAE_REMOVE_VELOCITY = -80;//-80
+    public static final double L1_EJECT_VELOCITY = -10;//10
+    public static final double BRANCH_EJECT_VELOCITY = -15;//15
     public static final double PROCESSOR_EJECT_VELOCITY = -120;
-    public static final double NET_EJECT_VELOCITY = -120;
+    public static final double NET_EJECT_VELOCITY = -120;//-120
     public static final double DEALGIFY_VELOCITY = -60;
 
     public static final double CORAL_STALL_DEBOUNCE_TIME = 0.1;
-    public static final int CORAL_STALL_CURRENT = 50;
+    public static final int CORAL_STALL_CURRENT = 30;//50
     
     public static final double ALGAE_STALL_DEBOUNCE_TIME = 0.5;
     public static final int ALGAE_STALL_CURRENT = 55;

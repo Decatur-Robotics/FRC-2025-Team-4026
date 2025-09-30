@@ -205,7 +205,7 @@ public class RobotContainer {
         JoystickButton triggerLeft = new JoystickButton(joystick, LogitechControllerButtons.triggerLeft);
         JoystickButton triggerRight = new JoystickButton(joystick, LogitechControllerButtons.triggerRight);
 
-        Supplier<Boolean> overrideAtPose = () -> new JoystickButton(new Joystick(0), LogitechControllerButtons.b).getAsBoolean();
+        Supplier<Boolean> overrideAtPose = () -> new JoystickButton(new Joystick(1), LogitechControllerButtons.triggerRight).getAsBoolean();
         Supplier<Boolean> overrideNearPose = () -> start.getAsBoolean();
         Supplier<Boolean> isNearAligned = () -> (swerve.isNearAligned() || Robot.isTestMode());
         Supplier<Boolean> isAligned = () -> (Robot.isTestMode()); // (swerve.isAligned() || Robot.isTestMode());
@@ -215,7 +215,7 @@ public class RobotContainer {
         right.whileTrue(superstructure.scoreCoralL2Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
         left.whileTrue(superstructure.scoreCoralL3Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
         up.whileTrue(superstructure.scoreCoralL4Command(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
-        triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
+        //triggerRight.whileTrue(superstructure.scoreAlgaeProcessorCommand(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
         triggerLeft.whileTrue(superstructure.scoreAlgaeNetCommand(isNearAligned, isAligned, overrideNearPose, overrideAtPose));
 
         b.whileTrue(superstructure.intakeCoralGroundCommand());
